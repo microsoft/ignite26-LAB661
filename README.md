@@ -1,3 +1,4 @@
+<!--
 ## Before you're done
 
 This repo has been created for your Microsoft Ignite 2026 session. Here's how to get it ready.
@@ -23,6 +24,7 @@ Fill in the sections below yourself, then:
 - You can add a `.devcontainer/` folder if needed.
 
 ---
+-->
 
 <a name="start-building"></a>
 
@@ -35,7 +37,7 @@ Fill in the sections below yourself, then:
 ## 🔥LAB661: Hill climbing for agents: From 60% to 90% with Open Source and Foundry
 ### Session description
 
-Add your session description here. Keep it concise — 2-3 sentences about what attendees will learn and why it matters.
+Take a working agent that misses its target and improve it through hill climbing: a repeatable process for making one measured change at a time. Use ASSERT to generate evaluations and test data from requirements, create scoring criteria with Rubrics, and implement controls with Agent Control Specification (ACS). Then use Microsoft Foundry observability, tracing, and evaluation signals to identify improvements, measure results, and iterate toward higher quality, lower cost, and safer outcomes.
 
 ### 🚀 Getting started
 
@@ -45,8 +47,7 @@ If you're following along during a live session:
 
 1. Step 1
 2. Step 2
-3. Open [`instructions/`](instructions/README.md) when this session includes
-   attendee step-by-step guidance
+3. Open the [attendee guidance](docs/README.md)
 
 #### On your own
 
@@ -54,22 +55,22 @@ If you're learning at your own pace:
 
 1. Clone this repository
 2. Set up your environment
-3. Follow the session guidance in [`instructions/`](instructions/README.md), or
-   use the linked docs-site entry point when this repository uses that pattern
+3. Follow the [attendee guidance](docs/README.md)
 
 ### 🎯 Learning outcomes
 
 By the end of this session, you will be able to:
 
-- Outcome 1
-- Outcome 2
-- Outcome 3
+- Apply a hill-climbing process to improve an agent through measured, incremental changes.
+- Generate evaluation data and scoring criteria with ASSERT and Rubrics, then implement controls with Agent Control Specification (ACS).
+- Use Microsoft Foundry observability, tracing, and evaluation signals to improve agent quality, cost, and safety.
 
 ### 💻 Technologies used
 
-- Technology 1
-- Technology 2
-- Technology 3
+- ASSERT
+- Rubrics
+- Agent Control Specification (ACS)
+- Microsoft Foundry observability
 
 ### 📚 Continue your learning
 
@@ -101,17 +102,22 @@ For more information, visit the [Learn MCP Server repo](https://aka.ms/learnmcp)
 
 ### 👥 Content owners
 
-<!-- TODO: Add yourself as a content owner
-1. Change the src in the image tag to {your github url}.png
-2. Change INSERT NAME HERE to your name
-3. Change the github url in the final href to your url. -->
-
 <table>
 <tr>
-    <td align="center"><a href="http://github.com/yourGitHubHandle">
-        <img src="https://github.com/yourGitHubHandle.png" width="100px;" alt="INSERT NAME HERE"/><br />
-        <sub><b>INSERT NAME HERE</b></sub></a><br />
-            <a href="https://github.com/yourGitHubHandle" title="talk">📢</a>
+    <td align="center"><a href="https://github.com/nitya">
+        <img src="https://github.com/nitya.png" width="100px;" alt="Nitya Narasimhan"/><br />
+        <sub><b>Nitya Narasimhan</b></sub></a><br />
+            <a href="https://github.com/nitya" title="talk">📢</a>
+    </td>
+    <td align="center"><a href="https://github.com/BethanyJep">
+        <img src="https://github.com/BethanyJep.png" width="100px;" alt="Bethany Jepchumba"/><br />
+        <sub><b>Bethany Jepchumba</b></sub></a><br />
+            <a href="https://github.com/BethanyJep" title="talk">📢</a>
+    </td>
+    <td align="center"><a href="https://github.com/mesameki">
+        <img src="https://github.com/mesameki.png" width="100px;" alt="Mehrnoosh Sameki"/><br />
+        <sub><b>Mehrnoosh Sameki</b></sub></a><br />
+            <a href="https://github.com/mesameki" title="talk">📢</a>
     </td>
 </tr></table>
 
