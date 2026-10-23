@@ -427,3 +427,6 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
+
+# Never commit contents of this folder
+.DO-NOT-COMMIT/

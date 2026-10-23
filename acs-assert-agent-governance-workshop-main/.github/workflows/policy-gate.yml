@@ -1,0 +1,50 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
+#
+# Policy gate: regenerate the ACS policy from the committed ASSERT baseline and
+# fail the build unless it still strongly blocks every known-bad output. This is
+# the offline core loop, run in CI, with zero credentials.
+name: policy-gate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  acs-policy-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Set up Python
+        uses: actions/setup-python@0b93645e9fea7318ecaed2b359559ac225c90a2b # v5.3.0
+        with:
+          python-version: "3.12"
+
+      - name: Install OPA
+        run: |
+          curl -fsSL -o /usr/local/bin/opa https://openpolicyagent.org/downloads/v0.70.0/opa_linux_amd64_static
+          chmod +x /usr/local/bin/opa
+          opa version
+
+      - name: Install ASSERT with the acs extra
+        run: |
+          git clone --depth 1 https://github.com/responsibleai/ASSERT.git /tmp/ASSERT
+          pip install -e "/tmp/ASSERT[acs]"
+
+      - name: Regenerate the policy from the committed baseline
+        env:
+          PYTHONPATH: src
+        run: python policy/generate_offline.py
+
+      - name: Gate, every known-bad output must be strongly blocked
+        run: |
+          assert-ai acs validate \
+            --manifest artifacts/acs/contoso-devbot-shell-abuse-v1/manifest.yaml \
+            --run-dir eval/fixtures/results/contoso-devbot-shell-abuse-v1/baseline-unguarded \
+            --require-block

@@ -1,0 +1,3 @@
+[submodule "acs-assert-agent-governance-workshop-main/ASSERT"]
+	path = acs-assert-agent-governance-workshop-main/ASSERT
+	url = https://github.com/responsibleai/ASSERT.git

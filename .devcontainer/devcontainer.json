@@ -1,0 +1,23 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/ubuntu
+{
+    "name": "Hill climbing for agents (LAB661)",
+    "image": "mcr.microsoft.com/devcontainers/python:3.13-bookworm",
+    "features": {
+        "ghcr.io/devcontainers/features/azure-cli:1": {
+            "installBicep": true
+        }
+    },
+    "remoteUser": "vscode",
+    "updateContentCommand": "bash .devcontainer/post-create.sh",
+    "waitFor": "updateContentCommand",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-python.python",
+                "ms-toolsai.jupyter",
+                "ms-azuretools.vscode-bicep"
+            ]
+        }
+    }
+}

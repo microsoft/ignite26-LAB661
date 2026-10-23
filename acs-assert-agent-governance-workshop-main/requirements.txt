@@ -1,0 +1,14 @@
+# Contoso DevBot — ACS + ASSERT workshop
+#
+# The workshop runs against a local editable checkout of ASSERT with the ACS
+# extra, which pulls in acs-generator and agent-control-specification. ASSERT is
+# not published to PyPI, so install it from your local clone:
+#
+#   pip install -e "/path/to/ASSERT[acs]"
+#
+# You also need the Open Policy Agent (`opa`) binary on PATH; the Python extra
+# does not install it. See https://www.openpolicyagent.org/docs/latest/#running-opa
+#
+# The offline core of the workshop needs nothing beyond the above. The optional
+# live track (workshop/more/lab-live-run.md) additionally uses litellm, which
+# ASSERT already depends on, plus your model provider credentials.

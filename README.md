@@ -115,7 +115,7 @@ For more information, visit the [Learn MCP Server repo](https://aka.ms/learnmcp)
             <a href="https://github.com/BethanyJep" title="talk">📢</a>
     </td>
     <td align="center"><a href="https://github.com/spiderpc">
-        <img src="https://github.com/spiderpc.png" width="100px;" alt="Mehrnoosh Sameki"/><br />
+        <img src="https://github.com/spiderpc.png" width="100px;" alt="Mike Shi"/><br />
         <sub><b>Mike Shi</b></sub></a><br />
             <a href="https://github.com/spiderpc" title="talk">📢</a>
     </td>
