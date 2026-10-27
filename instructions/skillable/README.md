@@ -35,8 +35,7 @@ No lab uses an API key. The live labs sign in with the attendee's Azure identity
 
 ## Core labs
 
-Run the checkup script (`./src/scripts/check-setup.sh`) before going to
-[Lab 0](core-0-setup-environment.md).
+Work through these in order.
 
 | Page file | Skillable pages | Time |
 |-----------|-----------------|------|
@@ -48,11 +47,9 @@ Run the checkup script (`./src/scripts/check-setup.sh`) before going to
 
 ## More labs
 
-The More 0 configure page has attendees confirm the live setup.
-
-| Command | Pass when |
-|---------|-----------|
-| `python3 -m devbot.agent "How do I see recent commits?"` | DevBot answers from the real model, with no `401` or `403` |
+These labs are optional. We recommend following them in the numbered order
+below. More 0 starts with the Azure setup and live checks. Without an Azure
+subscription, start at More 2.
 
 | Page file | Skillable pages | Needs Azure |
 |-----------|-----------------|-------------|

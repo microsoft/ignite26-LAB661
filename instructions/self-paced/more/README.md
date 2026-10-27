@@ -1,7 +1,8 @@
 # More labs
 
-The core labs taught the whole loop. These go deeper on one topic each. They are
-numbered in a suggested order, and each one stands on its own.
+The core labs taught the whole loop. These optional labs go deeper on one topic
+each. We recommend following them in the numbered order below. More 0 starts
+with the Azure setup and live checks.
 
 | Lab | You will learn | Needs Azure? |
 |-----|----------------|--------------|

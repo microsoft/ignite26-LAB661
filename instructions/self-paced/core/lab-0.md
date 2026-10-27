@@ -16,6 +16,9 @@ About 10 minutes.
 
 ## Step 0.1: Open the lab environment
 
+Already completed the guide's Quickstart? Continue to
+[Step 0.2: Verify the environment](#step-02-verify-the-environment).
+
 Open this repository in GitHub Codespaces or in VS Code with the Dev Containers
 extension. The dev container installs everything for you: Python, the Azure CLI,
 the Open Policy Agent (`opa`) binary, and the pinned Python packages in

@@ -31,9 +31,6 @@ identity (`az login`).
 
 ## Core labs
 
-Run the checkup script (`./src/scripts/check-setup.sh`) before going to
-[Lab 0](core/lab-0.md).
-
 Work through these in order.
 
 | Lab | What you do | Time |
@@ -46,16 +43,9 @@ Work through these in order.
 
 ## More labs
 
-Before the live More labs, after [More 0](more/lab-0-assert-skill.md) Steps 1
-and 2:
-
-| Command | Pass when |
-|---------|-----------|
-| `az account show --query name -o tsv` | It shows the subscription you used for `infra/setup.sh` |
-| `python3 -m devbot.agent "How do I see recent commits?"` | DevBot answers from the real model, with no `401` or `403` |
-
-Optional, numbered in a suggested order. Without an Azure subscription, start at
-More 2. See the [More labs overview](more/README.md).
+These labs are optional. We recommend following them in the numbered order
+below. More 0 starts with the Azure setup and live checks. Without an Azure
+subscription, start at More 2. See the [More labs overview](more/README.md).
 
 | Lab | What you do | Needs Azure |
 |-----|-------------|-------------|
