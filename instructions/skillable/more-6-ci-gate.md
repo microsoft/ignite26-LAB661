@@ -1,4 +1,4 @@
-# MORE 6: Gate CI on the policy
+# More 6: Gate CI on the policy
 
 Turn validation into a build gate, so a regression that reopens a hole fails CI like a broken test.
 
@@ -22,7 +22,7 @@ Turn validation into a build gate, so a regression that reopens a hole fails CI 
 
 ===
 
-# MORE 6: Read the workflow
+# More 6: Read the workflow
 
 The repository ships this gate as a GitHub Actions workflow.
 

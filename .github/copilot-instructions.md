@@ -144,7 +144,7 @@ Planning only until the owner says "GO!". `.DO-NOT-COMMIT/` is gitignored scratc
 - Replace or remove the `instructions/README.md` placeholder so it links to both paths.
 - Remove the stub header comment and "none yet" module list from `instructions/skillable/README.md` once modules exist; confirm it matches the modules.
 - Add the deck URL to the root README once available.
-- Keep `.github/skills/update-skillable-instructions/` and `.github/skills/run-assert-eval/` at finalize: attendees use the second in MORE 0. Finalize removes only `agents/`, `tests/`, `copilot-instructions.md`, and `AGENT-WORKFLOW.md`, so `.github/` stays.
+- Keep `.github/skills/update-skillable-instructions/` and `.github/skills/run-assert-eval/` at finalize: attendees use the second in More 0. Finalize removes only `agents/`, `tests/`, `copilot-instructions.md`, and `AGENT-WORKFLOW.md`, so `.github/` stays.
 - Remove `.github/planning.md` at finalize (owner notes, including the deferred Windows 11 Skillable setup), or move what is still open somewhere private.
 - Remove unused placeholder folders and confirm `.devcontainer/` is added if needed.
 

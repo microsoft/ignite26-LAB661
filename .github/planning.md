@@ -33,8 +33,8 @@ include all of the following. Confirm each with the Skillable team.
 - `opa.exe` v0.70.0 on `PATH`, verified against its published checksum.
 - Azure CLI.
 - A clone of this repository at a known path, opened in VS Code.
-- GitHub Copilot in VS Code, signed in, for MORE 0.
-- For MORE 0 and 1: an Azure subscription per attendee, and either rights to
+- GitHub Copilot in VS Code, signed in, for More 0.
+- For More 0 and 1: an Azure subscription per attendee, and either rights to
   create role assignments or **Cognitive Services OpenAI User** granted up front.
 
 ### Scripts to port to PowerShell
@@ -46,7 +46,7 @@ source of truth for the self-paced path and CI.
 |---------------|--------------------|-------|
 | `src/scripts/check-setup.sh` | `check-setup.ps1` | Same checks and the same `ok` / `MISS` lines, so the expected output in the pages stays the same |
 | `src/scripts/run-offline-loop.sh` | `run-offline-loop.ps1` | Set `$env:PYTHONPATH`, stop on the first non-zero `$LASTEXITCODE` |
-| `infra/setup.sh` | `setup.ps1` | Largest port. Uses `az`, `jq`, `openssl` and `mapfile`. Replace `jq` with `ConvertTo-Json`, and `openssl rand` with `Get-Random`. Only needed if MORE 0 and 1 run on the VM |
+| `infra/setup.sh` | `setup.ps1` | Largest port. Uses `az`, `jq`, `openssl` and `mapfile`. Replace `jq` with `ConvertTo-Json`, and `openssl rand` with `Get-Random`. Only needed if More 0 and 1 run on the VM |
 | `set -a; source .env; set +a` | `load-env.ps1` | Read `.env` lines into `$env:` variables |
 
 ### Command translations for the Skillable pages
@@ -60,7 +60,7 @@ source of truth for the self-paced path and CI.
 | `cp .env.example .env` | `Copy-Item .env.example .env` |
 | `"$(pwd)/data/results"` | `"$PWD\data\results"` |
 | `echo "exit: $?"` | `"exit: $LASTEXITCODE"` |
-| `echo '{...}' \| opa eval -I ...` | Use a here-string or a `.json` file. PowerShell quoting breaks the inline JSON in MORE 3 and 4 |
+| `echo '{...}' \| opa eval -I ...` | Use a here-string or a `.json` file. PowerShell quoting breaks the inline JSON in More 3 and 4 |
 | Multi-line `\` continuation | Backtick continuation, or keep each command on one line |
 
 ### Other Windows checks
@@ -78,7 +78,7 @@ source of truth for the self-paced path and CI.
 ### Decisions to make
 
 - Codespace from the VM (no port needed) or local Windows (this section)?
-- If local Windows: do MORE 0 and 1 run on the VM, which needs the `setup.ps1`
+- If local Windows: do More 0 and 1 run on the VM, which needs the `setup.ps1`
   port, or stay self-paced only?
 - One set of Skillable pages per platform, or a Skillable section switch
   (`:::name(variable=value)`) that shows bash or PowerShell commands?

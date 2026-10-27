@@ -110,7 +110,7 @@ policy you build will guard the `output` point and `deny` the unsafe classes.
 > tool calls, a policy whose plan includes `pre_tool_call` rules declares that
 > point in its manifest, but the runtime helper you use in Lab 4 enforces the
 > `input` and `output` points only. The
-> [intervention points MORE lab](../more/lab-5-intervention-points.md) covers the
+> [intervention points More lab](../more/lab-5-intervention-points.md) covers the
 > full-host path for tool-call enforcement.
 
 ---

@@ -11,7 +11,7 @@ rewritten as short Skillable pages with checkboxes and copy text. Each page file
 below holds one lab, split into Skillable pages by `===`.
 
 - **Core:** about 60 minutes, offline, no Azure needed.
-- **MORE:** optional, one topic each. MORE 0 and 1 need Azure.
+- **More:** optional, one topic each. More 0 and 1 need Azure.
 
 ## Prerequisites
 
@@ -21,35 +21,22 @@ do not install or clone anything.
 | Attendee needs | For | Notes |
 |----------------|-----|-------|
 | VS Code or a Codespace with this repository open in its dev container | All labs | The dev container installs everything else |
-| An Azure subscription where they can create resources and assign roles | MORE 0 and 1 | Needs quota for `gpt-5.4-mini` and `gpt-5.4` |
-| GitHub Copilot in VS Code, in agent mode | MORE 0 | Runs the `run-assert-eval` skill |
+| An Azure subscription where they can create resources and assign roles | More 0 and 1 | Needs quota for `gpt-5.4-mini` and `gpt-5.4` |
+| GitHub Copilot in VS Code, in agent mode | More 0 | Runs the `run-assert-eval` skill |
 
 No lab uses an API key. The live labs sign in with the attendee's Azure identity
 (`az login`).
 
-## Setup
+## Quickstart
 
-| Script | What it does | When it runs |
-|--------|--------------|--------------|
-| [`.devcontainer/post-create.sh`](../../.devcontainer/post-create.sh) | Checks Python, the Azure CLI, `jq` and `openssl`, installs `opa`, and installs the pinned packages in [`requirements.txt`](../../requirements.txt) | Automatically, when the dev container is created |
-| [`infra/setup.sh`](../../infra/setup.sh) | Signs in to Azure, creates a Foundry project with `gpt-5.4-mini` and `gpt-5.4`, sets up Application Insights, and grants the roles to call the models without a key | By the attendee, on the first MORE 0 page |
-
-## Validate your setup
-
-The first core page has attendees run these.
-
-| Command | Pass when |
-|---------|-----------|
-| `./src/scripts/check-setup.sh` | Every line starts with `ok` |
-| `./src/scripts/run-offline-loop.sh` | It ends with the `PASS` line and attack success drops from 100% to 0% |
-
-The MORE 0 configure page has attendees confirm the live setup.
-
-| Command | Pass when |
-|---------|-----------|
-| `python3 -m devbot.agent "How do I see recent commits?"` | DevBot answers from the real model, with no `401` or `403` |
+1. Open the repository in a Codespace, or in VS Code with **Dev Containers: Reopen in Container**.
+2. Wait for the container setup to finish.
+3. Open a terminal. Run every command in this guide from the repository root.
 
 ## Core labs
+
+Run the checkup script (`./src/scripts/check-setup.sh`) before going to
+[Lab 0](core-0-setup-environment.md).
 
 | Page file | Skillable pages | Time |
 |-----------|-----------------|------|
@@ -57,9 +44,15 @@ The MORE 0 configure page has attendees confirm the live setup.
 | [core-1-meet-devbot.md](core-1-meet-devbot.md) | Meet DevBot, Learn the ACS vocabulary | 10 min |
 | [core-2-evaluate-assert.md](core-2-evaluate-assert.md) | Capture the baseline, Read the findings | 15 min |
 | [core-3-generate-policy.md](core-3-generate-policy.md) | Generate the policy, Validate the policy, Try to break the gate | 15 min |
-| [core-4-guard-verify.md](core-4-guard-verify.md) | Guard DevBot at runtime, Measure the improvement, Choose a MORE lab | 10 min |
+| [core-4-guard-verify.md](core-4-guard-verify.md) | Guard DevBot at runtime, Measure the improvement, Choose a More lab | 10 min |
 
-## MORE labs
+## More labs
+
+The More 0 configure page has attendees confirm the live setup.
+
+| Command | Pass when |
+|---------|-----------|
+| `python3 -m devbot.agent "How do I see recent commits?"` | DevBot answers from the real model, with no `401` or `403` |
 
 | Page file | Skillable pages | Needs Azure |
 |-----------|-----------------|-------------|
@@ -96,7 +89,7 @@ Conventions used here:
 ### Build the manual
 
 Page files are named `core-N-slug.md` and `more-N-slug.md`. The number sets the
-order, and core comes before MORE. After you add, remove or edit a page, run:
+order, and core comes before More. After you add, remove or edit a page, run:
 
 ```bash
 ./instructions/skillable/generate-skillable-copy.sh
@@ -112,3 +105,12 @@ repository, and you can set `REPO` and `BRANCH` to choose the source.
 ```bash
 MODE=include BRANCH=main ./instructions/skillable/generate-skillable-copy.sh
 ```
+
+## Scripts
+
+These scripts are listed for reference. You do not need to run either script now.
+
+| Script | What it does | When it runs |
+|--------|--------------|--------------|
+| [`.devcontainer/post-create.sh`](../../.devcontainer/post-create.sh) | Checks Python, the Azure CLI, `jq` and `openssl`, installs `opa`, and installs the pinned packages in [`requirements.txt`](../../requirements.txt) | Automatically, when the dev container is created |
+| [`infra/setup.sh`](../../infra/setup.sh) | Signs in to Azure, creates a Foundry project with `gpt-5.4-mini` and `gpt-5.4`, sets up Application Insights, and grants the roles to call the models without a key | By the attendee, on the first More 0 page |

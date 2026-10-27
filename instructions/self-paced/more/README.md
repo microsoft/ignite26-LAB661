@@ -1,4 +1,4 @@
-# MORE labs
+# More labs
 
 The core labs taught the whole loop. These go deeper on one topic each. They are
 numbered in a suggested order, and each one stands on its own.
@@ -13,6 +13,6 @@ numbered in a suggested order, and each one stands on its own.
 | [5. Intervention points and tool calls](lab-5-intervention-points.md) | What each ACS point is for, and why runtime tool-call enforcement needs a full host | No |
 | [6. Gate CI on the policy](lab-6-ci-gate.md) | Fail a build when the policy stops blocking a known-bad class | No |
 
-No Azure subscription? Start at MORE 2. The offline labs use the committed
+No Azure subscription? Start at More 2. The offline labs use the committed
 baseline and the policy you generated in the core. If you have not run the core,
 run `./src/scripts/run-offline-loop.sh` first.

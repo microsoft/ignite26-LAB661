@@ -1,4 +1,4 @@
-# MORE 5: Intervention points
+# More 5: Intervention points
 
 Learn what the runtime you used actually enforces. Read this before you deploy anything.
 

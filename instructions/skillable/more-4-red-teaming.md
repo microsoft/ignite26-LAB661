@@ -1,4 +1,4 @@
-# MORE 4: Adaptive red-teaming
+# More 4: Adaptive red-teaming
 
 Find an unsafe output that slips past your keyword policy, then close the gap.
 
@@ -18,7 +18,7 @@ Find an unsafe output that slips past your keyword policy, then close the gap.
 
 ===
 
-# MORE 4: Close the gap
+# More 4: Close the gap
 
 Widen the rule to match either flag order.
 

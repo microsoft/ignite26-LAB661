@@ -1,4 +1,4 @@
-# MORE 3: Author custom Rego
+# More 3: Author custom Rego
 
 Write and test an ACS rule by hand. Generated policy is a starting point, not a ceiling.
 

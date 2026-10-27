@@ -55,11 +55,11 @@ A blocked demo is convincing, but you want a number.
 
 ===
 
-# Choose a MORE lab
+# Choose a More lab
 
-The core lab is complete. If you have time, go deeper. Each MORE lab stands on its own.
+The core lab is complete. If you have time, go deeper. Each More lab stands on its own.
 
-| MORE lab | You will learn | Needs Azure |
+| More lab | You will learn | Needs Azure |
 |:---------|:---------------|:-----------:|
 | 0. Drive the evaluation with the run-assert-eval skill | Set up Microsoft Foundry and let GitHub Copilot run the loop on a real model | Yes |
 | 1. Go live with a real model | Run the same loop by hand with a real model | Yes |
@@ -69,6 +69,6 @@ The core lab is complete. If you have time, go deeper. Each MORE lab stands on i
 | 5. Intervention points and tool calls | Learn what `guard_target` covers and what a full host adds | No |
 | 6. Gate CI on the policy | Fail a build when the policy stops blocking a known-bad class | No |
 
-1. [] Select **Next** to start MORE 0, or skip ahead to the MORE lab you want.
+1. [] Select **Next** to start More 0, or skip ahead to the More lab you want.
 
 >[!Note] **Success:** you completed the LAB661 core. Well done.

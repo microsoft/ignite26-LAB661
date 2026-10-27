@@ -21,7 +21,7 @@ The core lab is one full turn of a measure, change, and re-measure loop.
 1. **Generate and validate.** Compile those findings into an Agent Control Specification (ACS) policy and prove it blocks every known-bad output.
 1. **Guard and verify.** Put the policy in front of DevBot and watch attack success drop from 100% to 0%.
 
->[!Note] **Duration:** about 60 minutes for the core labs. The MORE labs at the end are optional.
+>[!Note] **Duration:** about 60 minutes for the core labs. The More labs at the end are optional.
 
 ## How these instructions work
 
@@ -387,11 +387,11 @@ A blocked demo is convincing, but you want a number.
 
 ===
 
-# Choose a MORE lab
+# Choose a More lab
 
-The core lab is complete. If you have time, go deeper. Each MORE lab stands on its own.
+The core lab is complete. If you have time, go deeper. Each More lab stands on its own.
 
-| MORE lab | You will learn | Needs Azure |
+| More lab | You will learn | Needs Azure |
 |:---------|:---------------|:-----------:|
 | 0. Drive the evaluation with the run-assert-eval skill | Set up Microsoft Foundry and let GitHub Copilot run the loop on a real model | Yes |
 | 1. Go live with a real model | Run the same loop by hand with a real model | Yes |
@@ -401,17 +401,17 @@ The core lab is complete. If you have time, go deeper. Each MORE lab stands on i
 | 5. Intervention points and tool calls | Learn what `guard_target` covers and what a full host adds | No |
 | 6. Gate CI on the policy | Fail a build when the policy stops blocking a known-bad class | No |
 
-1. [] Select **Next** to start MORE 0, or skip ahead to the MORE lab you want.
+1. [] Select **Next** to start More 0, or skip ahead to the More lab you want.
 
 >[!Note] **Success:** you completed the LAB661 core. Well done.
 
 ===
 
-# MORE 0: Set up Microsoft Foundry
+# More 0: Set up Microsoft Foundry
 
-The next two MORE labs run on a real model. Set up a Foundry project and sign in to it, with no API key.
+The next two More labs run on a real model. Set up a Foundry project and sign in to it, with no API key.
 
->[!Alert] MORE 0 and MORE 1 call a real model, so they use your Azure subscription and cost money. Every other MORE lab runs offline. To skip ahead, go to MORE 2.
+>[!Alert] More 0 and More 1 call a real model, so they use your Azure subscription and cost money. Every other More lab runs offline. To skip ahead, go to More 2.
 
 1. [] In the terminal, run the setup script.
 
@@ -440,7 +440,7 @@ The next two MORE labs run on a real model. Set up a Foundry project and sign in
 
 ===
 
-# MORE 0: Configure your environment
+# More 0: Configure your environment
 
 Point DevBot and ASSERT at your Foundry project.
 
@@ -477,7 +477,7 @@ Point DevBot and ASSERT at your Foundry project.
 
 ===
 
-# MORE 0: Meet the run-assert-eval skill
+# More 0: Meet the run-assert-eval skill
 
 Let GitHub Copilot run the whole loop for you. You name a risk, and the skill writes the evaluation, runs it, generates a policy, and reruns it to prove the fix.
 
@@ -498,7 +498,7 @@ Let GitHub Copilot run the whole loop for you. You name a risk, and the skill wr
 
 ===
 
-# MORE 0: Name one risk
+# More 0: Name one risk
 
 Describe DevBot and one thing it must never do. The permissible boundary matters most, because without it the run has nothing to count helpful answers against.
 
@@ -523,7 +523,7 @@ Describe DevBot and one thing it must never do. The permissible boundary matters
 
 ===
 
-# MORE 0: Prove the fix
+# More 0: Prove the fix
 
 Read the two headline rates, then let the skill govern the failure.
 
@@ -546,11 +546,11 @@ Read the two headline rates, then let the skill govern the failure.
 
 ===
 
-# MORE 1: Go live by hand
+# More 1: Go live by hand
 
-Run the same loop as the core, one command at a time, with a real model. If you did MORE 0, this is what the skill did for you.
+Run the same loop as the core, one command at a time, with a real model. If you did More 0, this is what the skill did for you.
 
->[!Alert] This lab needs the Foundry project and `.env` from MORE 0. If you skipped MORE 0, go back and complete its setup and configure pages first.
+>[!Alert] This lab needs the Foundry project and `.env` from More 0. If you skipped More 0, go back and complete its setup and configure pages first.
 
 1. [] Load your environment.
 
@@ -566,7 +566,7 @@ Run the same loop as the core, one command at a time, with a real model. If you 
 
 ===
 
-# MORE 1: Generate a live policy
+# More 1: Generate a live policy
 
 Let a model design the guardrail rules from the real findings.
 
@@ -598,9 +598,9 @@ Let a model design the guardrail rules from the real findings.
 
 ===
 
-# MORE 1: Clean up Azure
+# More 1: Clean up Azure
 
-Stop paying for the resources when you are done with MORE 0 and 1.
+Stop paying for the resources when you are done with More 0 and 1.
 
 1. [] Delete the resource group.
 
@@ -610,7 +610,7 @@ Stop paying for the resources when you are done with MORE 0 and 1.
 
 ===
 
-# MORE 2: Browse runs in the ASSERT viewer
+# More 2: Browse runs in the ASSERT viewer
 
 Read a run's metrics the way a reviewer would, without writing any Python.
 
@@ -624,13 +624,13 @@ Read a run's metrics the way a reviewer would, without writing any Python.
 
 1. [] Find the same numbers you read in the core: 14 cases and a 71.4% policy violation rate.
 
->[!Knowledge] `Judge Model` reads `reference-judge/deterministic`, a reminder that this baseline was captured offline. A live run from MORE 0 or 1 names the real judge model.
+>[!Knowledge] `Judge Model` reads `reference-judge/deterministic`, a reminder that this baseline was captured offline. A live run from More 0 or 1 names the real judge model.
 
 ## Compare two runs
 
 The viewer's real power is comparison: pin a baseline and read the delta.
 
-1. [] If you did MORE 0 or 1, list your live runs.
+1. [] If you did More 0 or 1, list your live runs.
 
    ++assert-ai results list --results-dir "$(pwd)/artifacts/results"++
 
@@ -645,7 +645,7 @@ The viewer's real power is comparison: pin a baseline and read the delta.
 
 ===
 
-# MORE 3: Author custom Rego
+# More 3: Author custom Rego
 
 Write and test an ACS rule by hand. Generated policy is a starting point, not a ceiling.
 
@@ -689,7 +689,7 @@ A flat deny throws away the whole answer. A `transform` verdict keeps the useful
 
 ===
 
-# MORE 4: Adaptive red-teaming
+# More 4: Adaptive red-teaming
 
 Find an unsafe output that slips past your keyword policy, then close the gap.
 
@@ -709,7 +709,7 @@ Find an unsafe output that slips past your keyword policy, then close the gap.
 
 ===
 
-# MORE 4: Close the gap
+# More 4: Close the gap
 
 Widen the rule to match either flag order.
 
@@ -739,7 +739,7 @@ Widen the rule to match either flag order.
 
 ===
 
-# MORE 5: Intervention points
+# More 5: Intervention points
 
 Learn what the runtime you used actually enforces. Read this before you deploy anything.
 
@@ -765,7 +765,7 @@ Learn what the runtime you used actually enforces. Read this before you deploy a
 
 ===
 
-# MORE 6: Gate CI on the policy
+# More 6: Gate CI on the policy
 
 Turn validation into a build gate, so a regression that reopens a hole fails CI like a broken test.
 
@@ -789,7 +789,7 @@ Turn validation into a build gate, so a regression that reopens a hole fails CI 
 
 ===
 
-# MORE 6: Read the workflow
+# More 6: Read the workflow
 
 The repository ships this gate as a GitHub Actions workflow.
 

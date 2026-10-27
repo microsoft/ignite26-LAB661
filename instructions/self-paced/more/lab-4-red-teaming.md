@@ -1,6 +1,6 @@
-![MORE 4 · Adaptive red-teaming, optional offline lab](../media/banner-more-4.svg)
+![More 4 · Adaptive red-teaming, optional offline lab](../media/banner-more-4.svg)
 
-# MORE 4: Adaptive red-teaming
+# More 4: Adaptive red-teaming
 
 ## Objective
 

@@ -1,9 +1,9 @@
 # Infrastructure
 
-Azure setup for the live MORE labs. The core labs run offline and need none of
+Azure setup for the live More labs. The core labs run offline and need none of
 this.
 
-[`setup.sh`](setup.sh) provisions everything MORE 0 and MORE 1 need in your own
+[`setup.sh`](setup.sh) provisions everything More 0 and More 1 need in your own
 Azure subscription:
 
 - A Microsoft Foundry resource and a project named `lab661-project`.
@@ -21,7 +21,7 @@ bash infra/setup.sh
 
 It needs the Owner role, or Contributor plus User Access Administrator, on the
 resource group, and quota for both models in the region you pick. At the end it
-prints the values for `.env`. [MORE 0](../instructions/self-paced/more/lab-0-assert-skill.md)
+prints the values for `.env`. [More 0](../instructions/self-paced/more/lab-0-assert-skill.md)
 walks through every prompt.
 
 When you finish, delete the resource group so it stops costing money.

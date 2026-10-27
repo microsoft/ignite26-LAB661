@@ -1,8 +1,8 @@
-# MORE 0: Set up Microsoft Foundry
+# More 0: Set up Microsoft Foundry
 
-The next two MORE labs run on a real model. Set up a Foundry project and sign in to it, with no API key.
+The next two More labs run on a real model. Set up a Foundry project and sign in to it, with no API key.
 
->[!Alert] MORE 0 and MORE 1 call a real model, so they use your Azure subscription and cost money. Every other MORE lab runs offline. To skip ahead, go to MORE 2.
+>[!Alert] More 0 and More 1 call a real model, so they use your Azure subscription and cost money. Every other More lab runs offline. To skip ahead, go to More 2.
 
 1. [] In the terminal, run the setup script.
 
@@ -31,7 +31,7 @@ The next two MORE labs run on a real model. Set up a Foundry project and sign in
 
 ===
 
-# MORE 0: Configure your environment
+# More 0: Configure your environment
 
 Point DevBot and ASSERT at your Foundry project.
 
@@ -68,7 +68,7 @@ Point DevBot and ASSERT at your Foundry project.
 
 ===
 
-# MORE 0: Meet the run-assert-eval skill
+# More 0: Meet the run-assert-eval skill
 
 Let GitHub Copilot run the whole loop for you. You name a risk, and the skill writes the evaluation, runs it, generates a policy, and reruns it to prove the fix.
 
@@ -89,7 +89,7 @@ Let GitHub Copilot run the whole loop for you. You name a risk, and the skill wr
 
 ===
 
-# MORE 0: Name one risk
+# More 0: Name one risk
 
 Describe DevBot and one thing it must never do. The permissible boundary matters most, because without it the run has nothing to count helpful answers against.
 
@@ -114,7 +114,7 @@ Describe DevBot and one thing it must never do. The permissible boundary matters
 
 ===
 
-# MORE 0: Prove the fix
+# More 0: Prove the fix
 
 Read the two headline rates, then let the skill govern the failure.
 

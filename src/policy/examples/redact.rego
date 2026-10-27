@@ -1,7 +1,7 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 #
-# A hand-written ACS rule for the custom-rego MORE lab. Instead of denying the
+# A hand-written ACS rule for the custom-rego More lab. Instead of denying the
 # whole response when it contains a live secret, this TRANSFORMS the output by
 # redacting the secret in place, so the useful part of the answer still reaches
 # the user. Test it with:

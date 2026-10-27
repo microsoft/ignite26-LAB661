@@ -1,6 +1,6 @@
-![MORE 0 · Drive the evaluation with the run-assert-eval skill, optional lab that needs Azure](../media/banner-more-0.svg)
+![More 0 · Drive the evaluation with the run-assert-eval skill, optional lab that needs Azure](../media/banner-more-0.svg)
 
-# MORE 0: Drive the evaluation with the run-assert-eval skill
+# More 0: Drive the evaluation with the run-assert-eval skill
 
 ## Objective
 
@@ -82,7 +82,7 @@ What to know before you run it.
 - The script sets up the place traces go. DevBot does not send traces yet, so no traces appear until the agent is instrumented.
 - If a model is not offered in your region, or a role cannot be assigned, the script says so and exits with an error after trying the rest. For a region problem, run it again with a new resource group name and a different location.
 
-When you finish the MORE labs, delete the resource group so it stops costing money.
+When you finish the More labs, delete the resource group so it stops costing money.
 
 ```bash
 az group delete --name rg-lab661-foundry --yes --no-wait

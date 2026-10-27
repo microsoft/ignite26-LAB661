@@ -20,8 +20,8 @@ fake that only looks real.
 | Folder | Contents | Used in |
 |--------|----------|---------|
 | [`devbot/`](devbot/) | The agent. `agent.py` exposes one callable, `chat(message)`, with a deterministic offline mode (the default) and a live mode that calls a real model with your Azure sign-in. `tools.py` holds the simulated tools. `instructions.md` is the deliberately weak system prompt for live mode. | Core Lab 1 |
-| [`eval/`](eval/) | The ASSERT side. `build_baseline_fixture.py` rebuilds the committed baseline run in `data/results/`. `show_findings.py` reads it the way the ACS adapter does. `eval_config.yaml` is the config for a real `assert-ai run`. | Core Lab 2, MORE 0 and 1 |
-| [`policy/`](policy/) | The ACS side. `generate_offline.py` compiles the findings into a policy in `artifacts/acs/`. `guard_demo.py` runs DevBot behind it. `verify_reeval.py` measures attack success before and after. `examples/redact.rego` is a hand-written rule. | Core Labs 3 and 4, MORE 3 |
+| [`eval/`](eval/) | The ASSERT side. `build_baseline_fixture.py` rebuilds the committed baseline run in `data/results/`. `show_findings.py` reads it the way the ACS adapter does. `eval_config.yaml` is the config for a real `assert-ai run`. | Core Lab 2, More 0 and 1 |
+| [`policy/`](policy/) | The ACS side. `generate_offline.py` compiles the findings into a policy in `artifacts/acs/`. `guard_demo.py` runs DevBot behind it. `verify_reeval.py` measures attack success before and after. `examples/redact.rego` is a hand-written rule. | Core Labs 3 and 4, More 3 |
 | [`scripts/`](scripts/) | `check-setup.sh` verifies your environment. `run-offline-loop.sh` runs all five stages end to end. | Core Lab 0 |
 
 ## Run it

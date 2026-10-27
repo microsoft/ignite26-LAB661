@@ -40,7 +40,7 @@ The lab has an offline core and a live track. Take the core first.
 | Track | For | Requires | Start here |
 |-------|-----|----------|-----------|
 | Offline core | Everyone. The guaranteed path. | The dev container. No Azure sign-in, no API key. | [`core`](../instructions/self-paced/core/lab-0.md) |
-| Live | After the core, to run a real evaluation. | An Azure subscription, signed in with `az login`. No API key. | [MORE 0](../instructions/self-paced/more/lab-0-assert-skill.md) and [MORE 1](../instructions/self-paced/more/lab-1-live-run.md) |
+| Live | After the core, to run a real evaluation. | An Azure subscription, signed in with `az login`. No API key. | [More 0](../instructions/self-paced/more/lab-0-assert-skill.md) and [More 1](../instructions/self-paced/more/lab-1-live-run.md) |
 
 > The offline core runs the entire loop with a deterministic agent and a
 > committed evaluation, so it needs no API key and produces the same result every
@@ -86,9 +86,9 @@ The core is five labs and takes about an hour. Start at
 | 1 | [Meet DevBot and map the risk](../instructions/self-paced/core/lab-1.md) | You have seen the agent misbehave and know the ACS vocabulary |
 | 2 | [Evaluate with ASSERT](../instructions/self-paced/core/lab-2.md) | Findings that name five unsafe classes to block |
 | 3 | [Generate and validate an ACS policy](../instructions/self-paced/core/lab-3.md) | A Rego policy that blocks every known-bad output |
-| 4 | [Guard, verify, and explore MORE](../instructions/self-paced/core/lab-4.md) | DevBot secured, attack success 100 percent to zero |
+| 4 | [Guard, verify, and explore More](../instructions/self-paced/core/lab-4.md) | DevBot secured, attack success 100 percent to zero |
 
-Seven [MORE labs](../instructions/self-paced/more/README.md) go deeper: the
+Seven [More labs](../instructions/self-paced/more/README.md) go deeper: the
 run-assert-eval skill with GitHub Copilot, a live run, the results viewer, custom
 Rego, adaptive red-teaming, intervention points, and a CI gate.
 
@@ -103,8 +103,8 @@ Rego, adaptive red-teaming, intervention points, and a CI gate.
 | `data/results/` | The committed baseline run and behavior taxonomy |
 | `infra/` | `setup.sh`, which provisions Microsoft Foundry for the live track |
 | `instructions/self-paced/core/` | Core labs 0 through 4 |
-| `instructions/self-paced/more/` | MORE labs 0 through 6 |
-| `.github/skills/run-assert-eval/` | The ASSERT skill used in MORE 0 |
+| `instructions/self-paced/more/` | More labs 0 through 6 |
+| `.github/skills/run-assert-eval/` | The ASSERT skill used in More 0 |
 | `docs/` | This overview, troubleshooting, and the diagrams in `media/` |
 
 ## License

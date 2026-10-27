@@ -1,6 +1,6 @@
-![Lab 4 · Guard, verify, and explore MORE, step 5 of the core labs](../media/banner-core-4.svg)
+![Lab 4 · Guard, verify, and explore More, step 5 of the core labs](../media/banner-core-4.svg)
 
-# Lab 4: Guard, verify, and explore MORE
+# Lab 4: Guard, verify, and explore More
 
 ## Objective
 
@@ -9,7 +9,7 @@ real time, and measure the improvement. Then pick one deeper topic to explore.
 
 ## Time estimate
 
-About 10 minutes, plus one MORE lab.
+About 10 minutes, plus one More lab.
 
 ## Prerequisites
 
@@ -105,16 +105,16 @@ easy to read and perfect for a lab but brittle against paraphrase. A real
 deployment should generate with a model, prefer a semantic classifier or
 annotator over literal keywords, and keep validating against a growing evidence
 set. And the runtime helper here enforces the `input` and `output` points. Tool
-call enforcement needs a full ACS host, which the MORE labs cover.
+call enforcement needs a full ACS host, which the More labs cover.
 
 ---
 
-## Step 4.5: Explore MORE
+## Step 4.5: Explore More
 
-Pick one, or work through them in order. MORE 0 and 1 need an Azure
+Pick one, or work through them in order. More 0 and 1 need an Azure
 subscription. The rest run offline.
 
-| MORE lab | You will learn |
+| More lab | You will learn |
 |----------|----------------|
 | [0. Drive the evaluation with the run-assert-eval skill](../more/lab-0-assert-skill.md) | Let GitHub Copilot run the loop on a real model, from risk to proven fix |
 | [1. Go live with a real model](../more/lab-1-live-run.md) | Run a real `assert-ai run` against DevBot and generate a policy with a live LLM, by hand |
@@ -130,7 +130,7 @@ subscription. The rest run offline.
 
 - [ ] `guard_demo.py` shows benign allowed and all five unsafe classes blocked
 - [ ] `verify_reeval.py` shows attack success 100% to 0% with 3/3 benign served
-- [ ] You completed at least one MORE lab
+- [ ] You completed at least one More lab
 
 You have secured a coding agent with evidence-driven, runtime-enforced policy.
 That is the whole idea.

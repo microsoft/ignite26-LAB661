@@ -3,7 +3,7 @@
 # Licensed under the MIT License.
 """Render the progress banners at the top of each self-paced lab.
 
-Each banner shows the lab title and a strip of core and MORE steps with the
+Each banner shows the lab title and a strip of Core and More steps with the
 current lab highlighted. Edit LABS, then run from the repository root:
 
     python3 instructions/self-paced/media/make_banners.py            # all labs
@@ -27,14 +27,14 @@ LABS = [
     ("core-1", "Lab 1", "Meet DevBot and map the risk", "Watch DevBot misbehave and learn the ACS vocabulary · about 10 minutes"),
     ("core-2", "Lab 2", "Evaluate with ASSERT", "Capture a baseline and read five deny targets from it · about 15 minutes"),
     ("core-3", "Lab 3", "Generate and validate an ACS policy", "Prove the policy blocks every known-bad output · about 15 minutes"),
-    ("core-4", "Lab 4", "Guard, verify, and explore MORE", "Watch attack success drop from 100% to 0% · about 10 minutes"),
-    ("more-0", "MORE 0", "Drive the evaluation with the run-assert-eval skill", "Optional · needs Azure · let GitHub Copilot run the loop on a real model"),
-    ("more-1", "MORE 1", "Go live with a real model", "Optional · needs Azure · run the same loop by hand"),
-    ("more-2", "MORE 2", "Browse runs in the ASSERT viewer", "Optional · offline · read and compare runs without code"),
-    ("more-3", "MORE 3", "Author custom Rego", "Optional · offline · write and test a rule that redacts instead of blocks"),
-    ("more-4", "MORE 4", "Adaptive red-teaming", "Optional · offline · find a bypass and close the gap"),
-    ("more-5", "MORE 5", "Intervention points and tool calls", "Optional · offline · learn what your runtime enforces"),
-    ("more-6", "MORE 6", "Gate CI on the policy", "Optional · offline · fail the build when the policy regresses"),
+    ("core-4", "Lab 4", "Guard, verify, and explore More", "Watch attack success drop from 100% to 0% · about 10 minutes"),
+    ("more-0", "More 0", "Drive the evaluation with the run-assert-eval skill", "Optional · needs Azure · let GitHub Copilot run the loop on a real model"),
+    ("more-1", "More 1", "Go live with a real model", "Optional · needs Azure · run the same loop by hand"),
+    ("more-2", "More 2", "Browse runs in the ASSERT viewer", "Optional · offline · read and compare runs without code"),
+    ("more-3", "More 3", "Author custom Rego", "Optional · offline · write and test a rule that redacts instead of blocks"),
+    ("more-4", "More 4", "Adaptive red-teaming", "Optional · offline · find a bypass and close the gap"),
+    ("more-5", "More 5", "Intervention points and tool calls", "Optional · offline · learn what your runtime enforces"),
+    ("more-6", "More 6", "Gate CI on the policy", "Optional · offline · fail the build when the policy regresses"),
 ]
 
 W, H = 1200, 152
@@ -49,7 +49,7 @@ RAINBOW = ["#3ee87a", "#4fd8ff", "#5b8cff", "#8b5cf6", "#ec4899", "#fb923c", "#f
 def step_strip(current: int) -> str:
     parts, x, y, r, gap = [], 24, 116, 11, 30
     for group in ("core", "more"):
-        label = "CORE" if group == "core" else "MORE"
+        label = "Core" if group == "core" else "More"
         parts.append(
             f'<text x="{x}" y="{y + 4}" font-family="{FONT}" font-size="10" font-weight="700" '
             f'letter-spacing="2" fill="{SOFT}" fill-opacity="0.7">{label}</text>'

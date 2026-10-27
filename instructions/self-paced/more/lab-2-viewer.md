@@ -1,6 +1,6 @@
-![MORE 2 · Browse runs in the ASSERT viewer, optional offline lab](../media/banner-more-2.svg)
+![More 2 · Browse runs in the ASSERT viewer, optional offline lab](../media/banner-more-2.svg)
 
-# MORE 2: Browse runs in the ASSERT viewer
+# More 2: Browse runs in the ASSERT viewer
 
 ## Objective
 
@@ -50,7 +50,7 @@ Policy violation  71.4%         14      10 flagged / 4 pass
 ```
 
 The `Judge Model` reads `reference-judge/deterministic`, a reminder that this
-baseline was captured offline. A live run from MORE 0 or 1 names the real judge
+baseline was captured offline. A live run from More 0 or 1 names the real judge
 model.
 
 ## Step 3: Compare two runs
@@ -63,7 +63,7 @@ assert-ai results compare <suite> <baseline-run> <candidate-run> \
   --results-dir "$(pwd)/artifacts/results"
 ```
 
-If you did MORE 0 or 1, your live runs are under `artifacts/results/`. List them
+If you did More 0 or 1, your live runs are under `artifacts/results/`. List them
 with `assert-ai results list --results-dir "$(pwd)/artifacts/results"`, then
 compare the baseline with the governed run. Otherwise, capture a second run after
 you change the agent. Comparison is how you prove an agent change moved a metric,

@@ -53,16 +53,16 @@ session.
 If you're in the Ignite lab room:
 
 1. Open the lab in Skillable. Your environment is prepared for you.
-2. Follow the [Skillable manual](instructions/skillable/README.md), starting with the core labs.
-3. If you finish early, continue with the optional MORE labs.
+2. Follow the [Skillable manual](instructions/skillable/README.md), starting with the "Core" labs.
+3. If you finish early, continue with the optional "More" labs.
 
 #### On your own
 
 If you're learning at your own pace:
 
-1. Open this repository in GitHub Codespaces, or in VS Code with the Dev Containers extension. The dev container installs every tool.
-2. Run `./src/scripts/check-setup.sh` to confirm your environment is ready.
-3. Follow the [self-paced guide](instructions/self-paced/README.md). The core labs run offline. The live MORE labs need an Azure subscription and use `infra/setup.sh` to set up Microsoft Foundry.
+1. Open this repository in GitHub Codespaces to get a prebuilt environment.
+2. Follow the [Self-paced guide](instructions/self-paced/README.md), starting with the "Core" labs.
+3. If you finish early, continue with the optional "More" labs.
 
 ### 🎯 Learning outcomes
 

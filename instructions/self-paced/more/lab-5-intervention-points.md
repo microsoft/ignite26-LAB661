@@ -1,6 +1,6 @@
-![MORE 5 · Intervention points and tool calls, optional offline lab](../media/banner-more-5.svg)
+![More 5 · Intervention points and tool calls, optional offline lab](../media/banner-more-5.svg)
 
-# MORE 5: Intervention points and tool calls
+# More 5: Intervention points and tool calls
 
 ## Objective
 

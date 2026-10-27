@@ -155,4 +155,4 @@ Before moving to Lab 4, confirm:
 - [ ] `acs validate --require-block` reports 5/5 strongly blocked and exits 0
 - [ ] You saw validation fail when a rule was removed, then restored it
 
-**Next**: [Lab 4, Guard, verify, and explore MORE](lab-4.md)
+**Next**: [Lab 4, Guard, verify, and explore More](lab-4.md)

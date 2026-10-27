@@ -23,7 +23,7 @@ Run every command from the repository root.
 | `data/results/` | Committed baseline run and behavior taxonomy |
 | `infra/` | `setup.sh`, which provisions Foundry for the live track |
 | `instructions/self-paced/core/` | Core labs 0 through 4 |
-| `instructions/self-paced/more/` | MORE labs 0 through 6, deeper topics |
+| `instructions/self-paced/more/` | More labs 0 through 6, deeper topics |
 | `instructions/skillable/` | The same core labs as a Skillable paged manual |
 | `docs/` | Overview, troubleshooting, diagrams |
 | `artifacts/` | Generated policy and live runs (gitignored) |
@@ -38,7 +38,7 @@ Run every command from the repository root.
 - **No API keys.** The live track signs in with the learner's Azure identity
   (`az login`). Do not add key-based auth.
 - **The offline core must stay credential-free.** Any command in the core labs
-  must run without an Azure sign-in. Live-only steps belong in MORE 0 and 1
+  must run without an Azure sign-in. Live-only steps belong in More 0 and 1
   (`instructions/self-paced/more/lab-0-assert-skill.md`, `lab-1-live-run.md`).
 - **Every command in a lab must be tested.** If you change a command, run it and
   paste the real output. Do not write expected output you have not observed.

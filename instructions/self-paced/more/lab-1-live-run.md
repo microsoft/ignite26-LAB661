@@ -1,18 +1,18 @@
-![MORE 1 · Go live with a real model, optional lab that needs Azure](../media/banner-more-1.svg)
+![More 1 · Go live with a real model, optional lab that needs Azure](../media/banner-more-1.svg)
 
-# MORE 1: Go live with a real model
+# More 1: Go live with a real model
 
 ## Objective
 
 Run the loop for real, by hand. Replace the deterministic offline pieces with a
 live model, so ASSERT generates and judges real conversations and the ACS
 generator designs the policy with an LLM. The ACS half of the loop is unchanged.
-If you did MORE 0, this is what the skill did for you, one command at a time.
+If you did More 0, this is what the skill did for you, one command at a time.
 
 ## What you will need
 
-- The Foundry project and `.env` from [MORE 0](lab-0-assert-skill.md), Steps 1
-  and 2. If you skipped MORE 0, do those two steps now, then come back.
+- The Foundry project and `.env` from [More 0](lab-0-assert-skill.md), Steps 1
+  and 2. If you skipped More 0, do those two steps now, then come back.
 - The core labs completed once, so you know the shape of the result.
 
 > This lab calls a real model, so it costs money. No API key is used: DevBot and
@@ -93,7 +93,7 @@ to a third-party generation model. Two options.
 
 Either way the compiled policy is real and enforceable.
 
-When you finish the MORE labs, delete the resource group so it stops costing
+When you finish the More labs, delete the resource group so it stops costing
 money.
 
 ```bash

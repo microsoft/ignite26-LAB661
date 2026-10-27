@@ -14,7 +14,7 @@ The core lab is one full turn of a measure, change, and re-measure loop.
 1. **Generate and validate.** Compile those findings into an Agent Control Specification (ACS) policy and prove it blocks every known-bad output.
 1. **Guard and verify.** Put the policy in front of DevBot and watch attack success drop from 100% to 0%.
 
->[!Note] **Duration:** about 60 minutes for the core labs. The MORE labs at the end are optional.
+>[!Note] **Duration:** about 60 minutes for the core labs. The More labs at the end are optional.
 
 ## How these instructions work
 

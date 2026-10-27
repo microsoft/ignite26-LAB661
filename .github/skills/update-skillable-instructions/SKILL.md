@@ -26,7 +26,7 @@ instructions/skillable/
   README.md                    maintainer and lab guide: labs, prerequisites, setup, validation
   core-0-setup-environment.md  one file per core lab; the number sets the order
   core-1-<slug>.md ...
-  more-0-<slug>.md ...         one file per MORE lab, after the core
+  more-0-<slug>.md ...         one file per More lab, after the core
   generate-skillable-copy.sh   joins the pages into skillable-copy.md
   skillable-copy.md            generated; never edit by hand
   media/                       images used by the pages, if any
@@ -74,7 +74,7 @@ One sentence stating the outcome the attendee will see.
 ```
 
 Rules:
-- Start each Skillable page with a `# ` heading, 40 characters or fewer, sentence case, no period. It labels the Next button. MORE pages start with `MORE N: `.
+- Start each Skillable page with a `# ` heading, 40 characters or fewer, sentence case, no period. It labels the Next button. More pages start with `More N: `.
 - One sentence per step. Order each step as where, what, why.
 - Numbered steps use `1.` for every item. Add `[]` for a progress checkbox on actions the attendee performs.
 - Indent blocks that sit between steps to the same level as the step before them.

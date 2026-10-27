@@ -1,8 +1,8 @@
-# MORE 1: Go live by hand
+# More 1: Go live by hand
 
-Run the same loop as the core, one command at a time, with a real model. If you did MORE 0, this is what the skill did for you.
+Run the same loop as the core, one command at a time, with a real model. If you did More 0, this is what the skill did for you.
 
->[!Alert] This lab needs the Foundry project and `.env` from MORE 0. If you skipped MORE 0, go back and complete its setup and configure pages first.
+>[!Alert] This lab needs the Foundry project and `.env` from More 0. If you skipped More 0, go back and complete its setup and configure pages first.
 
 1. [] Load your environment.
 
@@ -18,7 +18,7 @@ Run the same loop as the core, one command at a time, with a real model. If you 
 
 ===
 
-# MORE 1: Generate a live policy
+# More 1: Generate a live policy
 
 Let a model design the guardrail rules from the real findings.
 
@@ -50,9 +50,9 @@ Let a model design the guardrail rules from the real findings.
 
 ===
 
-# MORE 1: Clean up Azure
+# More 1: Clean up Azure
 
-Stop paying for the resources when you are done with MORE 0 and 1.
+Stop paying for the resources when you are done with More 0 and 1.
 
 1. [] Delete the resource group.
 

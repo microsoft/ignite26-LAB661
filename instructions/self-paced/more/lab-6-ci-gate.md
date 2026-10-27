@@ -1,6 +1,6 @@
-![MORE 6 · Gate CI on the policy, optional offline lab](../media/banner-more-6.svg)
+![More 6 · Gate CI on the policy, optional offline lab](../media/banner-more-6.svg)
 
-# MORE 6: Gate CI on the policy
+# More 6: Gate CI on the policy
 
 ## Objective
 

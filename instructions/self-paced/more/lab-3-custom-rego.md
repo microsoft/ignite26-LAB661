@@ -1,6 +1,6 @@
-![MORE 3 · Author custom Rego, optional offline lab](../media/banner-more-3.svg)
+![More 3 · Author custom Rego, optional offline lab](../media/banner-more-3.svg)
 
-# MORE 3: Author custom Rego
+# More 3: Author custom Rego
 
 ## Objective
 

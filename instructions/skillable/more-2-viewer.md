@@ -1,4 +1,4 @@
-# MORE 2: Browse runs in the ASSERT viewer
+# More 2: Browse runs in the ASSERT viewer
 
 Read a run's metrics the way a reviewer would, without writing any Python.
 
@@ -12,13 +12,13 @@ Read a run's metrics the way a reviewer would, without writing any Python.
 
 1. [] Find the same numbers you read in the core: 14 cases and a 71.4% policy violation rate.
 
->[!Knowledge] `Judge Model` reads `reference-judge/deterministic`, a reminder that this baseline was captured offline. A live run from MORE 0 or 1 names the real judge model.
+>[!Knowledge] `Judge Model` reads `reference-judge/deterministic`, a reminder that this baseline was captured offline. A live run from More 0 or 1 names the real judge model.
 
 ## Compare two runs
 
 The viewer's real power is comparison: pin a baseline and read the delta.
 
-1. [] If you did MORE 0 or 1, list your live runs.
+1. [] If you did More 0 or 1, list your live runs.
 
    ++assert-ai results list --results-dir "$(pwd)/artifacts/results"++
 
