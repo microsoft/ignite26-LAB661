@@ -134,7 +134,8 @@ Planning only until the owner says "GO!". `.DO-NOT-COMMIT/` is gitignored scratc
 ### Attendee instructions layout
 
 - `instructions/self-paced/README.md`: read in VS Code; provisions infra from scratch. Stub only.
-- `instructions/skillable/`: numbered module files (`NN-slug.md`) plus `README.md`, the assembled paged manual (`===` page breaks) that the owner copies into Skillable. Maintained by the `update-skillable-instructions` skill in `.github/skills/`.
+- `instructions/skillable/`: one page file per lab (`core-N-slug.md`, `more-N-slug.md`), `generate-skillable-copy.sh`, and the generated `skillable-copy.md` the owner pastes into Skillable. Maintained by the `update-skillable-instructions` skill in `.github/skills/`. Syntax reference: https://docs.skillable.com/docs/creating-instructions-with-markdown-syntax.
+- `.github/skills/run-assert-eval/`: ASSERT's skill, copied from responsibleai/ASSERT at commit `49848007` with its MIT license, without its `tests/`. Local changes: its script paths point to `.github/skills/run-assert-eval/`, and its README and setup checklist no longer mention other assistants or the tests. Redo these if you refresh the copy.
 - Skillable uses one Markdown file per lab profile (pasted into Studio or synced from the default branch). Images go in `instructions/skillable/media/`.
 
 ### Final checks (do at finalize)
@@ -143,6 +144,7 @@ Planning only until the owner says "GO!". `.DO-NOT-COMMIT/` is gitignored scratc
 - Replace or remove the `instructions/README.md` placeholder so it links to both paths.
 - Remove the stub header comment and "none yet" module list from `instructions/skillable/README.md` once modules exist; confirm it matches the modules.
 - Add the deck URL to the root README once available.
-- Keep `.github/skills/update-skillable-instructions/` at finalize so others can maintain the repo. Finalize removes only `agents/`, `tests/`, `copilot-instructions.md`, and `AGENT-WORKFLOW.md`, so `.github/` stays.
+- Keep `.github/skills/update-skillable-instructions/` and `.github/skills/run-assert-eval/` at finalize: attendees use the second in MORE 0. Finalize removes only `agents/`, `tests/`, `copilot-instructions.md`, and `AGENT-WORKFLOW.md`, so `.github/` stays.
+- Remove `.github/planning.md` at finalize (owner notes, including the deferred Windows 11 Skillable setup), or move what is still open somewhere private.
 - Remove unused placeholder folders and confirm `.devcontainer/` is added if needed.
 

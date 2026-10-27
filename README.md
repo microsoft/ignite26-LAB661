@@ -41,29 +41,36 @@ Take a working agent that misses its target and improve it through hill climbing
 
 ### 🚀 Getting started
 
+In this lab you take Contoso DevBot, a coding agent that misses its target, and
+climb toward a safe agent one measured change at a time. ASSERT measures what
+DevBot gets wrong, an Agent Control Specification (ACS) policy generated from that
+evidence blocks it, and the same evaluation proves the change worked. The
+[attendee instructions](instructions/README.md) show how every lab maps to the
+session.
+
 #### In a guided session
 
-If you're following along during a live session:
+If you're in the Ignite lab room:
 
-1. Step 1
-2. Step 2
-3. Open the [attendee guidance](docs/README.md)
+1. Open the lab in Skillable. Your environment is prepared for you.
+2. Follow the [Skillable manual](instructions/skillable/README.md), starting with the core labs.
+3. If you finish early, continue with the optional MORE labs.
 
 #### On your own
 
 If you're learning at your own pace:
 
-1. Clone this repository
-2. Set up your environment
-3. Follow the [attendee guidance](docs/README.md)
+1. Open this repository in GitHub Codespaces, or in VS Code with the Dev Containers extension. The dev container installs every tool.
+2. Run `./src/scripts/check-setup.sh` to confirm your environment is ready.
+3. Follow the [self-paced guide](instructions/self-paced/README.md). The core labs run offline. The live MORE labs need an Azure subscription and use `infra/setup.sh` to set up Microsoft Foundry.
 
 ### 🎯 Learning outcomes
 
 By the end of this session, you will be able to:
 
-- Apply a hill-climbing process to improve an agent through measured, incremental changes.
-- Generate evaluation data and scoring criteria with ASSERT and Rubrics, then implement controls with Agent Control Specification (ACS).
-- Use Microsoft Foundry observability, tracing, and evaluation signals to improve agent quality, cost, and safety.
+- Apply a hill-climbing loop to an agent: measure where it fails with ASSERT, make one change, and verify the result with the same evidence.
+- Generate an Agent Control Specification (ACS) policy from evaluation findings, validate that it blocks every known-bad output, and enforce it at runtime without editing the agent.
+- Run the loop on real models in Microsoft Foundry with your Azure identity, and use the run-assert-eval skill with GitHub Copilot to go from a named risk to a proven fix.
 
 ### 💻 Technologies used
 

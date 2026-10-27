@@ -43,6 +43,19 @@ else
     fail "az bicep skipped because az is missing"
 fi
 
+# ------------------------------------------------------------ shell tools ----
+# infra/setup.sh needs jq and openssl.
+log "Shell tools"
+for tool in jq openssl; do
+    if command -v "${tool}" >/dev/null 2>&1; then
+        ok "${tool} found"
+    elif sudo apt-get update -qq >/dev/null 2>&1 && sudo apt-get install -y -qq "${tool}" >/dev/null 2>&1; then
+        ok "${tool} installed"
+    else
+        fail "could not install ${tool}"
+    fi
+done
+
 # ------------------------------------------------------------------ opa ----
 log "Open Policy Agent"
 OPA_VERSION="v0.70.0"

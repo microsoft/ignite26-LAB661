@@ -1,46 +1,46 @@
 ---
 name: update-skillable-instructions
-description: 'Create and maintain the Skillable lab instruction files in instructions/skillable/ using Skillable Markdown syntax. Use when: adding, editing, reordering, or reviewing Skillable lab modules; rebuilding the README.md manual that gets pasted into Skillable or synced from GitHub; checking Skillable syntax (page breaks, blocks, copyable text, tokens, images).'
+description: 'Create and maintain the Skillable lab instruction files in instructions/skillable/ using Skillable Markdown syntax, validated against https://docs.skillable.com/docs/creating-instructions-with-markdown-syntax. Use when: adding, editing, reordering, or reviewing the core-N and more-N Skillable page files; regenerating skillable-copy.md with generate-skillable-copy.sh; checking Skillable syntax (page breaks, blocks, copyable text, tokens, images).'
 ---
 
 # Update Skillable instructions
 
-Maintain `instructions/skillable/`: authored module files and one assembled `README.md`. The owner copies `README.md` into Skillable Studio (or points the GitHub instructions source at it) to get the paged manual.
+Maintain `instructions/skillable/`: one authored page file per lab, a generator script, and the generated `skillable-copy.md` that the owner pastes into Skillable Studio (or builds as `[!include]` lines that pull each page from GitHub).
 
-Reference docs (only fetch when syntax is in doubt; append `.md` for plain Markdown):
-- https://docs.skillable.com/docs/creating-instructions-with-markdown-syntax
+The syntax reference is the Skillable authoring guide. Use it to validate every page. Append `.md` to the URL for plain Markdown.
+- https://docs.skillable.com/docs/creating-instructions-with-markdown-syntax (syntax, the source of truth)
 - https://docs.skillable.com/docs/instructions-writing-best-practices
 - https://docs.skillable.com/docs/github-instructions-source
 
 ## How Skillable consumes this folder
 
-- A lab profile uses exactly one Markdown file, either pasted into Studio or synced from the repo's default branch. Other files are imported but not managed. Here that file is `README.md`.
-- Any commit to the default branch triggers a sync. Studio is read-only unless "Edit Locally" is on.
-- Images must sit next to that file or in a folder beside it. Use `media/`.
-- GitHub previews do not render Skillable-only syntax (blocks, tokens, copyable text). Check the rendering in Skillable, not GitHub.
+- A lab profile uses exactly one Markdown file, pasted into Studio or synced from the repo. Here that file is `skillable-copy.md`.
+- `[!include [label](raw-github-url)]` pulls a page live from GitHub. It needs a public repo and pins to a branch.
+- GitHub previews do not render Skillable-only syntax (blocks, checkboxes, copy text). Check the rendering in Skillable.
 - Repo size limit is 500 MB. Keep videos out of the repo.
 
 ## Folder layout
 
 ```text
 instructions/skillable/
-  README.md        generated manual: the one file pasted into Skillable or synced from GitHub
-  00-intro.md      authored modules, one per lab page group, numeric prefix sets order
-  01-<slug>.md
-  media/           images used by the modules
+  README.md                    maintainer and lab guide: labs, prerequisites, setup, validation
+  core-0-setup-environment.md  one file per core lab; the number sets the order
+  core-1-<slug>.md ...
+  more-0-<slug>.md ...         one file per MORE lab, after the core
+  generate-skillable-copy.sh   joins the pages into skillable-copy.md
+  skillable-copy.md            generated; never edit by hand
+  media/                       images used by the pages, if any
 ```
 
-Modules are the source of truth. Never edit `README.md` by hand.
+Each page file holds one lab. Split it into Skillable pages with a line containing only `===`.
 
 ## Workflow
 
-1. Read the module list in the header comment of `README.md` and the existing `NN-*.md` files to learn the current list and order.
-2. Create, edit, rename, or delete module files as requested. Keep prefixes contiguous (`00`, `01`, ...) and slugs lowercase with hyphens.
-3. Rebuild `README.md`: concatenate modules in numeric order, with a line containing only `===` between modules.
-4. Start `README.md` with an HTML comment that says it is generated, lists the module files in order (one per line, with title and estimated minutes), and tells the owner to copy everything below the comment into Skillable. Skillable ignores HTML comments, so copying the whole file is safe.
+1. Read `README.md` and the existing `core-*.md` and `more-*.md` files to learn the current list and order.
+2. Create, edit, rename, or delete page files as requested. Keep numbers contiguous within `core-` and `more-`, and slugs lowercase with hyphens.
+3. Keep each page in step with the matching self-paced lab in `instructions/self-paced/core/` or `instructions/self-paced/more/`: same commands, same expected output.
+4. Update the lab tables in `README.md`, then run `./instructions/skillable/generate-skillable-copy.sh` (or `MODE=include` for the GitHub include form).
 5. Run the checklist below and fix failures before finishing.
-
-Skillable has no include for relative paths. If a module must stay a separate synced source, use `[!include [label](raw-github-url)]` instead and confirm with the owner first, because it pins to a branch and the repo must be public.
 
 ## Module shape
 
@@ -70,17 +70,18 @@ One sentence stating the outcome the attendee will see.
 
 > [!Knowledge] Why this happened: one or two sentences giving the aha.
 
-> [!Note] Win: state the visible result, for example the new score.
+> [!Note] **Success:** state the visible result, for example the new score.
 ```
 
 Rules:
-- Start each module with `# ` heading, 40 characters or fewer, verb first, sentence case, no period. It labels the Next button.
+- Start each Skillable page with a `# ` heading, 40 characters or fewer, sentence case, no period. It labels the Next button. MORE pages start with `MORE N: `.
 - One sentence per step. Order each step as where, what, why.
 - Numbered steps use `1.` for every item. Add `[]` for a progress checkbox on actions the attendee performs.
 - Indent blocks that sit between steps to the same level as the step before them.
 - Attendee-facing, simple, conversational language. No fabricated results, links, or scores.
 - Never give away the fix in the main text of the break step. Put help in hint blocks.
-- Every module ends with a visible win.
+- Every Skillable page ends with a `>[!Note] **Success:**` line stating the visible win.
+- Use `-nocopy` on code blocks that show expected output.
 
 ## Syntax quick reference
 
@@ -104,10 +105,11 @@ Use `@lab` tokens for any per-attendee value. Never hardcode credentials, subscr
 
 ## Checklist
 
-- Every `NN-*.md` is listed in the `README.md` header comment, and the list matches the files on disk.
-- `README.md` contains every module in order, separated by `===`, and matches the modules exactly.
-- Each module starts with a valid `# ` heading and ends with a win.
+- Every `core-*.md` and `more-*.md` file is listed in the lab tables in `README.md`, and the tables match the files on disk and their `# ` page titles.
+- `skillable-copy.md` was regenerated after the last page change.
+- Each Skillable page starts with a valid `# ` heading of 40 characters or fewer and ends with a success note.
+- Commands and expected output match the matching self-paced lab.
 - Images referenced exist under `media/` and use relative paths without a leading slash.
 - No secrets, hardcoded per-attendee values, or placeholder text.
-- Syntax matches the table above; blocks inside lists are indented.
+- Syntax matches the Skillable authoring guide; blocks inside lists are indented.
 - Links to repo files from outside `skillable/` are relative and exist.

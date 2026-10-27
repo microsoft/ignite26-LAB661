@@ -1,8 +1,9 @@
 # LAB661 Python dependencies, installed by .devcontainer/post-create.sh.
 #
 # ASSERT's acs extra needs pre-release ACS packages, so they are pinned exactly.
+# The azure-auth extra lets ASSERT and DevBot sign in with az login instead of an API key.
 # The Open Policy Agent (opa) binary is not a Python package; post-create.sh installs it.
 
-assert-ai[acs]==0.3.0
+assert-ai[acs,azure-auth]==0.3.0
 acs-generator==0.3.1b0
 agent-control-specification==0.3.1b1
