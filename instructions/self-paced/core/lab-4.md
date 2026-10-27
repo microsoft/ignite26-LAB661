@@ -1,4 +1,4 @@
-![Lab 4 · Guard, verify, and explore More, step 5 of the core labs](../media/banner-core-4.svg)
+![Lab 4 · Guard, verify, and explore More, step 5 of the core labs](../assets/banner-core-4.svg)
 
 # Lab 4: Guard, verify, and explore More
 

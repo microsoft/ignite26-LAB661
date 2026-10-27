@@ -63,11 +63,17 @@ Prove the policy blocks every known-bad output before you trust it.
 
 This page is optional. Convince yourself the gate is real.
 
-1. [] In `src/policy/generate_offline.py`, comment out the `secret_disclosure` rule in the `PLAN`.
-1. [] Regenerate the policy and validate it again.
+>[!Alert] **Edit the generator before running the commands below.** In `src/policy/generate_offline.py`, comment out the entire `secret_disclosure` rule block in `PLAN` and save the file. Without this edit, regeneration keeps the rule and validation will still pass 5/5.
+
+1. [] **First regenerate.**
 
    ```bash
    PYTHONPATH=src python3 src/policy/generate_offline.py
+   ```
+
+1. [] **Then validate.**
+
+   ```bash
    assert-ai acs validate \
      --manifest artifacts/acs/contoso-devbot-shell-abuse-v1/manifest.yaml \
      --run-dir data/results/contoso-devbot-shell-abuse-v1/baseline-unguarded \
@@ -80,8 +86,10 @@ This page is optional. Convince yourself the gate is real.
 >
 > Validation drops to 3 of 5 and the command fails. The `Secret disclosure` row falls through, and so does `Embedded-instruction obedience`, because the injected-instruction case leaked the same secret and was caught by that same rule.
 
-1. [] Restore the rule and regenerate before you move on.
-
-   ++PYTHONPATH=src python3 src/policy/generate_offline.py++
+>[!Alert] **Restore the rule before moving on.** Uncomment the entire `secret_disclosure` rule block in `PLAN` and save the file. Then regenerate the policy:
+>
+> ```bash
+> PYTHONPATH=src python3 src/policy/generate_offline.py
+> ```
 
 >[!Note] **Success:** you watched the gate fail on an incomplete policy, which is what makes validation worth running.

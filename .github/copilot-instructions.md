@@ -91,7 +91,7 @@ Planning only until the owner says "GO!". `.DO-NOT-COMMIT/` is gitignored scratc
   - 2 Debug with traces, 15 min: find the cause in the Foundry traces, scope the rule, reach about 75%.
   - 3 Add a control, 15 min: generate an ACS policy and guard the agent. The first policy over-blocks. Validate, narrow it, reach about 90%, check cost and latency.
   - Wrap-up, 5 min.
-- `more/` is take-home, self-paced only, and outside the Skillable manual: adaptive red-teaming, CI gate on the pass rate, cost and latency tuning via traces, deeper Rubrics (including a rubric bug that makes the score lie), ASSERT viewer, and the full ASSERT `run-assert-eval` skill. Custom Rego was dropped.
+- `more/` is take-home, self-paced only, and outside the Skillable manual: adaptive red-teaming, CI gate on the pass rate, cost and latency tuning via traces, deeper Rubrics (including a rubric bug that makes the score lie), ASSERT viewer, and the full ASSERT `run-assert-eval` skill. Keep every More lab that works when tested (owner decision, including custom Rego); they are bonus labs for early finishers and at-home learners.
 - Layout: `instructions/` holds written modules. `labs/core` and `labs/more` hold runnable material per module. `src/devbot/` holds the agent. `data/` holds recorded golden runs. `infra/` holds Foundry setup for self-paced. `docs/` holds background.
 - Tooling: `assert-ai` 0.3.0 is on PyPI (Python 3.11 or newer). The `acs` extra needs pre-release `acs-generator` (0.3.1b0) and `agent-control-specification` (0.3.1b0 or newer), so pin exact versions in the dev container. `opa` is a separate binary.
 - Foundry skill (`microsoft/azure-skills`, `microsoft-foundry`): traces are read from Application Insights with KQL. It documents no upload of traces from a file.

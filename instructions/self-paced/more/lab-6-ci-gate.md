@@ -1,4 +1,4 @@
-![More 6 · Gate CI on the policy, optional offline lab](../media/banner-more-6.svg)
+![More 6 · Gate CI on the policy, optional offline lab](../assets/banner-more-6.svg)
 
 # More 6: Gate CI on the policy
 
@@ -25,29 +25,59 @@ Confirm the passing case exits 0.
 assert-ai acs validate \
   --manifest artifacts/acs/contoso-devbot-shell-abuse-v1/manifest.yaml \
   --run-dir data/results/contoso-devbot-shell-abuse-v1/baseline-unguarded \
-  --require-block
-echo "exit: $?"
+  --require-block; echo "exit: $?"
 ```
 
-You should see the 5/5 table and `exit: 0`.
+The output ends with:
+
+```text
+Validation: handled 5/5 (reacted, incl. warn); strongly blocked 5/5 (deny/escalate); handled_rate 100.0%
+exit: 0
+```
 
 ## Step 2: Watch it fail
 
-Recreate the regression from Lab 3. Remove one rule from the `PLAN` in
-`src/policy/generate_offline.py`, regenerate, and re-run the gate.
+Recreate a regression. A script regenerates the policy with the
+`secret_disclosure` rule removed, without editing any source file.
+
+### Step 2.1: Drop a rule
 
 ```bash
-PYTHONPATH=src python3 src/policy/generate_offline.py
+PYTHONPATH=src python3 src/policy/drop_rule.py
+```
+
+```text
+Dropped rule: secret_disclosure
+Regenerated artifacts/acs/contoso-devbot-shell-abuse-v1/policy/devbot_shell_guardrails.rego
+```
+
+### Step 2.2: Run the gate again
+
+```bash
 assert-ai acs validate \
   --manifest artifacts/acs/contoso-devbot-shell-abuse-v1/manifest.yaml \
   --run-dir data/results/contoso-devbot-shell-abuse-v1/baseline-unguarded \
-  --require-block
-echo "exit: $?"
+  --require-block; echo "exit: $?"
 ```
 
-Now the command prints a non-zero exit and a line like `ACS policy did not
-strongly block 2 known-bad example(s)`. In CI, that fails the job. Restore the
-rule and regenerate.
+The output now ends with:
+
+```text
+Validation: handled 3/5 (reacted, incl. warn); strongly blocked 3/5 (deny/escalate); handled_rate 60.0%
+ACS policy did not strongly block 2 known-bad example(s) (only deny/escalate counts as a block).
+exit: 1
+```
+
+Two examples get through, the secret leak and the injected instruction that
+leaks a secret. In CI, `exit: 1` fails the job.
+
+### Step 2.3: Restore the full policy
+
+```bash
+PYTHONPATH=src python3 src/policy/generate_offline.py
+```
+
+Rerun the gate from Step 1. It prints `exit: 0` again.
 
 ## Step 3: The workflow
 
@@ -64,7 +94,9 @@ baseline, and runs `acs validate --require-block`. No credentials are involved,
 because the whole thing runs against the committed offline baseline.
 
 It runs only when you start it. On GitHub, open the **Actions** tab, pick
-**policy-gate**, and select **Run workflow**. To gate every change instead,
+**policy-gate**, and select **Run workflow**. GitHub lists a manually started
+workflow only once its file is on the repository's default branch, which it is
+in your own fork. To gate every change instead,
 replace the `on:` block with this and commit it.
 
 ```yaml

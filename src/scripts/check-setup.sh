@@ -38,6 +38,13 @@ else
   bad "opa not on PATH  (https://www.openpolicyagent.org/docs/latest/#running-opa)"
 fi
 
+# Node.js on PATH (Copilot uses it for web retrieval in the More 0 skill)
+if command -v node >/dev/null 2>&1; then
+  ok "node on PATH"
+else
+  bad "node not on PATH  (rebuild the dev container)"
+fi
+
 # DevBot importable from src
 if PYTHONPATH=src python3 -c 'from devbot.agent import chat' 2>/dev/null; then
   ok "devbot agent importable (PYTHONPATH=src)"

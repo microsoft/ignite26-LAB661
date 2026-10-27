@@ -1,4 +1,4 @@
-![More 3 · Author custom Rego, optional offline lab](../media/banner-more-3.svg)
+![More 3 · Author custom Rego, optional offline lab](../assets/banner-more-3.svg)
 
 # More 3: Author custom Rego
 
@@ -89,10 +89,70 @@ and it catches the most common authoring mistakes before runtime.
 
 ## Step 5: Write your own
 
-Add a rule to `src/policy/examples/redact.rego` that denies an output containing
-`DROP TABLE` (a crude SQL-destruction guard), then test it with `opa eval` the
-same way. Remember the `else` chain, and remember to `opa check` after every
-edit.
+Work on a copy, so the example stays as shipped.
+
+```bash
+mkdir -p artifacts/custom-rego
+cp src/policy/examples/redact.rego artifacts/custom-rego/
+```
+
+In `artifacts/custom-rego/redact.rego`, add a rule that denies an output
+containing `DROP TABLE`, a crude SQL-destruction guard. Add it to the same
+`else` chain. Then check and test it.
+
+> [!WARNING]
+> **Edit the copy before you test.** If you skip the edit, the test below prints
+> `allow` instead of `deny`, because the copied file has no `DROP TABLE` rule
+> yet. Stuck? Open **One solution** below.
+
+```bash
+opa check artifacts/custom-rego
+```
+
+```bash
+echo '{"intervention_point":"output","policy_target":{"value":"then run DROP TABLE users;"}}' \
+  | opa eval -I -d artifacts/custom-rego 'data.workshop.custom.output_verdict.decision' -f raw
+```
+
+That prints `deny`. Now confirm the new rule did not break the old ones. The
+redaction still applies, and prints `transform`.
+
+```bash
+echo '{"intervention_point":"output","policy_target":{"value":"your key is sk-live-51H8XYZ and it is live"}}' \
+  | opa eval -I -d artifacts/custom-rego 'data.workshop.custom.output_verdict.decision' -f raw
+```
+
+A benign output is still allowed, and prints `allow`.
+
+```bash
+echo '{"intervention_point":"output","policy_target":{"value":"run git log"}}' \
+  | opa eval -I -d artifacts/custom-rego 'data.workshop.custom.output_verdict.decision' -f raw
+```
+
+<details>
+<summary>One solution</summary>
+
+Append the rule to the end of the copy. Run this once; running it twice adds the
+rule twice.
+
+```bash
+cat >> artifacts/custom-rego/redact.rego <<'EOF'
+else := {
+    "decision": "deny",
+    "reason": "sql_destruction",
+    "message": "Blocks endorsing a DROP TABLE statement.",
+} if {
+    input.intervention_point == "output"
+    contains(upper(input.policy_target.value), "DROP TABLE")
+}
+EOF
+```
+
+`upper` makes the match case-insensitive. Because the redaction rule comes
+first, an output with both a secret and `DROP TABLE` gets the redaction, not the
+deny. Order is policy.
+
+</details>
 
 ---
 

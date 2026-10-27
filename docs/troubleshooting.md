@@ -96,16 +96,86 @@ these.
 
 - Run `az account show` to confirm you are signed in to the subscription where
   you ran `infra/setup.sh`. If not, run `az login`.
-- Copy `.env.example` to `.env`, paste the values the setup script printed, and
-  confirm it has `ASSERT_AZURE_USE_AAD=1` and `DEVBOT_MODE=live`.
+- Confirm `.env` exists. `infra/setup.sh` writes it; if it is missing or out of
+  date, run setup again and answer `y` when it asks to replace `.env`.
 - A `401` or `403` usually means your **Cognitive Services OpenAI User** role has
   not applied yet. Wait a few minutes and try again.
+- `DefaultAzureCredential failed to retrieve a token` means you are not signed
+  in, for example after a container rebuild. Run `az login --use-device-code`.
 - `azure-identity package is not installed` means the dev container predates the
   sign-in change. Rebuild the container, or run `pip install -r requirements.txt`.
 - Confirm the model names in `src/eval/eval_config.yaml` match deployments in
   your Foundry resource.
 
 The offline core does not need any of this.
+
+### The run-assert-eval skill says `node` is missing
+
+The skill uses Node.js to fetch research sources. Rebuild the dev container, then
+confirm `./src/scripts/check-setup.sh` shows `node on PATH`. After a rebuild,
+sign in again with `az login --use-device-code`.
+
+### The skill asks permission before each command
+
+Set the chat's permissions to **Allow All** before you start, as More 0 Step 3
+describes. Then open a new chat and paste the Step 5 prompt again.
+
+### The skill's research is slow, or a source returns `404`
+
+Research fetches several papers and guides before it proposes test dimensions,
+so it can take several minutes. A `404` means a page moved; the skill looks for
+another copy and continues. Wait for the dimension review.
+
+### `Rate limiter: waiting ...s for model ... cooldown`
+
+ASSERT is pacing its calls to stay under the model deployment's tokens-per-minute
+limit. It waits and retries, so nothing is lost; the run is only slower. Running
+More 0 and More 1 at the same time makes it worse.
+
+If the chat looks stuck while ASSERT waits, move the command to the background
+with the play icon on its terminal, then tell the skill to continue. It resumes
+faster than waiting for the foreground command to return.
+
+`infra/setup.sh` deploys `gpt-5.4-mini` at 500K tokens per minute and `gpt-5.4`
+at 100K. ASSERT generates test cases on `gpt-5.4-mini` with 8 parallel calls, so
+it needs the extra headroom. If your quota is lower, deployment fails with a
+"check quota" warning; run setup again with a smaller capacity, for example
+`MINI_CAPACITY=200 MODEL_CAPACITY=50 bash infra/setup.sh`. Setup does not change
+the capacity of a deployment that already exists. To raise an existing one:
+
+```bash
+RG=rg-lab661-foundry
+ACCT=$(az cognitiveservices account list -g $RG --query '[0].name' -o tsv)
+VER=$(az cognitiveservices account deployment show -g $RG -n $ACCT --deployment-name gpt-5.4-mini --query properties.model.version -o tsv)
+az cognitiveservices account deployment create -g $RG -n $ACCT --deployment-name gpt-5.4-mini \
+  --model-name gpt-5.4-mini --model-version $VER --model-format OpenAI \
+  --sku-name GlobalStandard --sku-capacity 500 --query sku.capacity -o tsv
+```
+
+### `cd viewer` fails after a run
+
+ASSERT prints `cd viewer && npm run dev` at the end of a run. That browser viewer
+ships only in ASSERT's source repository, not in the PyPI package this lab
+installs. Use the `assert-ai results` commands instead, as in the
+[viewer lab](../instructions/self-paced/more/lab-2-viewer.md). For a live run,
+pass `--results-dir "$PWD/artifacts/results"`.
+
+### Live results are not under `artifacts/results/`
+
+Installed from PyPI, ASSERT 0.3.0 resolves relative result paths against its own
+install folder, so runs land under `site-packages/artifacts/results/`. Add
+`--override artifacts_root="$PWD/artifacts"` to `assert-ai run`, and point the
+`acs` commands at the run with `--run-dir`, as the live labs do.
+
+### The skill reports a validation error in its dimension review
+
+Its validator checks the review's bookkeeping fields. The skill fixes the field
+and reruns the check on its own; the test design does not change. Let it finish.
+
+### No `examples/` folder appears
+
+The skill writes the config only after you approve the dimension review. Until
+then there is nothing under `examples/`.
 
 ### The viewer shows no suites
 

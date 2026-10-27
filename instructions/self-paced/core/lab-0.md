@@ -1,4 +1,4 @@
-![Lab 0 · Setup, step 1 of the core labs](../media/banner-core-0.svg)
+![Lab 0 · Setup, step 1 of the core labs](../assets/banner-core-0.svg)
 
 # Lab 0: Setup
 
@@ -21,7 +21,7 @@ Already completed the guide's Quickstart? Continue to
 
 Open this repository in GitHub Codespaces or in VS Code with the Dev Containers
 extension. The dev container installs everything for you: Python, the Azure CLI,
-the Open Policy Agent (`opa`) binary, and the pinned Python packages in
+Node.js, the Open Policy Agent (`opa`) binary, and the pinned Python packages in
 `requirements.txt` (ASSERT with its `acs` extra, `acs-generator`, and
 `agent-control-specification`). You do not install or clone anything yourself.
 
@@ -42,6 +42,7 @@ You want all green:
   ok    acs-generator present
   ok    agent-control-specification present
   ok    opa on PATH (Version: 0.70.0)
+  ok    node on PATH
   ok    devbot agent importable (PYTHONPATH=src)
 
 All checks passed. Run: bash src/scripts/run-offline-loop.sh

@@ -20,9 +20,16 @@ bash infra/setup.sh
 ```
 
 It needs the Owner role, or Contributor plus User Access Administrator, on the
-resource group, and quota for both models in the region you pick. At the end it
-prints the values for `.env`. [More 0](../instructions/self-paced/more/lab-0-assert-skill.md)
-walks through every prompt.
+resource group, and quota for both models in the region you pick. After successful
+provisioning it creates a private `.env` with the live settings and tracing
+connection string, without printing the credential. An existing `.env` is kept
+unless you confirm replacement; replacement discards custom settings.
+[More 0](../instructions/self-paced/more/lab-0-assert-skill.md) walks through every
+prompt and validates the generated environment.
+
+When the resources already exist, for example in a pre-provisioned Skillable lab,
+`bash infra/setup.sh --env-only` creates nothing. It finds the Foundry resource
+and Application Insights in the resource group and only writes `.env`.
 
 When you finish, delete the resource group so it stops costing money.
 

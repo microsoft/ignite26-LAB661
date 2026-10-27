@@ -75,4 +75,4 @@ ACS is a stateless, deterministic, fail-closed policy runtime. It inspects an ag
 >
 > `output`. DevBot leaks by **saying** things, such as printing a key or endorsing `rm -rf` in chat. That is an output violation, so the policy you build guards `output` and denies the unsafe classes.
 
->[!Note] **Success:** you can name the four intervention points and the five verdicts, and you know DevBot's failures are `output` violations.
+>[!Note] **Success:** you can name the four main intervention points and the five verdicts, and you know DevBot's failures are `output` violations.

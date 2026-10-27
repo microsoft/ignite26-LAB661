@@ -19,6 +19,20 @@ BRANCH="${BRANCH:-$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo main)}"
 RAW_BASE="https://raw.githubusercontent.com/${REPO}/${BRANCH}/instructions/skillable"
 OUT="skillable-copy.md"
 
+# Local media path -> path of the same image already uploaded to the Skillable profile.
+declare -A SKILLABLE_MEDIA=(
+    ["media/vscode-continue-with-github.png"]="instructions359309/e4hal04w.png"
+)
+
+with_skillable_media() {
+    local text
+    text="$(cat "$1")"
+    for local_path in "${!SKILLABLE_MEDIA[@]}"; do
+        text="${text//"(${local_path})"/"(${SKILLABLE_MEDIA[${local_path}]})"}"
+    done
+    printf '%s\n' "${text}"
+}
+
 mapfile -t PAGES < <(ls -1 core-[0-9]*-*.md 2>/dev/null | sort -V; ls -1 more-[0-9]*-*.md 2>/dev/null | sort -V)
 if [[ ${#PAGES[@]} -eq 0 ]]; then
     echo "No page files (core-N-*.md or more-N-*.md) found; aborting." >&2
@@ -47,7 +61,7 @@ EOF
         if [[ "${MODE}" == "include" ]]; then
             printf '[!include[%s](%s/%s)]\n' "${page%.md}" "${RAW_BASE}" "${page}"
         else
-            cat "${page}"
+            with_skillable_media "${page}"
         fi
     done
 } > "${OUT}"

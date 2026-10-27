@@ -61,7 +61,7 @@ The core lab is complete. If you have time, go deeper. Each More lab stands on i
 
 | More lab | You will learn | Needs Azure |
 |:---------|:---------------|:-----------:|
-| 0. Drive the evaluation with the run-assert-eval skill | Set up Microsoft Foundry and let GitHub Copilot run the loop on a real model | Yes |
+| 0. Drive the evaluation with the run-assert-eval skill | Connect to Microsoft Foundry and let GitHub Copilot run the loop on a real model | Yes |
 | 1. Go live with a real model | Run the same loop by hand with a real model | Yes |
 | 2. Browse runs in the ASSERT viewer | Read and compare runs without writing code | No |
 | 3. Author custom Rego | Write and test a rule, including one that redacts instead of blocks | No |

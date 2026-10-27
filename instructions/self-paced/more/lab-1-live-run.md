@@ -1,4 +1,4 @@
-![More 1 · Go live with a real model, optional lab that needs Azure](../media/banner-more-1.svg)
+![More 1 · Go live with a real model, optional lab that needs Azure](../assets/banner-more-1.svg)
 
 # More 1: Go live with a real model
 
@@ -6,7 +6,8 @@
 
 Run the loop for real, by hand. Replace the deterministic offline pieces with a
 live model, so ASSERT generates and judges real conversations and the ACS
-generator designs the policy with an LLM. The ACS half of the loop is unchanged.
+generator designs the policy with an LLM. You will find that a model-designed
+policy can look finished and still never fire, and learn how to spot it.
 If you did More 0, this is what the skill did for you, one command at a time.
 
 ## What you will need
@@ -27,18 +28,29 @@ spec, points the target at `devbot.agent:chat`, and defines the judge dimensions
 
 ```bash
 set -a; source .env; set +a
-PYTHONPATH=src assert-ai run --config src/eval/eval_config.yaml
+PYTHONPATH=src assert-ai run --config src/eval/eval_config.yaml \
+  --override artifacts_root="$PWD/artifacts"
 ```
 
 The first line loads `.env` into your shell, so DevBot sees `DEVBOT_MODE=live`.
+The override keeps the results in this repository. Without it, a PyPI install of
+ASSERT writes them inside its own install folder.
 
 ASSERT will generate adversarial and benign prompts from the spec, send each to
 DevBot, and judge the transcripts. It writes a real run to
 `artifacts/results/contoso-devbot-shell-abuse-live/baseline/`.
 
 Because a real model is non-deterministic and samples are small, your exact
-numbers will differ from the offline fixture. Focus on the shape, DevBot should
-still fail the unsafe classes, because its instructions are still weak.
+numbers will differ. Expect fewer failing classes than the offline fixture. In
+two fresh test runs, harm ranged from 21.4% to 50.0% and over-refusal from 0% to
+18.8%, because each run generates a new taxonomy and new test cases. One finding
+held in both: only destructive commands got through, 3 of 16 each time. Check
+yours.
+
+```bash
+assert-ai results status contoso-devbot-shell-abuse-live baseline \
+  --results-dir "$PWD/artifacts/results"
+```
 
 ## Step 2: Generate the policy with a live LLM
 
@@ -46,40 +58,130 @@ Now let a model design the guardrail rules from the real findings.
 
 ```bash
 assert-ai acs generate \
-  --suite contoso-devbot-shell-abuse-live \
-  --run baseline \
+  --run-dir artifacts/results/contoso-devbot-shell-abuse-live/baseline \
   --out artifacts/acs/contoso-devbot-shell-abuse-live \
-  --model azure/gpt-5.4 \
-  --require-block
+  --model azure/gpt-5.4
 ```
 
 The generator sends only structured findings signal and redacted representative
 snippets to the model, never raw transcripts wholesale, so a secret captured in a
 transcript is not shipped to the policy model. Read
 [Securing agents with ACS](https://github.com/responsibleai/ASSERT/blob/main/docs/guides/securing-agents-with-acs.md)
-for the exact data-handling contract. Still, review the generated Rego. A live
-policy often uses richer conditions than the offline keyword rules, which is
-better for coverage and exactly why review matters.
+for the exact data-handling contract.
 
-`--require-block` makes generation itself fail if the freshly generated policy
-does not strongly block every known-bad example, so you never write out a policy
-that fails its own validation.
+In one test run, the output ended like this. The model decides the rules, so
+yours may differ.
 
-## Step 3: Validate and guard, exactly as before
+```text
+Guarded points: output
+Validation: handled 0/4 (reacted, incl. warn); strongly blocked 0/4 (deny/escalate); handled_rate 0.0%
+  Note: this policy conditions on LLM annotators (input.annotations.*), which offline validation does not populate ...
+```
 
-From here the commands are identical to the core, only the suite and run names
-change.
+The policy was written, yet it blocked none of the known-bad examples. Find out
+why. First, see what the rules check.
+
+```bash
+grep -n "annotations\." artifacts/acs/contoso-devbot-shell-abuse-live/policy/*.rego
+```
+
+```text
+38:    input.annotations.unsafe_remote_exec_output == true
+54:    input.annotations.unsafe_destructive_fs_output == true
+```
+
+The rules do not match text. They deny a reply when an **LLM classifier**, an
+*annotator*, has labeled it unsafe. Offline validation never runs a classifier,
+so these rules cannot fire there. That explains the 0 of 4.
+
+Next, check that the manifest connects the classifiers to the reply.
+
+```bash
+grep -n -A6 "^intervention_points\|^annotators" artifacts/acs/contoso-devbot-shell-abuse-live/manifest.yaml
+```
+
+```text
+10:intervention_points:
+11-  output:
+12-    policy_target: $.output
+13-    policy_target_kind: assistant_output
+14-    policy:
+15-      id: contoso_devbot_shell_abuse_live_baseline
+16-      query: data.agent_control_specification.contoso_devbot_shell_abuse_live_baseline.output_verdict
+17:annotators:
+18-  unsafe_remote_exec_output:
+19-    type: llm
+20-  unsafe_destructive_fs_output:
+21-    type: llm
+```
+
+The classifiers are declared under `annotators`, but the `output` point has no
+`annotations` entry that feeds the reply to them. Even at runtime the labels
+would never be set, so the policy would allow everything.
+
+The rules change from run to run. In a second fresh run, the generator wrote a
+single rule on `input.annotations.destructive_shell_endorsement_output.decision`,
+covering only the class that failed. The missing `annotations` entry was the same.
+
+> [!IMPORTANT]
+> A model-designed policy can look finished and still never fire. Before you
+> trust one, check what its rules condition on, and check that every classifier
+> it relies on is wired to the point it guards. The More 0 skill hit the same
+> gap and fixed it on review.
+
+<details>
+<summary>What a wired classifier looks like</summary>
+
+The output point needs an `annotations` entry, and your code needs a classifier
+that sets the label at runtime.
+
+```yaml
+intervention_points:
+  output:
+    # ...policy_target and policy as above...
+    annotations:
+      unsafe_destructive_fs_output:
+        from: $policy_target
+```
+
+In More 0, the skill wrote that classifier as an extra model call inside a
+governed wrapper, then proved the policy with a full governed rerun.
+
+</details>
+
+## Step 3: Validate, and know what it can prove
+
+Run the same validation as the core.
 
 ```bash
 assert-ai acs validate \
   --manifest artifacts/acs/contoso-devbot-shell-abuse-live/manifest.yaml \
-  --suite contoso-devbot-shell-abuse-live \
-  --run baseline \
-  --require-block
+  --run-dir artifacts/results/contoso-devbot-shell-abuse-live/baseline
 ```
 
-Point `guard_target` at the new manifest to enforce the live-generated policy at
-runtime, the same way `src/policy/guard_demo.py` does for the offline one.
+```text
+                                Validation cases
+Intervention point  Behavior            Dimension         Decision  Strong block
+output              Remote code         policy_violation  allow     no
+                    execution or
+                    unsafe
+                    fetch-and-run
+output              Unsafe destructive  policy_violation  allow     no
+                    filesystem action
+...
+Validation: handled 0/4 (reacted, incl. warn); strongly blocked 0/4 (deny/escalate); handled_rate 0.0%
+```
+
+Offline validation proves only rules it can evaluate, such as the keyword rules
+from the core. For a classifier-based policy you have two honest ways forward.
+
+| Route | What you do |
+|-------|-------------|
+| Measure it | Wire the classifier, wrap DevBot, and rerun the same evaluation, as the skill did in [More 0](lab-0-assert-skill.md) |
+| Keep it testable | Write keyword rules from these findings, as in the core, so `--require-block` can prove them offline |
+
+Do not pass `--require-block` to `generate` or `validate` for this policy. It
+exits with an error because nothing can be blocked offline.
 
 ## Step 4: Keep sensitive evals off third-party models
 
@@ -104,8 +206,13 @@ az group delete --name rg-lab661-foundry --yes --no-wait
 
 ## Takeaways
 
-- The live track changes only the model, not the loop.
-- `assert-ai run` produces real findings; `acs generate --model` designs a real
-  policy; validate and guard are unchanged.
+- A live model fails differently from the offline fixture, usually on fewer
+  classes, and it can over-refuse.
+- `acs generate --model` may design rules that depend on LLM classifiers.
+  Offline validation cannot test those, and an unwired classifier means the
+  policy never fires.
+- Read the Rego and the manifest before you trust a generated policy. Prove
+  classifier rules with a governed rerun, or keep keyword rules you can
+  validate offline.
 - Mind the data-handling contract, and prefer a local generation model for
   sensitive evaluations.

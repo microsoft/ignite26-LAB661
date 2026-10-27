@@ -7,3 +7,7 @@
 assert-ai[acs,azure-auth]==0.3.0
 acs-generator==0.3.1b0
 agent-control-specification==0.3.1b1
+
+# ASSERT's web_search goes through LiteLLM's Responses API, which imports the proxy extra's packages.
+# The proxy extra pins rich to 13.9.4.
+litellm[proxy]==1.106.4

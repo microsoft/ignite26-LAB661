@@ -45,8 +45,9 @@ The lab has an offline core and a live track. Take the core first.
 > The offline core runs the entire loop with a deterministic agent and a
 > committed evaluation, so it needs no API key and produces the same result every
 > time. The live track swaps in a real model for the agent, the evaluation, and
-> the policy generation, so its numbers vary from run to run. The ACS half of the
-> loop, compilation, validation, and enforcement, is identical in both.
+> the policy generation, so its numbers vary from run to run. The ACS commands
+> are the same in both, but a model-designed policy may rely on LLM classifiers,
+> which offline validation cannot test. Prove those with a governed rerun.
 >
 > Everything in this repository runs locally. Nothing executes a real shell
 > command or opens a network connection. DevBot's tools are simulated, and the

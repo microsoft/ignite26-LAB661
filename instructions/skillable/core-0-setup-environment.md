@@ -1,3 +1,34 @@
+# Sign in to your lab
+
+Sign in to the virtual machine, then to GitHub, so GitHub Copilot works in VS Code.
+
+1. [] Sign in to the virtual machine with this password.
+
+   +++@lab.VirtualMachine(Win11-Pro-Base).Password+++
+
+1. [] Note your Azure credentials. You use them to sign in to GitHub and, in More 0, to Azure.
+
+   | Credential | Value |
+   |:-----------|:------|
+   | Username | +++@lab.CloudPortalCredential(User1).Username+++ |
+   | Password | +++@lab.CloudPortalCredential(User1).Password+++ |
+   | Temporary Access Pass | +++@lab.CloudPortalCredential(User1).AccessToken+++ |
+
+1. [] In the browser on the virtual machine, open the GitHub Enterprise sign-in page and sign in with your **Azure** credentials.
+
+   +++https://github.com/enterprises/skillable-events/sso+++
+
+1. [] Keep that browser page open, then open VS Code.
+1. [] In VS Code, select **Continue with GitHub** and finish the sign-in through the same SSO page.
+
+   !IMAGE[VS Code sign-in with the Continue with GitHub option](media/vscode-continue-with-github.png)
+
+>[!Alert] Sign in to GitHub with your **Azure** credentials, not a personal GitHub account. GitHub Copilot works only through this enterprise sign-in.
+
+>[!Note] **Success:** you are signed in to the virtual machine and to GitHub in VS Code.
+
+===
+
 # Get started with LAB661
 
 Welcome to **LAB661**. You will take **Contoso DevBot**, a coding agent with no guardrails, and make it safe without editing a single line of the agent.
@@ -24,6 +55,8 @@ The core lab is one full turn of a measure, change, and re-measure loop.
 
 Nothing in this lab runs a real dangerous command. DevBot's tools are simulated, and the secret it leaks is a fake.
 
+>[!Note] **Success:** you know what you will build and how to use these instructions.
+
 ===
 
 # Check your lab environment
@@ -43,6 +76,7 @@ Confirm every tool the lab needs is installed.
      ok    acs-generator present
      ok    agent-control-specification present
      ok    opa on PATH (Version: 0.70.0)
+     ok    node on PATH
      ok    devbot agent importable (PYTHONPATH=src)
 
    All checks passed. Run: bash src/scripts/run-offline-loop.sh

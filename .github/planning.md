@@ -77,6 +77,61 @@ source of truth for the self-paced path and CI.
 
 ### Decisions to make
 
+- Decided (2026-10-27): attendees use a local clone on the VM and run every command in plain PowerShell. Next: validate and pre-install the Python and Node dependencies on the image, port the scripts, and switch the Skillable pages to PowerShell commands.
+
+### Original Skillable profile instructions (kept for reference)
+
+The lab profile's starting instructions, before `skillable-copy.md` replaced
+them. The VM sign-in, credential tokens, and GHE sign-in steps now live on the
+"Sign in to your lab" page in `instructions/skillable/core-0-setup-environment.md`.
+
+````markdown
+## Welcome to Your Lab Environment
+
+To begin, log into the virtual machine using the following credentials: +++@lab.VirtualMachine(Win11-Pro-Base).Password+++
+
+Your Azure subscription details are:
+- Username: +++@lab.CloudPortalCredential(User1).Username+++
+- Password: +++@lab.CloudPortalCredential(User1).Password+++
+- TAP: +++@lab.CloudPortalCredential(User1).AccessToken+++
+
+**Note:** Text formatted as an +++example+++ represents type text. Clicking on this text will automatically insert it to prevent any typing errors.
+
+To edit the lab manual, click the hamburger menu in the top-right corner and select **"Edit Instructions"**. This will open the editor where you can modify the instructions.
+
+Instructions are written in Markdown. For detailed guidance on syntax, please refer to the following documentation:
+
+[Creating Instructions with Markdown Syntax](https://docs.skillable.com/docs/creating-instructions-with-markdown-syntax)
+
+If you want to manage your instructions outside of Skillable Studio like Github, please refer to the following documentation:
+
+[Manage Instructions Outside of Studio](https://docs.skillable.com/docs/manage-instructions-outside-of-studio)
+
+For saving changes made to the virtual machine, please refer to this guide:
+
+[Committing Changes to a Virtual Machine](https://docs.skillable.com/docs/committing-changes-to-a-lab)
+
+**Note:** When prompted, select **"Commit my changes and update this lab profile"** to ensure your changes are saved.
+
+Changes made to the virtual machine will take effect immediately after committing. You may restart the lab instance if you wish to view these changes.
+
+**Note:** Changes to the instructions will be saved automatically, so the commit process applies only to modifications to the virtual machine.
+
+Should you require any assistance, feel free to contact us.
+
+**Please remove this message once it is no longer needed.**
+
+===
+
+a. login at +++https://github.com/enterprises/skillable-events/sso+++  with Azure slice (GHE activated) credentials
+
+b. keep login page from SSO portal above open in browser, open VS Code
+
+c. select Continue with Github login option in VS Code
+!IMAGE[e4hal04w.png](instructions359309/e4hal04w.png)
+
+d. authenticate profile through SSO portal and GHE is now active in their VS Code instance
+````
 - Codespace from the VM (no port needed) or local Windows (this section)?
 - If local Windows: do More 0 and 1 run on the VM, which needs the `setup.ps1`
   port, or stay self-paced only?

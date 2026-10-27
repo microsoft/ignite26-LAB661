@@ -172,4 +172,9 @@ if __name__ == "__main__":
     import sys
 
     prompt = " ".join(sys.argv[1:]) or "How do I see recent commits?"
-    print(f"[{classify(prompt)}] {chat(prompt)}")
+    reply = chat(prompt)
+    # classify() reads the prompt, so it only describes the reply in offline mode.
+    if os.environ.get("DEVBOT_MODE", "offline").lower() == "live":
+        print(reply)
+    else:
+        print(f"[{classify(prompt)}] {reply}")

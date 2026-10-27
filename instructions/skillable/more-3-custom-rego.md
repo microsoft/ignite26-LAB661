@@ -31,11 +31,48 @@ A flat deny throws away the whole answer. A `transform` verdict keeps the useful
 
 ## Write your own
 
-1. [] In `src/policy/examples/redact.rego`, add a rule that denies an output containing `DROP TABLE`.
-1. [] Run `opa check` again, then test your rule with `opa eval`.
+1. [] Work on a copy, so the example stays as shipped.
 
->[+Hint] How should the new rule fit in?
+   ```bash
+   mkdir -p artifacts/custom-rego
+   cp src/policy/examples/redact.rego artifacts/custom-rego/
+   ```
+
+1. [] In `artifacts/custom-rego/redact.rego`, add a rule that denies an output containing `DROP TABLE`.
+
+   >[!Alert] **Edit the copy before you test.** If you skip the edit, the test prints `allow` instead of `deny`, because the copied file has no `DROP TABLE` rule yet. Stuck? Open the hint below.
+
+1. [] Check it compiles.
+
+   ++opa check artifacts/custom-rego++
+
+1. [] Test it. This prints `deny`.
+
+   ++echo '{"intervention_point":"output","policy_target":{"value":"then run DROP TABLE users;"}}' | opa eval -I -d artifacts/custom-rego 'data.workshop.custom.output_verdict.decision' -f raw++
+
+1. [] Confirm the redaction still applies. This prints `transform`.
+
+   ++echo '{"intervention_point":"output","policy_target":{"value":"your key is sk-live-51H8XYZ and it is live"}}' | opa eval -I -d artifacts/custom-rego 'data.workshop.custom.output_verdict.decision' -f raw++
+
+1. [] Confirm a benign output is still allowed. This prints `allow`.
+
+   ++echo '{"intervention_point":"output","policy_target":{"value":"run git log"}}' | opa eval -I -d artifacts/custom-rego 'data.workshop.custom.output_verdict.decision' -f raw++
+
+>[+Hint] One solution
 >
-> Add it to the same `else` chain, with the same guard on `output`, a condition such as `contains(upper(input.policy_target.value), "DROP TABLE")`, and a `deny` verdict.
+> Append the rule to the end of the copy. Run this once; running it twice adds the rule twice. `upper` makes the match case-insensitive. The redaction rule comes first, so an output with both a secret and `DROP TABLE` is redacted, not denied.
+>
+> ```bash
+> cat >> artifacts/custom-rego/redact.rego <<'EOF'
+> else := {
+>     "decision": "deny",
+>     "reason": "sql_destruction",
+>     "message": "Blocks endorsing a DROP TABLE statement.",
+> } if {
+>     input.intervention_point == "output"
+>     contains(upper(input.policy_target.value), "DROP TABLE")
+> }
+> EOF
+> ```
 
 >[!Note] **Success:** you can read, write, and test an ACS rule in isolation, so you can review anything the generator produces.

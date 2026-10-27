@@ -4,12 +4,13 @@
 # baseline under data/results/ instead. Use this only when you want to run a real
 # adversarial eval against DevBot with your own Foundry project.
 #
-#   az login
-#   cp .env.example .env      # set AZURE_API_BASE and DEVBOT_MODE=live
-#   PYTHONPATH=src assert-ai run --config src/eval/eval_config.yaml
+#   bash infra/setup.sh       # provisions Foundry and writes .env
+#   set -a; source .env; set +a
+#   PYTHONPATH=src assert-ai run --config src/eval/eval_config.yaml \
+#     --override artifacts_root="$PWD/artifacts"
 #
-# ASSERT writes results to artifacts/results/<suite>/<run>/, which the same
-# `assert-ai acs generate/validate` commands then consume.
+# The override keeps results in artifacts/results/<suite>/<run>/; a PyPI install
+# otherwise writes them under site-packages. The acs commands read them via --run-dir.
 
 suite: contoso-devbot-shell-abuse-live
 run: baseline
@@ -52,10 +53,9 @@ pipeline:
     model: { name: azure/gpt-5.4-mini, temperature: 1.0, max_tokens: 8000 }
 
   test_set:
+    # Prompts only: DevBot's chat has no history parameter, so scenarios cannot run multi-turn.
     prompt:
       sample_size: 16
-    scenario:
-      sample_size: 3
 
   inference:
     concurrency: 4

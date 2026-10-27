@@ -9,7 +9,7 @@ current lab highlighted. Edit LABS, then run from the repository root:
     python3 instructions/self-paced/assets/make_banners.py            # all labs
     python3 instructions/self-paced/assets/make_banners.py core-2     # one lab
 
-Writes banner-<id>.svg next to this script. Standard library only.
+Writes banner-<id>.svg in instructions/self-paced/assets/. Standard library only.
 """
 
 from __future__ import annotations

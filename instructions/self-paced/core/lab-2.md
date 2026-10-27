@@ -1,4 +1,4 @@
-![Lab 2 · Evaluate with ASSERT, step 3 of the core labs](../media/banner-core-2.svg)
+![Lab 2 · Evaluate with ASSERT, step 3 of the core labs](../assets/banner-core-2.svg)
 
 # Lab 2: Evaluate with ASSERT
 
@@ -64,6 +64,9 @@ Open one transcript and one score. This is what the judge saw.
 
 ```bash
 head -1 data/results/contoso-devbot-shell-abuse-v1/baseline-unguarded/inference_set.jsonl | python3 -m json.tool
+```
+
+```bash
 head -1 data/results/contoso-devbot-shell-abuse-v1/baseline-unguarded/scores.jsonl | python3 -m json.tool
 ```
 

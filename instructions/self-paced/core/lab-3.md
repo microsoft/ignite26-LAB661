@@ -1,4 +1,4 @@
-![Lab 3 · Generate and validate an ACS policy, step 4 of the core labs](../media/banner-core-3.svg)
+![Lab 3 · Generate and validate an ACS policy, step 4 of the core labs](../assets/banner-core-3.svg)
 
 # Lab 3: Generate and validate an ACS policy
 
@@ -121,12 +121,23 @@ command succeeds.
 
 ## Step 3.5: Try to break the gate (optional)
 
-Convince yourself the gate is real. Comment out one rule in the `PLAN` in
-`src/policy/generate_offline.py`, for example the `secret_disclosure` rule,
-regenerate, and re-validate.
+Convince yourself the gate is real.
+
+> [!WARNING]
+> **Edit the generator before running the commands below.** In
+> `src/policy/generate_offline.py`, comment out the entire `secret_disclosure`
+> rule block in `PLAN` and save the file. Without this edit, regeneration keeps
+> the rule and validation will still pass 5/5.
+
+**First regenerate.**
 
 ```bash
 PYTHONPATH=src python3 src/policy/generate_offline.py
+```
+
+**Then validate.**
+
+```bash
 assert-ai acs validate \
   --manifest artifacts/acs/contoso-devbot-shell-abuse-v1/manifest.yaml \
   --run-dir data/results/contoso-devbot-shell-abuse-v1/baseline-unguarded \
@@ -137,7 +148,16 @@ Now validation drops to 3 of 5 strongly blocked and the command exits non-zero.
 Removing one rule cost you two rows. The `Secret disclosure` row falls through,
 and so does `Embedded-instruction obedience`, because the injected-instruction
 case leaked the same secret and was caught by that same rule. One deleted rule,
-two reopened holes. Restore the rule and regenerate before moving on.
+two reopened holes.
+
+> [!WARNING]
+> **Restore the rule before moving on.** Uncomment the entire
+> `secret_disclosure` rule block in `PLAN` and save the file. Then regenerate
+> the policy:
+>
+> ```bash
+> PYTHONPATH=src python3 src/policy/generate_offline.py
+> ```
 
 ---
 

@@ -18,15 +18,17 @@ Run every command from the repository root.
 |------|---------|
 | `src/devbot/` | The DevBot agent and its simulated tools |
 | `src/eval/` | Fixture builder, findings viewer, live eval config |
-| `src/policy/` | Offline generator, guard demo, verify script, example Rego |
+| `src/policy/` | Offline generator, guard demo, verify script, example Rego, and More lab helpers (`widen_destructive_rule.py`, `drop_rule.py`, `tool_call_demo.py`) that regenerate a policy without editing source |
 | `src/scripts/` | `check-setup.sh`, `run-offline-loop.sh` |
+| `src/examples/` | Read-only copy of ASSERT's billing support example (MIT), used in More 0. Not run |
 | `data/results/` | Committed baseline run and behavior taxonomy |
 | `infra/` | `setup.sh`, which provisions Foundry for the live track |
 | `instructions/self-paced/core/` | Core labs 0 through 4 |
 | `instructions/self-paced/more/` | More labs 0 through 6, deeper topics |
-| `instructions/skillable/` | The same core labs as a Skillable paged manual |
-| `docs/` | Overview, troubleshooting, diagrams |
+| `instructions/skillable/` | The same core and More labs as a Skillable paged manual |
+| `docs/` | Overview, troubleshooting, diagrams, and the read-only `developer-guide.ipynb` (banners from `docs/assets/make_guide_banners.py`) |
 | `artifacts/` | Generated policy and live runs (gitignored) |
+| `examples/`, `tests/`, `src/devbot/acs/`, `src/devbot/guarded.py` | Written by the `run-assert-eval` skill in More 0. Lab output, gitignored |
 
 ## Hard rules
 
@@ -56,7 +58,7 @@ Run every command from the repository root.
 - Changing a lab command? Run it and update the shown output to match, in both
   `instructions/self-paced/` and `instructions/skillable/`.
 - Renaming, adding, or retiming a lab? Update `LABS` in
-  `instructions/self-paced/media/make_banners.py` and run it to regenerate the
+  `instructions/self-paced/assets/make_banners.py` and run it to regenerate the
   progress banners.
 
 ## Validation

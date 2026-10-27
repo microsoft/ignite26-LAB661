@@ -21,8 +21,9 @@ fake that only looks real.
 |--------|----------|---------|
 | [`devbot/`](devbot/) | The agent. `agent.py` exposes one callable, `chat(message)`, with a deterministic offline mode (the default) and a live mode that calls a real model with your Azure sign-in. `tools.py` holds the simulated tools. `instructions.md` is the deliberately weak system prompt for live mode. | Core Lab 1 |
 | [`eval/`](eval/) | The ASSERT side. `build_baseline_fixture.py` rebuilds the committed baseline run in `data/results/`. `show_findings.py` reads it the way the ACS adapter does. `eval_config.yaml` is the config for a real `assert-ai run`. | Core Lab 2, More 0 and 1 |
-| [`policy/`](policy/) | The ACS side. `generate_offline.py` compiles the findings into a policy in `artifacts/acs/`. `guard_demo.py` runs DevBot behind it. `verify_reeval.py` measures attack success before and after. `examples/redact.rego` is a hand-written rule. | Core Labs 3 and 4, More 3 |
+| [`policy/`](policy/) | The ACS side. `generate_offline.py` compiles the findings into a policy in `artifacts/acs/`. `guard_demo.py` runs DevBot behind it. `verify_reeval.py` measures attack success before and after. `widen_destructive_rule.py` regenerates the policy with a regex that closes the `rm -fr` bypass. `drop_rule.py` regenerates it with one rule removed, to fail the CI gate. `tool_call_demo.py` writes a demo policy with a `pre_tool_call` rule to `artifacts/acs/toolcall-demo`. `examples/redact.rego` is a hand-written rule. | Core Labs 3 and 4, More 3 to 6 |
 | [`scripts/`](scripts/) | `check-setup.sh` verifies your environment. `run-offline-loop.sh` runs all five stages end to end. | Core Lab 0 |
+| [`examples/`](examples/) | A read-only copy of ASSERT's billing support example, with one config per risk. Not run by the lab. | More 0 |
 
 ## Run it
 

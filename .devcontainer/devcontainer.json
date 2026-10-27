@@ -7,7 +7,11 @@
         "ghcr.io/devcontainers/features/azure-cli:1": {
             "installBicep": true
         },
-        "ghcr.io/devcontainers/features/copilot-cli:1": {}
+        "ghcr.io/devcontainers/features/copilot-cli:1": {},
+        // Copilot uses node for web retrieval when the run-assert-eval skill researches dimensions.
+        "ghcr.io/devcontainers/features/node:1": {
+            "version": "lts"
+        }
     },
     "remoteUser": "vscode",
     "updateContentCommand": "bash .devcontainer/post-create.sh",

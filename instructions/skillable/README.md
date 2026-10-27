@@ -20,9 +20,10 @@ do not install or clone anything.
 
 | Attendee needs | For | Notes |
 |----------------|-----|-------|
-| VS Code or a Codespace with this repository open in its dev container | All labs | The dev container installs everything else |
-| An Azure subscription where they can create resources and assign roles | More 0 and 1 | Needs quota for `gpt-5.4-mini` and `gpt-5.4` |
-| GitHub Copilot in VS Code, in agent mode | More 0 | Runs the `run-assert-eval` skill |
+| A Windows 11 VM (`Win11-Pro-Base`) with VS Code and this repository already on it | All labs | Attendees do not install or clone anything |
+| GitHub Enterprise sign-in through `https://github.com/enterprises/skillable-events/sso`, using the attendee's **Azure** credentials | More 0 | GitHub Copilot works only through this sign-in. The first page walks attendees through it |
+| A pre-provisioned Foundry project with `gpt-5.4-mini` and `gpt-5.4` deployed, plus Application Insights | More 0 and 1 | `infra/setup.sh --env-only` finds them and writes `.env` |
+| `@lab.CloudPortalCredential(User1)` Username, Password and AccessToken | Sign-in, More 0 | Shown on the first page with `+++` type text |
 
 No lab uses an API key. The live labs sign in with the attendee's Azure identity
 (`az login`).
@@ -39,7 +40,7 @@ Work through these in order.
 
 | Page file | Skillable pages | Time |
 |-----------|-----------------|------|
-| [core-0-setup-environment.md](core-0-setup-environment.md) | Get started with LAB661, Check your lab environment, Run the whole loop once | 10 min |
+| [core-0-setup-environment.md](core-0-setup-environment.md) | Sign in to your lab, Get started with LAB661, Check your lab environment, Run the whole loop once | 10 min |
 | [core-1-meet-devbot.md](core-1-meet-devbot.md) | Meet DevBot, Learn the ACS vocabulary | 10 min |
 | [core-2-evaluate-assert.md](core-2-evaluate-assert.md) | Capture the baseline, Read the findings | 15 min |
 | [core-3-generate-policy.md](core-3-generate-policy.md) | Generate the policy, Validate the policy, Try to break the gate | 15 min |
@@ -48,13 +49,13 @@ Work through these in order.
 ## More labs
 
 These labs are optional. We recommend following them in the numbered order
-below. More 0 starts with the Azure setup and live checks. Without an Azure
-subscription, start at More 2.
+below. More 0 starts by connecting to the pre-provisioned Azure resources.
+Skillable tears the environment down afterward, so there is no cleanup page.
 
 | Page file | Skillable pages | Needs Azure |
 |-----------|-----------------|-------------|
-| [more-0-assert-skill.md](more-0-assert-skill.md) | Set up Microsoft Foundry, Configure your environment, Meet the run-assert-eval skill, Name one risk, Prove the fix | Yes |
-| [more-1-live-run.md](more-1-live-run.md) | Go live by hand, Generate a live policy, Clean up Azure | Yes |
+| [more-0-assert-skill.md](more-0-assert-skill.md) | Connect to Microsoft Foundry, Validate your environment, Meet the run-assert-eval skill, Name one risk, Prove the fix | Yes |
+| [more-1-live-run.md](more-1-live-run.md) | Go live by hand, Generate a live policy | Yes |
 | [more-2-viewer.md](more-2-viewer.md) | Browse runs in the ASSERT viewer | No |
 | [more-3-custom-rego.md](more-3-custom-rego.md) | Author custom Rego | No |
 | [more-4-red-teaming.md](more-4-red-teaming.md) | Adaptive red-teaming, Close the gap | No |
@@ -110,4 +111,4 @@ These scripts are listed for reference. You do not need to run either script now
 | Script | What it does | When it runs |
 |--------|--------------|--------------|
 | [`.devcontainer/post-create.sh`](../../.devcontainer/post-create.sh) | Checks Python, the Azure CLI, `jq` and `openssl`, installs `opa`, and installs the pinned packages in [`requirements.txt`](../../requirements.txt) | Automatically, when the dev container is created |
-| [`infra/setup.sh`](../../infra/setup.sh) | Signs in to Azure, creates a Foundry project with `gpt-5.4-mini` and `gpt-5.4`, sets up Application Insights, and grants the roles to call the models without a key | By the attendee, on the first More 0 page |
+| [`infra/setup.sh`](../../infra/setup.sh) | With `--env-only`, signs in to Azure, finds the pre-provisioned Foundry project and Application Insights, and writes `.env`. It creates nothing | By the attendee, on the first More 0 page |
