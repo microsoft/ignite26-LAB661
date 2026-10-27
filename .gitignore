@@ -427,3 +427,12 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
+
+# Never commit contents of this folder
+.DO-NOT-COMMIT/
+
+# Written by the run-assert-eval skill in More 0 (lab output)
+/examples/
+/tests/
+/src/devbot/acs/
+/src/devbot/guarded.py

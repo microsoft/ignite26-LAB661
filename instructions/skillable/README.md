@@ -1,0 +1,114 @@
+# LAB661 Skillable manual
+
+The in-venue version of LAB661. Attendees follow a paged manual inside a
+Skillable lab, with the environment prepared for them. They secure Contoso
+DevBot, a deliberately under-governed coding agent, with a policy generated from
+evidence of its own misbehavior. ASSERT finds what DevBot does wrong. Agent
+Control Specification (ACS) blocks it at runtime.
+
+This manual has the same labs as the [self-paced guide](../self-paced/README.md),
+rewritten as short Skillable pages with checkboxes and copy text. Each page file
+below holds one lab, split into Skillable pages by `===`.
+
+- **Core:** about 60 minutes, offline, no Azure needed.
+- **More:** optional, one topic each. More 0 and 1 need Azure.
+
+## Prerequisites
+
+The lab profile must give every attendee these before the lab starts. Attendees
+do not install or clone anything.
+
+| Attendee needs | For | Notes |
+|----------------|-----|-------|
+| A Windows 11 VM (`Win11-Pro-Base`) with VS Code and this repository already on it | All labs | Attendees do not install or clone anything |
+| GitHub Enterprise sign-in through `https://github.com/enterprises/skillable-events/sso`, using the attendee's **Azure** credentials | More 0 | GitHub Copilot works only through this sign-in. The first page walks attendees through it |
+| A pre-provisioned Foundry project with `gpt-5.4-mini` and `gpt-5.4` deployed, plus Application Insights | More 0 and 1 | `infra/setup.sh --env-only` finds them and writes `.env` |
+| `@lab.CloudPortalCredential(User1)` Username, Password and AccessToken | Sign-in, More 0 | Shown on the first page with `+++` type text |
+
+No lab uses an API key. The live labs sign in with the attendee's Azure identity
+(`az login`).
+
+## Quickstart
+
+1. Open the repository in a Codespace, or in VS Code with **Dev Containers: Reopen in Container**.
+2. Wait for the container setup to finish.
+3. Open a terminal. Run every command in this guide from the repository root.
+
+## Core labs
+
+Work through these in order.
+
+| Page file | Skillable pages | Time |
+|-----------|-----------------|------|
+| [core-0-setup-environment.md](core-0-setup-environment.md) | Sign in to your lab, Get started with LAB661, Check your lab environment, Run the whole loop once | 10 min |
+| [core-1-meet-devbot.md](core-1-meet-devbot.md) | Meet DevBot, Learn the ACS vocabulary | 10 min |
+| [core-2-evaluate-assert.md](core-2-evaluate-assert.md) | Capture the baseline, Read the findings | 15 min |
+| [core-3-generate-policy.md](core-3-generate-policy.md) | Generate the policy, Validate the policy, Try to break the gate | 15 min |
+| [core-4-guard-verify.md](core-4-guard-verify.md) | Guard DevBot at runtime, Measure the improvement, Choose a More lab | 10 min |
+
+## More labs
+
+These labs are optional. We recommend following them in the numbered order
+below. More 0 starts by connecting to the pre-provisioned Azure resources.
+Skillable tears the environment down afterward, so there is no cleanup page.
+
+| Page file | Skillable pages | Needs Azure |
+|-----------|-----------------|-------------|
+| [more-0-assert-skill.md](more-0-assert-skill.md) | Connect to Microsoft Foundry, Validate your environment, Meet the run-assert-eval skill, Name one risk, Prove the fix | Yes |
+| [more-1-live-run.md](more-1-live-run.md) | Go live by hand, Generate a live policy | Yes |
+| [more-2-viewer.md](more-2-viewer.md) | Browse runs in the ASSERT viewer | No |
+| [more-3-custom-rego.md](more-3-custom-rego.md) | Author custom Rego | No |
+| [more-4-red-teaming.md](more-4-red-teaming.md) | Adaptive red-teaming, Close the gap | No |
+| [more-5-intervention-points.md](more-5-intervention-points.md) | Intervention points | No |
+| [more-6-ci-gate.md](more-6-ci-gate.md) | Gate CI on the policy, Read the workflow | No |
+
+## If something goes wrong
+
+Attendees raise a hand for a proctor. Proctors can use
+[troubleshooting](../../docs/troubleshooting.md).
+
+## Maintainer notes
+
+### Syntax
+
+Write every page in Skillable Markdown. The reference is
+[Creating instructions with Markdown syntax](https://docs.skillable.com/docs/creating-instructions-with-markdown-syntax).
+GitHub does not render Skillable-only syntax such as `>[!Knowledge]`, `1. []`
+checkboxes or `++copy text++`, so check the result in Skillable Studio.
+
+Conventions used here:
+
+- Start each Skillable page with a `# ` heading of 40 characters or fewer. It labels the **Next** button.
+- Use `1. []` for steps the attendee performs, and `++text++` for commands to copy.
+- Put fixes and answers in `>[+Hint]` blocks, never in the step itself.
+- End every page with a `>[!Note] **Success:**` line that states the visible result.
+- Use `-nocopy` on code blocks that show expected output.
+
+### Build the manual
+
+Page files are named `core-N-slug.md` and `more-N-slug.md`. The number sets the
+order, and core comes before More. After you add, remove or edit a page, run:
+
+```bash
+./instructions/skillable/generate-skillable-copy.sh
+```
+
+It writes [skillable-copy.md](skillable-copy.md), every page joined by `===`.
+Paste that whole file into the lab profile (**Edit Instructions**).
+
+To have Skillable pull each page live from GitHub instead, run with
+`MODE=include`. It writes one `[!include]` line per page. This needs a public
+repository, and you can set `REPO` and `BRANCH` to choose the source.
+
+```bash
+MODE=include BRANCH=main ./instructions/skillable/generate-skillable-copy.sh
+```
+
+## Scripts
+
+These scripts are listed for reference. You do not need to run either script now.
+
+| Script | What it does | When it runs |
+|--------|--------------|--------------|
+| [`.devcontainer/post-create.sh`](../../.devcontainer/post-create.sh) | Checks Python, the Azure CLI, `jq` and `openssl`, installs `opa`, and installs the pinned packages in [`requirements.txt`](../../requirements.txt) | Automatically, when the dev container is created |
+| [`infra/setup.sh`](../../infra/setup.sh) | With `--env-only`, signs in to Azure, finds the pre-provisioned Foundry project and Application Insights, and writes `.env`. It creates nothing | By the attendee, on the first More 0 page |
