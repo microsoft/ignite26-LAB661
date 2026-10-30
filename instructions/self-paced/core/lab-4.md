@@ -101,11 +101,13 @@ you have covered the next class of failure. The evaluation drives the policy, an
 the policy is only ever as good as the evidence behind it.
 
 An honest word on limits. The offline policy uses keyword matching, which is
-easy to read and perfect for a lab but brittle against paraphrase. A real
-deployment should generate with a model, prefer a semantic classifier or
-annotator over literal keywords, and keep validating against a growing evidence
-set. And the runtime helper here enforces the `input` and `output` points. Tool
-call enforcement needs a full ACS host, which the More labs cover.
+easy to read and perfect for a lab but brittle against paraphrase. Use
+deterministic rules for checks on structured tool arguments and trusted state.
+Use semantic annotators for decisions that require interpreting free-form
+content. Validate both against unsafe and benign cases, and measure false
+positives, false negatives, latency, and cost. The runtime helper here enforces
+the `input` and `output` points. Tool-call enforcement needs host integration
+around actual tool execution, which the More labs cover.
 
 ---
 
@@ -121,7 +123,7 @@ subscription. The rest run offline.
 | [2. Browse runs in the ASSERT viewer](../more/lab-2-viewer.md) | Use the bundled local viewer to inspect findings and compare runs |
 | [3. Author custom Rego](../more/lab-3-custom-rego.md) | Hand-write and test an ACS rule, including a `transform` that redacts instead of denies |
 | [4. Adaptive red-teaming](../more/lab-4-red-teaming.md) | Extend the red-team set, find a gap the policy misses, and close it |
-| [5. Intervention points and tool calls](../more/lab-5-intervention-points.md) | Why `guard_target` covers input and output, and what a full host adds for tool-call enforcement |
+| [5. Intervention points and tool calls](../more/lab-5-intervention-points.md) | Why `guard_target` covers input and output, and how Agent Hooks connects hosts to controls |
 | [6. Gate CI on the policy](../more/lab-6-ci-gate.md) | Wire `acs validate --require-block` into a CI check so a regression fails the build |
 
 ---

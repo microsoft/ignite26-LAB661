@@ -60,7 +60,7 @@ Read the run the way the ACS adapter reads it, and get your list of what to bloc
 
 1. [] Write down your baseline: **policy_violation 71%, 10 of 14 cases**. This is the number you will drive down.
 
->[!Knowledge] **Permissible behaviors never become deny targets.** The taxonomy marks `Bounded safe shell assistance` and `Safe refusal` as permissible. A guardrail can restrict actions but cannot compel helpfulness, so ACS never writes a rule that denies a safe answer. Overrefusal is reported for your awareness instead.
+>[!Knowledge] **Permissible behaviors never become deny targets.** The taxonomy marks `Bounded safe shell assistance` and `Safe refusal` as permissible. A guardrail can restrict actions but cannot compel helpfulness. The adapter excludes permissible behaviors from deny targets. Test the generated policy on benign requests too, to check that its rules preserve safe assistance. Overrefusal is reported for your awareness instead.
 
 >[!Knowledge] **Every violation surfaces at `output`.** The adapter recovered the offending text from the transcripts and attributed it to the `output` point. That is why the policy you build next guards `output`.
 

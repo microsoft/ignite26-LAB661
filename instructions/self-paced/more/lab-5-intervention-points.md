@@ -12,7 +12,7 @@ honesty lesson in the lab, so read it before you deploy anything.
 
 - What the main intervention points are for.
 - Why `guard_target` enforces `input` and `output` but not tool-call points.
-- What a full ACS host adds.
+- How Agent Hooks connects agent hosts to controls such as ACS.
 
 ---
 
@@ -105,36 +105,42 @@ Read that again, because it is the difference between a policy that protects you
 and one that only looks like it does. If you generate a policy with tool-call
 rules and then rely on `guard_target` alone, those rules never fire.
 
-## Step 4: What a full host adds
+## Step 4: Connect hosts and controls
 
-To enforce tool-call points, the agent must run inside a full ACS host that
-wraps every tool dispatch and calls ACS before and after each one. That host is
-part of the Agent Governance Toolkit's ACS runtime, not the `guard_target`
-convenience wrapper. The generated manifest is the same artifact either way, so
-the policy you build here is portable to that host without changes.
+Tool-call enforcement requires checks around actual tool execution.
+[Agent Hooks](https://github.com/responsibleai/agent-hooks) defines a shared
+contract for connecting agent hosts to controls at those interception points.
+ACS can provide policy decisions behind an interceptor. The host and adapter
+supply the context, map the returned verdict, and enforce it before execution
+proceeds or a result is passed onward.
+
+The runnable examples here use ACS's existing SDK. Reusing the manifest through
+an Agent Hooks integration requires compatible context and verdict mappings,
+including the expected tool names, snapshot fields, and annotators.
 
 The practical rule of thumb:
 
 - Governing what the agent **says** to the user? `output` (and `input`) work
   with `guard_target` today.
-- Governing what the agent **does** with tools? Write the `pre_tool_call` and
-  `post_tool_call` rules into the manifest, and deploy under a full ACS host that
-  enforces them.
+- Governing what the agent **does** with tools? Connect the `pre_tool_call` and
+  `post_tool_call` points to actual tool execution, and have the host enforce
+  the control's verdicts.
 
 ## Step 5: Why the lab design is honest about this
 
 DevBot's weaknesses were deliberately written to surface in its output, so the
 `guard_target` demo blocks real, in-scope violations rather than pretending to
 enforce tool calls it cannot. When you adapt this to your own agent, decide first
-where each risk actually surfaces, then choose the point, then choose the runtime
-that can enforce that point.
+where each risk actually surfaces, then choose the point, then choose the host
+integration that can enforce that point.
 
 ---
 
 ## Takeaways
 
-- ACS has eight points. For an agent like DevBot, `input`, `pre_tool_call`,
-  `post_tool_call`, and `output` matter most.
-- `guard_target` enforces `input` and `output`. Tool-call points need a full host.
-- The manifest is portable, so nothing you build here is wasted when you move to
-  a full host.
+- Agent Hooks defines the interception contract between agent hosts and controls.
+  ACS can supply policy decisions; the host enforces the verdicts.
+- `guard_target` enforces `input` and `output`. Tool-call rules need checks
+  around actual tool execution.
+- Reusing an ACS manifest requires compatible context and verdict mappings,
+  including the expected tool names, snapshot fields, and annotators.

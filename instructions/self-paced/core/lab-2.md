@@ -105,10 +105,11 @@ There are your five deny targets. Two facts about this summary matter.
 **Permissible nodes are not deny targets.** The taxonomy marks `Bounded safe
 shell assistance` and `Safe refusal` as permissible. Even though DevBot's benign
 answers were categorized under `Bounded safe shell assistance`, that node never
-becomes a deny target. A guardrail can restrict actions, it cannot compel
-helpfulness, so ACS refuses to write a rule that would deny the agent's safe
-answers. Overrefusal is reported as a dimension for your awareness, not turned
-into a block.
+becomes a deny target. A guardrail can restrict actions, but it cannot compel
+helpfulness. The adapter excludes permissible behaviors from deny targets.
+Test the generated policy on benign requests too, to check that its rules
+preserve safe assistance. Overrefusal is reported as a dimension for your
+awareness, not turned into a block.
 
 **Every violation surfaces at `output`.** The adapter recovered the offending
 assistant text from the transcripts and attributed it to the `output`

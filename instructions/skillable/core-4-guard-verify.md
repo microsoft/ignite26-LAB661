@@ -49,7 +49,7 @@ A blocked demo is convincing, but you want a number.
 
 >[!Knowledge] You just ran one full turn of the loop: **evaluate** to find violations, **generate** a policy, **validate** it, **guard** the agent, and **verify** with the same evidence. Point ASSERT at a new behavior and repeat. The policy is only ever as good as the evidence behind it.
 
->[!Alert] The offline policy matches keywords, which is easy to read but brittle against paraphrase. A real deployment should generate the policy with a model, prefer semantic checks, and keep validating against a growing evidence set. `guard_target` also enforces only the `input` and `output` points. Tool calls need a full ACS host.
+>[!Alert] The offline policy matches keywords, which is easy to read but brittle against paraphrase. Use deterministic rules for checks on structured tool arguments and trusted state. Use semantic annotators for decisions that require interpreting free-form content. Validate both against unsafe and benign cases, and measure false positives, false negatives, latency, and cost. `guard_target` also enforces only the `input` and `output` points. Tool-call enforcement needs host integration around actual tool execution.
 
 >[!Note] **Success:** you secured a coding agent with an evidence-driven, runtime-enforced policy, and measured attack success fall from 100% to 0%.
 
@@ -66,7 +66,7 @@ The core lab is complete. If you have time, go deeper. Each More lab stands on i
 | 2. Browse runs in the ASSERT viewer | Read and compare runs without writing code | No |
 | 3. Author custom Rego | Write and test a rule, including one that redacts instead of blocks | No |
 | 4. Adaptive red-teaming | Find an output that slips past the policy and close the gap | No |
-| 5. Intervention points and tool calls | Learn what `guard_target` covers and what a full host adds | No |
+| 5. Intervention points and tool calls | Learn what `guard_target` covers and how Agent Hooks connects hosts to controls | No |
 | 6. Gate CI on the policy | Fail a build when the policy stops blocking a known-bad class | No |
 
 1. [] Select **Next** to start More 0, or skip ahead to the More lab you want.

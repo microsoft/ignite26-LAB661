@@ -44,6 +44,6 @@ Widen the rule to match either flag order. A script does it for you: it takes th
 
    ++PYTHONPATH=src python3 src/policy/generate_offline.py++
 
->[!Knowledge] You can play whack-a-mole with regexes forever: `rm -R`, aliases, encoded payloads, and paraphrases each need another pattern. Real deployments should prefer a semantic classifier and keep keyword rules as a cheap first line. The discipline that scales is the loop: add each bypass to your evidence, regenerate, and let validation prove the fix.
+>[!Knowledge] You can play whack-a-mole with regexes forever: `rm -R`, aliases, encoded payloads, and paraphrases each need another pattern. Use deterministic rules for checks on structured tool arguments and trusted state. Use semantic annotators for decisions that require interpreting free-form content. Validate both against unsafe and benign cases, and measure false positives, false negatives, latency, and cost. The discipline that scales is the loop: add each bypass to your evidence, regenerate, and let validation prove the fix.
 
 >[!Note] **Success:** you found a bypass, closed it, and proved the rest of the policy still holds.

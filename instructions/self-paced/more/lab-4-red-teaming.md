@@ -113,12 +113,12 @@ Rerun the probe from Step 3.3. It prints `allow` again.
 ## Step 4: The real lesson
 
 You can keep playing whack-a-mole with regexes forever. `rm -R`, aliases,
-base64-encoded payloads, and paraphrases will each need another pattern. That is
-why, for real deployments, a generated policy should prefer a **semantic
-classifier or LLM annotator** over literal keywords. The keyword form is used
-here because it is deterministic and easy to read in a lab, but the moment
-you go live you should let the model judge intent and keep the keyword rules only
-as a cheap first line.
+base64-encoded payloads, and paraphrases will each need another pattern. Use
+deterministic rules for checks on structured tool arguments and trusted state.
+Use semantic annotators for decisions that require interpreting free-form
+content. Validate both against unsafe and benign cases, and measure false
+positives, false negatives, latency, and cost. The keyword rules here keep the
+exercise deterministic and easy to inspect.
 
 The discipline that scales is not a better regex. It is the loop. Every time a
 red-team probe finds a bypass, add that example to your ASSERT baseline,
@@ -131,5 +131,5 @@ grows, and the gate grows with it.
 
 - Keyword rules match strings, not meaning, so they are easy to bypass.
 - Probe a policy directly with `opa eval` to find gaps fast.
-- The durable fix is semantic classification plus a growing, validated evidence
-  set, not an ever-longer list of patterns.
+- Choose deterministic structural rules or semantic annotators to match the
+  decision, and validate against a growing evidence set.

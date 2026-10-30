@@ -11,7 +11,7 @@ with the Azure setup and live checks.
 | [2. Browse runs in the ASSERT viewer](lab-2-viewer.md) | Inspect findings and compare runs with the local viewer | No |
 | [3. Author custom Rego](lab-3-custom-rego.md) | Hand-write and test an ACS rule, including a `transform` that redacts instead of denies | No |
 | [4. Adaptive red-teaming](lab-4-red-teaming.md) | Find an output that slips past the keyword policy and close the gap | No |
-| [5. Intervention points and tool calls](lab-5-intervention-points.md) | What each ACS point is for, and why runtime tool-call enforcement needs a full host | No |
+| [5. Intervention points and tool calls](lab-5-intervention-points.md) | What each ACS point is for, and how Agent Hooks connects hosts to controls for tool-call enforcement | No |
 | [6. Gate CI on the policy](lab-6-ci-gate.md) | Fail a build when the policy stops blocking a known-bad class | No |
 
 No Azure subscription? Start at More 2. The offline labs use the committed

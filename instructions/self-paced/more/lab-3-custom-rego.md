@@ -159,7 +159,10 @@ deny. Order is policy.
 ## Takeaways
 
 - A rule is a point guard, a condition, and a verdict.
-- `transform` redacts, `deny` blocks, `escalate` routes to a human.
+- `transform` redacts and `deny` blocks.
+- `escalate` is a policy intent requesting host approval. Current ACS represents
+  it as `deny` with an `approval` block. Without a configured approval flow, the
+  action remains blocked.
 - `opa eval` and `opa check` let you test policy in isolation, with no model and
   no agent.
 

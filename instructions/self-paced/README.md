@@ -54,7 +54,7 @@ subscription, start at More 2. See the [More labs overview](more/README.md).
 | [More 2: Browse runs in the ASSERT viewer](more/lab-2-viewer.md) | Read and compare runs without writing code | No |
 | [More 3: Author custom Rego](more/lab-3-custom-rego.md) | Write and test a rule, including one that redacts instead of blocks | No |
 | [More 4: Adaptive red-teaming](more/lab-4-red-teaming.md) | Find an output that slips past the policy and close the gap | No |
-| [More 5: Intervention points and tool calls](more/lab-5-intervention-points.md) | Learn what `guard_target` enforces and what a full ACS host adds | No |
+| [More 5: Intervention points and tool calls](more/lab-5-intervention-points.md) | Learn what `guard_target` enforces and how Agent Hooks connects hosts to controls | No |
 | [More 6: Gate CI on the policy](more/lab-6-ci-gate.md) | Fail a build when the policy stops blocking a known-bad class | No |
 
 When you finish More 0 and 1, delete the resource group so it stops costing
