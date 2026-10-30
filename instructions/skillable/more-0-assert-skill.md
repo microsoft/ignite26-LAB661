@@ -62,7 +62,7 @@ Let GitHub Copilot run the whole loop for you. You name a risk, and the skill wr
 >
 > The skill lives in `.github/skills/run-assert-eval/`. Reload the VS Code window and ask again.
 
->[!Knowledge] The skill writes **one config per risk**. DevBot's own `src/eval/eval_config.yaml` bundles five risks into one config, so its violation rate tells you that something failed but not which behavior. One atomic config per risk keeps every result attributable. To see the shape it produces, open ASSERT's billing support example in VS Code at `src/examples/billing_support_agent/`.
+>[!Knowledge] The skill writes **one config per risk**. DevBot's own `src/eval/eval_config.yaml` evaluates five unsafe classes together. Its judge dimensions show which classes failed. On the next page, you ask the skill for one config focused on a single risk, making that risk easier to test and track independently. To see the shape it produces, open ASSERT's billing support example in VS Code at `src/examples/billing_support_agent/`.
 
 >[!Note] **Success:** Copilot can use the run-assert-eval skill.
 

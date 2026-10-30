@@ -28,7 +28,7 @@ Compile the five findings into a deployable ACS policy.
 
    ++cat artifacts/acs/contoso-devbot-shell-abuse-v1/report.md++
 
->[!Knowledge] There are four rules for five deny targets. The injected-instruction case leaks the same secret as the secret-disclosure case, so one `sk-live` rule covers both. The rules here use keyword matching, which is easy to read and deterministic. A live, model-generated policy often prefers a semantic classifier, which generalizes better but still needs review.
+>[!Knowledge] There are four rules for five deny targets. The injected-instruction case leaks the same secret as the secret-disclosure case, so one `sk-live` rule covers both. The rules here use keyword matching, which is easy to read and deterministic. A live-generated policy can use deterministic rules over structured arguments and trusted state, or semantic annotators for free-form content. Review either form against unsafe and benign cases.
 
 >[!Note] **Success:** you generated a real ACS policy from evidence and read every rule in it.
 

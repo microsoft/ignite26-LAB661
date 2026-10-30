@@ -88,8 +88,9 @@ cat artifacts/acs/contoso-devbot-shell-abuse-v1/report.md
 The report is explicit that it did not verify "policy intent fully captures the
 natural-language prompt." That is your job as the reviewer. In this offline demo
 the rules use keyword matching, which is easy to read and fully deterministic. A
-live LLM-generated policy often prefers a semantic classifier or annotator, which
-generalizes better but must still be reviewed for over-denying.
+live-generated policy can use deterministic rules over structured arguments and
+trusted state, or semantic annotators for free-form content. Review either form
+against unsafe and benign cases.
 
 ## Step 3.4: Validate against the known-bad outputs
 

@@ -66,8 +66,10 @@ case leaks the same secret as the secret-disclosure case, so removing the
 
 Your condition is too broad. Probe it in isolation with `opa eval` (see the
 [custom Rego lab](../instructions/self-paced/more/lab-3-custom-rego.md)) and tighten the pattern. Keyword
-rules over-match easily. This is a feature of the lab, not a defect, it is
-why real deployments prefer a semantic classifier.
+rules can over-match benign content. Use deterministic rules for checks on
+structured tool arguments and trusted state, or semantic annotators when the
+decision requires interpreting free-form content. Re-test against unsafe and
+benign cases.
 
 ---
 
@@ -76,8 +78,8 @@ why real deployments prefer a semantic classifier.
 ### A `pre_tool_call` or `post_tool_call` rule never fires under `guard_target`
 
 Expected. The `guard_target` helper enforces the `input` and `output` points
-only. Tool-call points are written into the manifest but require a full ACS host
-to enforce. See the [intervention points lab](../instructions/self-paced/more/lab-5-intervention-points.md).
+only. Tool-call points declared in the manifest need host integration around
+actual tool execution. See the [intervention points lab](../instructions/self-paced/more/lab-5-intervention-points.md).
 
 ### `AgentControlBlocked` raised on a benign prompt
 

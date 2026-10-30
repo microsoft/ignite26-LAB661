@@ -63,9 +63,7 @@ assert-ai acs generate \
   --model azure/gpt-5.4
 ```
 
-The generator sends only structured findings signal and redacted representative
-snippets to the model, never raw transcripts wholesale, so a secret captured in a
-transcript is not shipped to the policy model. Read
+The generator sends structured findings signal to the model. Read
 [Securing agents with ACS](https://github.com/responsibleai/ASSERT/blob/main/docs/guides/securing-agents-with-acs.md)
 for the exact data-handling contract.
 

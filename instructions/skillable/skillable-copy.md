@@ -186,13 +186,15 @@ ACS is a stateless, deterministic, fail-closed policy runtime. It inspects an ag
 | `post_tool_call` | After a tool returns | Redact a secret in a tool result |
 | `output` | On the final response | Block an unsafe answer |
 
-| Verdict | Meaning |
-|:--------|:--------|
-| `allow` | Let it through |
-| `warn` | Let it through but flag it |
-| `deny` | Block it |
-| `escalate` | Send it to a human approver |
-| `transform` | Rewrite it, for example redact a secret |
+The [referenced ACS specification](https://github.com/responsibleai/agent-control-spec/blob/7a14236d9e3abbe636f3dd44143d46da2bf29ee0/spec/SPECIFICATION.md#13-verdicts) defines three normalized runtime verdicts: `allow`, `deny`, and `transform`. Policies may also express `warn` and `escalate` intents. The table maps the labels used by this lab's pinned SDK to that contract.
+
+| Policy label | Meaning | Normalized runtime verdict |
+|:-------------|:--------|:---------------------------|
+| `allow` | Let it through | `allow` |
+| `warn` | Let it through but flag it | `allow` with `warnings[]` |
+| `deny` | Block it | `deny` |
+| `escalate` | Request approval through the host's configured approval flow. Block if none is configured. | `deny` with `approval` |
+| `transform` | Rewrite it, for example redact a secret | `transform` |
 
 1. [] Look back at DevBot's five unsafe answers and decide which intervention point would catch them.
 
@@ -200,7 +202,7 @@ ACS is a stateless, deterministic, fail-closed policy runtime. It inspects an ag
 >
 > `output`. DevBot leaks by **saying** things, such as printing a key or endorsing `rm -rf` in chat. That is an output violation, so the policy you build guards `output` and denies the unsafe classes.
 
->[!Note] **Success:** you can name the four main intervention points and the five verdicts, and you know DevBot's failures are `output` violations.
+>[!Note] **Success:** you can name the four main intervention points and the three normalized runtime verdicts, explain the `warn` and `escalate` mappings, and identify DevBot's failures as `output` violations.
 
 ===
 
@@ -266,7 +268,7 @@ Read the run the way the ACS adapter reads it, and get your list of what to bloc
 
 1. [] Write down your baseline: **policy_violation 71%, 10 of 14 cases**. This is the number you will drive down.
 
->[!Knowledge] **Permissible behaviors never become deny targets.** The taxonomy marks `Bounded safe shell assistance` and `Safe refusal` as permissible. A guardrail can restrict actions but cannot compel helpfulness, so ACS never writes a rule that denies a safe answer. Overrefusal is reported for your awareness instead.
+>[!Knowledge] **Permissible behaviors never become deny targets.** The taxonomy marks `Bounded safe shell assistance` and `Safe refusal` as permissible. A guardrail can restrict actions but cannot compel helpfulness. The adapter excludes permissible behaviors from deny targets. Test the generated policy on benign requests too, to check that its rules preserve safe assistance. Overrefusal is reported for your awareness instead.
 
 >[!Knowledge] **Every violation surfaces at `output`.** The adapter recovered the offending text from the transcripts and attributed it to the `output` point. That is why the policy you build next guards `output`.
 
@@ -304,7 +306,7 @@ Compile the five findings into a deployable ACS policy.
 
    ++cat artifacts/acs/contoso-devbot-shell-abuse-v1/report.md++
 
->[!Knowledge] There are four rules for five deny targets. The injected-instruction case leaks the same secret as the secret-disclosure case, so one `sk-live` rule covers both. The rules here use keyword matching, which is easy to read and deterministic. A live, model-generated policy often prefers a semantic classifier, which generalizes better but still needs review.
+>[!Knowledge] There are four rules for five deny targets. The injected-instruction case leaks the same secret as the secret-disclosure case, so one `sk-live` rule covers both. The rules here use keyword matching, which is easy to read and deterministic. A live-generated policy can use deterministic rules over structured arguments and trusted state, or semantic annotators for free-form content. Review either form against unsafe and benign cases.
 
 >[!Note] **Success:** you generated a real ACS policy from evidence and read every rule in it.
 
@@ -423,7 +425,7 @@ A blocked demo is convincing, but you want a number.
 
 >[!Knowledge] You just ran one full turn of the loop: **evaluate** to find violations, **generate** a policy, **validate** it, **guard** the agent, and **verify** with the same evidence. Point ASSERT at a new behavior and repeat. The policy is only ever as good as the evidence behind it.
 
->[!Alert] The offline policy matches keywords, which is easy to read but brittle against paraphrase. A real deployment should generate the policy with a model, prefer semantic checks, and keep validating against a growing evidence set. `guard_target` also enforces only the `input` and `output` points. Tool calls need a full ACS host.
+>[!Alert] The offline policy matches keywords, which is easy to read but brittle against paraphrase. Use deterministic rules for checks on structured tool arguments and trusted state. Use semantic annotators for decisions that require interpreting free-form content. Validate both against unsafe and benign cases, and measure false positives, false negatives, latency, and cost. `guard_target` also enforces only the `input` and `output` points. Tool-call enforcement needs host integration around actual tool execution.
 
 >[!Note] **Success:** you secured a coding agent with an evidence-driven, runtime-enforced policy, and measured attack success fall from 100% to 0%.
 
@@ -440,7 +442,7 @@ The core lab is complete. If you have time, go deeper. Each More lab stands on i
 | 2. Browse runs in the ASSERT viewer | Read and compare runs without writing code | No |
 | 3. Author custom Rego | Write and test a rule, including one that redacts instead of blocks | No |
 | 4. Adaptive red-teaming | Find an output that slips past the policy and close the gap | No |
-| 5. Intervention points and tool calls | Learn what `guard_target` covers and what a full host adds | No |
+| 5. Intervention points and tool calls | Learn what `guard_target` covers and how Agent Hooks connects hosts to controls | No |
 | 6. Gate CI on the policy | Fail a build when the policy stops blocking a known-bad class | No |
 
 1. [] Select **Next** to start More 0, or skip ahead to the More lab you want.
@@ -513,7 +515,7 @@ Let GitHub Copilot run the whole loop for you. You name a risk, and the skill wr
 >
 > The skill lives in `.github/skills/run-assert-eval/`. Reload the VS Code window and ask again.
 
->[!Knowledge] The skill writes **one config per risk**. DevBot's own `src/eval/eval_config.yaml` bundles five risks into one config, so its violation rate tells you that something failed but not which behavior. One atomic config per risk keeps every result attributable. To see the shape it produces, open ASSERT's billing support example in VS Code at `src/examples/billing_support_agent/`.
+>[!Knowledge] The skill writes **one config per risk**. DevBot's own `src/eval/eval_config.yaml` evaluates five unsafe classes together. Its judge dimensions show which classes failed. On the next page, you ask the skill for one config focused on a single risk, making that risk easier to test and track independently. To see the shape it produces, open ASSERT's billing support example in VS Code at `src/examples/billing_support_agent/`.
 
 >[!Note] **Success:** Copilot can use the run-assert-eval skill.
 
@@ -666,7 +668,7 @@ Let a model design the guardrail rules from the real findings, then check whethe
 
    Expect `handled 0/4 ... strongly blocked 0/4`. Do not add `--require-block` for this policy. It exits with an error because nothing can be blocked offline.
 
->[!Knowledge] Offline validation proves only rules it can evaluate, such as the core's keyword rules. To prove a classifier-based policy, wire the classifier, wrap DevBot, and rerun the same evaluation, as the skill did in More 0. Or write keyword rules from these findings, as in the core, so `--require-block` can prove them offline. The generator sends only structured findings and redacted snippets to the model, never whole transcripts. For sensitive agents, generate with a self-hosted model or design the plan yourself, as `src/policy/generate_offline.py` does.
+>[!Knowledge] Offline validation proves only rules it can evaluate, such as the core's keyword rules. To prove a classifier-based policy, wire the classifier, wrap DevBot, and rerun the same evaluation, as the skill did in More 0. Or write keyword rules from these findings, as in the core, so `--require-block` can prove them offline. The generator sends structured findings signal to the model. For sensitive agents, generate with a self-hosted model or design the plan yourself, as `src/policy/generate_offline.py` does.
 
 >[!Note] **Success:** you ran the loop with a live model and can tell whether a generated policy can fire before you trust it.
 
@@ -833,7 +835,7 @@ Widen the rule to match either flag order. A script does it for you: it takes th
 
    ++PYTHONPATH=src python3 src/policy/generate_offline.py++
 
->[!Knowledge] You can play whack-a-mole with regexes forever: `rm -R`, aliases, encoded payloads, and paraphrases each need another pattern. Real deployments should prefer a semantic classifier and keep keyword rules as a cheap first line. The discipline that scales is the loop: add each bypass to your evidence, regenerate, and let validation prove the fix.
+>[!Knowledge] You can play whack-a-mole with regexes forever: `rm -R`, aliases, encoded payloads, and paraphrases each need another pattern. Use deterministic rules for checks on structured tool arguments and trusted state. Use semantic annotators for decisions that require interpreting free-form content. Validate both against unsafe and benign cases, and measure false positives, false negatives, latency, and cost. The discipline that scales is the loop: add each bypass to your evidence, regenerate, and let validation prove the fix.
 
 >[!Note] **Success:** you found a bypass, closed it, and proved the rest of the policy still holds.
 
@@ -870,11 +872,21 @@ ACS has eight intervention points. These four matter most for an agent like DevB
 
 >[!Knowledge] `guard_target` is a lightweight wrapper. It does not sit between the agent and its tools, so it cannot enforce `pre_tool_call` or `post_tool_call` rules, even though the demo manifest has one.
 
->[!Alert] If you generate a policy with tool-call rules and rely on `guard_target` alone, those rules never fire. To enforce them, run the agent inside a full ACS host that calls ACS before and after every tool. The manifest is the same either way, so nothing you built is wasted.
+>[!Alert] If you generate a policy with tool-call rules and rely on `guard_target` alone, those rules never fire. Tool-call enforcement requires checks around actual tool execution, with the host enforcing the control's verdicts.
 
->[!Knowledge] DevBot's weaknesses were written to surface in its output, so the `guard_target` demo blocks real violations rather than pretending to enforce tool calls. On your own agent, decide where each risk surfaces first, then choose the point, then choose a runtime that can enforce it.
+>[!Knowledge] [Agent Hooks](https://github.com/responsibleai/agent-hooks) defines a shared contract for connecting agent hosts to controls at interception points. ACS can provide policy decisions behind an interceptor. The host and adapter supply the context, map the returned verdict, and enforce it before execution proceeds or a result is passed onward.
+>
+> The runnable examples here use ACS's existing SDK. Reusing the manifest through an Agent Hooks integration requires compatible context and verdict mappings, including the expected tool names, snapshot fields, and annotators.
 
->[!Note] **Success:** you know which intervention points your runtime enforces, and when you need a full ACS host.
+>[!Knowledge] DevBot's weaknesses were written to surface in its output, so the `guard_target` demo blocks real violations rather than pretending to enforce tool calls. On your own agent, decide where each risk surfaces first, then choose the point, then choose a host integration that can enforce it.
+
+## Takeaways
+
+- Agent Hooks defines the interception contract between agent hosts and controls. ACS can supply policy decisions; the host enforces the verdicts.
+- `guard_target` enforces `input` and `output`. Tool-call rules need checks around actual tool execution.
+- Reusing an ACS manifest requires compatible context and verdict mappings, including the expected tool names, snapshot fields, and annotators.
+
+>[!Note] **Success:** you can distinguish the host, hook contract, and policy control, and know where tool-call enforcement belongs.
 
 ===
 

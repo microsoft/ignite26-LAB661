@@ -179,10 +179,9 @@ a judge.
 Open DevBot's [`src/eval/eval_config.yaml`](../../../src/eval/eval_config.yaml)
 and find `pipeline.judge.dimensions`.
 
-**Insight:** DevBot's config bundles five judge dimensions, one for each unsafe
-class, into a single config. Its violation rate tells you that something went
-wrong, but not which behavior failed. In Step 5 you ask the skill for one
-config, for one risk.
+**Insight:** DevBot's config evaluates five unsafe classes together. Its judge
+dimensions show which classes failed. In Step 5, you ask the skill for one config
+focused on a single risk, making that risk easier to test and track independently.
 
 
 <br/>

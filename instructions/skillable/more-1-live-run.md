@@ -66,6 +66,6 @@ Let a model design the guardrail rules from the real findings, then check whethe
 
    Expect `handled 0/4 ... strongly blocked 0/4`. Do not add `--require-block` for this policy. It exits with an error because nothing can be blocked offline.
 
->[!Knowledge] Offline validation proves only rules it can evaluate, such as the core's keyword rules. To prove a classifier-based policy, wire the classifier, wrap DevBot, and rerun the same evaluation, as the skill did in More 0. Or write keyword rules from these findings, as in the core, so `--require-block` can prove them offline. The generator sends only structured findings and redacted snippets to the model, never whole transcripts. For sensitive agents, generate with a self-hosted model or design the plan yourself, as `src/policy/generate_offline.py` does.
+>[!Knowledge] Offline validation proves only rules it can evaluate, such as the core's keyword rules. To prove a classifier-based policy, wire the classifier, wrap DevBot, and rerun the same evaluation, as the skill did in More 0. Or write keyword rules from these findings, as in the core, so `--require-block` can prove them offline. The generator sends structured findings signal to the model. For sensitive agents, generate with a self-hosted model or design the plan yourself, as `src/policy/generate_offline.py` does.
 
 >[!Note] **Success:** you ran the loop with a live model and can tell whether a generated policy can fire before you trust it.

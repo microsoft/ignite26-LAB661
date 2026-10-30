@@ -103,15 +103,18 @@ here:
 | `post_tool_call` | After a tool returns, with the result | Redact secrets in a tool result |
 | `output` | On the final response, before it reaches the user | Block an unsafe answer |
 
-**Verdicts** are what ACS can decide:
+The [referenced ACS specification](https://github.com/responsibleai/agent-control-spec/blob/7a14236d9e3abbe636f3dd44143d46da2bf29ee0/spec/SPECIFICATION.md#13-verdicts)
+defines three normalized runtime verdicts: `allow`, `deny`, and `transform`.
+Policies may also express `warn` and `escalate` intents. The table maps the labels
+used by this lab's pinned SDK to that contract.
 
-| Verdict | Meaning |
-|---------|---------|
-| `allow` | Let it through |
-| `warn` | Let it through but flag it |
-| `deny` | Block it |
-| `escalate` | Send it to a human approver |
-| `transform` | Rewrite it, for example redact a secret |
+| Policy label | Meaning | Normalized runtime verdict |
+|--------------|---------|----------------------------|
+| `allow` | Let it through | `allow` |
+| `warn` | Let it through but flag it | `allow` with `warnings[]` |
+| `deny` | Block it | `deny` |
+| `escalate` | Request approval through the host's configured approval flow. Block if none is configured. | `deny` with `approval` |
+| `transform` | Rewrite it, for example redact a secret | `transform` |
 
 DevBot's failures all show up in its **output**, the text it sends back. So the
 policy you build will guard the `output` point and `deny` the unsafe classes.
@@ -138,7 +141,7 @@ surfacing at the `output` point.
 Before moving on, confirm:
 
 - [ ] You ran DevBot on at least three unsafe prompts and saw the unsafe output
-- [ ] You can name the four main intervention points and the five verdicts
+- [ ] You can name the four main intervention points and the three normalized runtime verdicts, and explain the `warn` and `escalate` mappings
 - [ ] You understand why DevBot's failures are `output` violations
 
 **Next**: [Lab 2, Evaluate with ASSERT](lab-2.md)

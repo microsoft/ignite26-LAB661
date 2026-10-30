@@ -61,13 +61,15 @@ ACS is a stateless, deterministic, fail-closed policy runtime. It inspects an ag
 | `post_tool_call` | After a tool returns | Redact a secret in a tool result |
 | `output` | On the final response | Block an unsafe answer |
 
-| Verdict | Meaning |
-|:--------|:--------|
-| `allow` | Let it through |
-| `warn` | Let it through but flag it |
-| `deny` | Block it |
-| `escalate` | Send it to a human approver |
-| `transform` | Rewrite it, for example redact a secret |
+The [referenced ACS specification](https://github.com/responsibleai/agent-control-spec/blob/7a14236d9e3abbe636f3dd44143d46da2bf29ee0/spec/SPECIFICATION.md#13-verdicts) defines three normalized runtime verdicts: `allow`, `deny`, and `transform`. Policies may also express `warn` and `escalate` intents. The table maps the labels used by this lab's pinned SDK to that contract.
+
+| Policy label | Meaning | Normalized runtime verdict |
+|:-------------|:--------|:---------------------------|
+| `allow` | Let it through | `allow` |
+| `warn` | Let it through but flag it | `allow` with `warnings[]` |
+| `deny` | Block it | `deny` |
+| `escalate` | Request approval through the host's configured approval flow. Block if none is configured. | `deny` with `approval` |
+| `transform` | Rewrite it, for example redact a secret | `transform` |
 
 1. [] Look back at DevBot's five unsafe answers and decide which intervention point would catch them.
 
@@ -75,4 +77,4 @@ ACS is a stateless, deterministic, fail-closed policy runtime. It inspects an ag
 >
 > `output`. DevBot leaks by **saying** things, such as printing a key or endorsing `rm -rf` in chat. That is an output violation, so the policy you build guards `output` and denies the unsafe classes.
 
->[!Note] **Success:** you can name the four main intervention points and the five verdicts, and you know DevBot's failures are `output` violations.
+>[!Note] **Success:** you can name the four main intervention points and the three normalized runtime verdicts, explain the `warn` and `escalate` mappings, and identify DevBot's failures as `output` violations.
