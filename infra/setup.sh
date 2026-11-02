@@ -17,6 +17,7 @@
 #
 # Needs the Owner role (or Contributor plus User Access Administrator) on the
 # resource group so it can create role assignments. --env-only needs read access.
+# Needs Azure CLI 2.80.0 or newer.
 #
 # Optional environment variables skip the matching prompt:
 #   SUBSCRIPTION_ID, RESOURCE_GROUP, LOCATION, FOUNDRY_NAME, PROJECT_NAME,
@@ -85,10 +86,33 @@ assign_role() {
     fi
 }
 
+# ensure_jq: installs jq with winget (Git Bash on Windows), apt-get or brew when it is missing.
+ensure_jq() {
+    command -v jq >/dev/null 2>&1 && return 0
+    warn "jq not found; installing it"
+    if command -v winget >/dev/null 2>&1; then
+        # Exits non-zero when jq is already installed but not yet on this shell's PATH.
+        winget install --id jqlang.jq -e --silent \
+            --accept-source-agreements --accept-package-agreements >/dev/null 2>&1 || true
+        PATH="${PATH}:$(cygpath -u "${LOCALAPPDATA}")/Microsoft/WinGet/Links"
+    elif command -v apt-get >/dev/null 2>&1; then
+        sudo apt-get update -qq && sudo apt-get install -y -qq jq >/dev/null || true
+    elif command -v brew >/dev/null 2>&1; then
+        brew install jq >/dev/null || true
+    fi
+    command -v jq >/dev/null 2>&1 || die "jq not found and could not be installed; install jq and re-run"
+    ok "jq installed"
+}
+
 # ----------------------------------------------------------------- sign in ----
 log "Azure sign-in"
 command -v az >/dev/null 2>&1 || die "Azure CLI (az) not found"
-command -v jq >/dev/null 2>&1 || die "jq not found"
+# 2.80.0 adds 'az cognitiveservices account project' and --allow-project-management.
+AZ_MIN_VERSION="2.80.0"
+AZ_VERSION="$(az version --query '"azure-cli"' -o tsv 2>/dev/null | tr -d '\r' || true)"
+[[ "$(printf '%s\n' "${AZ_MIN_VERSION}" "${AZ_VERSION:-0}" | sort -V | head -n1)" == "${AZ_MIN_VERSION}" ]] \
+    || die "Azure CLI ${AZ_VERSION:-unknown} is too old; ${AZ_MIN_VERSION} or newer is needed. Run 'az upgrade', then re-run this script"
+ensure_jq
 if az account show >/dev/null 2>&1; then
     ok "signed in as $(az account show --query user.name -o tsv)"
     read -r -p "    Use this sign-in? [Y/n]: " reply
