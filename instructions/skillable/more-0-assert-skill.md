@@ -1,21 +1,25 @@
 # More 0: Connect to Microsoft Foundry
 
-The next two More labs run on a real model. Your Foundry project, both models, and tracing are already set up for this lab. Connect to them, with no API key.
+The next two More labs run on a real model and need a Foundry project, both models, and tracing. Use the lab's pre-provisioned resources if available, or set them up now, with no API key.
 
 >[!Knowledge] More 0 and More 1 call a real model. Every other More lab runs offline. To skip ahead, go to More 2.
 
-1. [] In the terminal, run the setup script. It finds the lab's resources and writes your `.env`. It creates nothing.
+1. [] In the **Git Bash** terminal at the repository root, run the Skillable setup script to reuse existing resources or create any that are missing, then write your `.env`.
 
-   ++bash infra/setup.sh --env-only++
+   ++bash instructions/skillable/scripts/setup.sh++
 
-1. [] Sign in when asked, pick the lab subscription, and press Enter to accept the default resource group.
-1. [] Wait for the script to finish. It ends with `Local environment is ready.`
+1. [] Sign in when asked and pick the lab subscription.
+1. [] Enter the pre-provisioned resource group if one was supplied, or accept the default resource group and location for a new setup.
+1. [] Review the plan and confirm it to create anything that is missing.
+1. [] Wait for the script to finish. It ends with "Foundry project, models, monitoring and access are ready."
 
 >[!Note] The script is idempotent and safe to run again. It asks before replacing an existing `.env`.
 
->[+Help] The script cannot find the lab's resources.
+>[!Alert] Runtime setup needs permission to create resources and enough model quota in the lab subscription. The lab VM must already have the required role assignments; this Skillable script does not grant them.
+
+>[+Help] Setup fails.
 >
-> Check that you picked the lab subscription. If it still fails, ask a proctor for help.
+> Check that you picked the lab subscription and resource group. For permission, model quota, or deployment errors, ask a proctor for help.
 
 >[!Note] **Success:** your `.env` points at the lab's Foundry project.
 
