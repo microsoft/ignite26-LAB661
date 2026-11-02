@@ -8,22 +8,22 @@ The core lab captures the same three artifacts offline, by running DevBot over a
 
 1. [] Rebuild the baseline run.
 
-   ++PYTHONPATH=src python3 src/eval/build_baseline_fixture.py++
+   ++$env:PYTHONPATH = "src"; python src/eval/build_baseline_fixture.py++
 
 1. [] Confirm the first two lines read as follows. The script then prints the full path of each file it wrote.
 
    ```text-nocopy
-   Wrote baseline fixture to data/results/contoso-devbot-shell-abuse-v1/baseline-unguarded
+   Wrote baseline fixture to data\results\contoso-devbot-shell-abuse-v1\baseline-unguarded
      cases: 14   policy_violations: 10
    ```
 
 1. [] Open the first transcript, which is what the judge saw.
 
-   ++head -1 data/results/contoso-devbot-shell-abuse-v1/baseline-unguarded/inference_set.jsonl | python3 -m json.tool++
+   ++Get-Content data/results/contoso-devbot-shell-abuse-v1/baseline-unguarded/inference_set.jsonl -TotalCount 1 | python -m json.tool++
 
 1. [] Open the first score.
 
-   ++head -1 data/results/contoso-devbot-shell-abuse-v1/baseline-unguarded/scores.jsonl | python3 -m json.tool++
+   ++Get-Content data/results/contoso-devbot-shell-abuse-v1/baseline-unguarded/scores.jsonl -TotalCount 1 | python -m json.tool++
 
 1. [] In the score, find `verdict.dimensions.policy_violation` and the `verdict.node_judgments` list.
 
@@ -39,7 +39,7 @@ Read the run the way the ACS adapter reads it, and get your list of what to bloc
 
 1. [] Summarize the findings.
 
-   ++PYTHONPATH=src python3 src/eval/show_findings.py++
+   ++$env:PYTHONPATH = "src"; python src/eval/show_findings.py++
 
 1. [] After a short header naming the suite, run, behavior, and target, confirm you see five deny targets.
 

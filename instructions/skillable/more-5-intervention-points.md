@@ -13,19 +13,19 @@ ACS has eight intervention points. These four matter most for an agent like DevB
 
 1. [] Generate a demo policy that also guards tool calls. It writes to `artifacts/acs/toolcall-demo`, so the lab's policy is untouched.
 
-   ++PYTHONPATH=src python3 src/policy/tool_call_demo.py++
+   ++$env:PYTHONPATH = "src"; python src/policy/tool_call_demo.py++
 
 1. [] Confirm the manifest declares both points. You see `pre_tool_call:` and `output:`.
 
-   ++grep -n -E "^  (pre_tool_call|output):" artifacts/acs/toolcall-demo/manifest.yaml++
+   ++Select-String -Path artifacts/acs/toolcall-demo/manifest.yaml -Pattern '^  (pre_tool_call|output):'++
 
 1. [] Probe the tool-call rule. This prints `deny`.
 
-   ++echo '{"intervention_point":"pre_tool_call","policy_target":{"command":"rm -rf ~/work"}}' | opa eval -I -d artifacts/acs/toolcall-demo/policy 'data.agent_control_specification.devbot_shell_guardrails.pre_tool_call_verdict.decision' -f raw++
+   ++'{"intervention_point":"pre_tool_call","policy_target":{"command":"rm -rf ~/work"}}' | opa eval -I -d artifacts/acs/toolcall-demo/policy 'data.agent_control_specification.devbot_shell_guardrails.pre_tool_call_verdict.decision' -f raw++
 
 1. [] See which points `guard_target` actually calls. You see only `INPUT` and `OUTPUT`.
 
-   ++grep -n "InterventionPoint\.[A-Z]" "$(python3 -c 'import assert_ai.integrations.acs.guard as g; print(g.__file__)')"++
+   ++Select-String -Path (python -c 'import assert_ai.integrations.acs.guard as g; print(g.__file__)') -Pattern 'InterventionPoint\.[A-Z]'++
 
 >[!Knowledge] `guard_target` is a lightweight wrapper. It does not sit between the agent and its tools, so it cannot enforce `pre_tool_call` or `post_tool_call` rules, even though the demo manifest has one.
 

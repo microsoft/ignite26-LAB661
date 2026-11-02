@@ -198,7 +198,8 @@ def build() -> None:
 
 
 def _write_jsonl(path: Path, rows: list[dict]) -> None:
-    with path.open("w", encoding="utf-8") as handle:
+    # LF on every OS, so a rebuild on Windows leaves the committed baseline unchanged.
+    with path.open("w", encoding="utf-8", newline="\n") as handle:
         for row in rows:
             handle.write(json.dumps(row) + "\n")
 

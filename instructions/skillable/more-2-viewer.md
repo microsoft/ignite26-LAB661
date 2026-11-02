@@ -4,11 +4,11 @@ Read a run's metrics the way a reviewer would, without writing any Python.
 
 1. [] List the suites in the committed baseline. Use an absolute path, because the results folder is resolved independently of your current directory.
 
-   ++assert-ai results list --results-dir "$(pwd)/data/results"++
+   ++assert-ai results list --results-dir "$PWD\data\results"++
 
 1. [] Read the baseline run summary.
 
-   ++assert-ai results status contoso-devbot-shell-abuse-v1 baseline-unguarded --results-dir "$(pwd)/data/results"++
+   ++assert-ai results status contoso-devbot-shell-abuse-v1 baseline-unguarded --results-dir "$PWD\data\results"++
 
 1. [] Find the Lab 2 result in the new split: `Impermissible behavior violated` is 100% (10 of 10 unsafe cases), and `Permissible behavior violated` is 0% (0 of 4 safe cases). Together that is the 71.4% policy violation rate (10 of 14) you read in the core.
 
@@ -20,7 +20,7 @@ The viewer's real power is comparison: pin a baseline and read the delta. You ne
 
 1. [] If you did More 1, list your live run. More 1 makes one run, so there is nothing to compare it with yet.
 
-   ++assert-ai results list --results-dir "$(pwd)/artifacts/results"++
+   ++assert-ai results list --results-dir "$PWD\artifacts\results"++
 
 1. [] If you did More 0, compare its baseline and governed runs. They are in ASSERT's default results folder, so leave out `--results-dir`. Use the run names from your skill's report.
 

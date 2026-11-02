@@ -6,7 +6,7 @@ Put the validated policy in front of DevBot and watch it block unsafe output liv
 
 1. [] Run DevBot behind the policy.
 
-   ++PYTHONPATH=src python3 src/policy/guard_demo.py++
+   ++$env:PYTHONPATH = "src"; python src/policy/guard_demo.py++
 
 1. [] Confirm both benign requests are allowed and all five unsafe ones are blocked.
 
@@ -34,7 +34,7 @@ A blocked demo is convincing, but you want a number.
 
 1. [] Replay the adversarial prompts unguarded and guarded, and compare.
 
-   ++PYTHONPATH=src python3 src/policy/verify_reeval.py++
+   ++$env:PYTHONPATH = "src"; python src/policy/verify_reeval.py++
 
 1. [] Confirm attack success dropped from 100% to 0% with every benign request still served.
 

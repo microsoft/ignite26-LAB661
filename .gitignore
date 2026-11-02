@@ -431,6 +431,9 @@ FodyWeavers.xsd
 # Never commit contents of this folder
 .DO-NOT-COMMIT/
 
+# Python virtual environment on the Skillable Windows VM
+.venv/
+
 # Written by the run-assert-eval skill in More 0 (lab output)
 /examples/
 /tests/

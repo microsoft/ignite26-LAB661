@@ -6,27 +6,27 @@ Compile the five findings into a deployable ACS policy.
 
 1. [] Generate the policy.
 
-   ++PYTHONPATH=src python3 src/policy/generate_offline.py++
+   ++$env:PYTHONPATH = "src"; python src/policy/generate_offline.py++
 
 1. [] Confirm the generator reports a manifest, a Rego file, a report, and `guarded_points: output`.
 
    ```text-nocopy
    Generated ACS policy (offline, deterministic)
-     manifest:       artifacts/acs/contoso-devbot-shell-abuse-v1/manifest.yaml
-     rego:           artifacts/acs/contoso-devbot-shell-abuse-v1/policy/devbot_shell_guardrails.rego
-     report:         artifacts/acs/contoso-devbot-shell-abuse-v1/report.md
+     manifest:       artifacts\acs\contoso-devbot-shell-abuse-v1\manifest.yaml
+     rego:           artifacts\acs\contoso-devbot-shell-abuse-v1\policy\devbot_shell_guardrails.rego
+     report:         artifacts\acs\contoso-devbot-shell-abuse-v1\report.md
      guarded_points: output
    ```
 
 1. [] Read the generated rules. Never deploy a policy you have not read.
 
-   ++cat artifacts/acs/contoso-devbot-shell-abuse-v1/policy/devbot_shell_guardrails.rego++
+   ++Get-Content artifacts/acs/contoso-devbot-shell-abuse-v1/policy/devbot_shell_guardrails.rego++
 
 1. [] Find the `default output_verdict := {"decision": "allow"}` line and the chain of `deny` rules under it.
 
 1. [] Read the report, which records what the generator could not verify on its own.
 
-   ++cat artifacts/acs/contoso-devbot-shell-abuse-v1/report.md++
+   ++Get-Content artifacts/acs/contoso-devbot-shell-abuse-v1/report.md++
 
 >[!Knowledge] There are four rules for five deny targets. The injected-instruction case leaks the same secret as the secret-disclosure case, so one `sk-live` rule covers both. The rules here use keyword matching, which is easy to read and deterministic. A live-generated policy can use deterministic rules over structured arguments and trusted state, or semantic annotators for free-form content. Review either form against unsafe and benign cases.
 
@@ -40,12 +40,7 @@ Prove the policy blocks every known-bad output before you trust it.
 
 1. [] Replay every known-bad example from the baseline through the policy.
 
-   ```bash
-   assert-ai acs validate \
-     --manifest artifacts/acs/contoso-devbot-shell-abuse-v1/manifest.yaml \
-     --run-dir data/results/contoso-devbot-shell-abuse-v1/baseline-unguarded \
-     --require-block
-   ```
+   ++assert-ai acs validate --manifest artifacts/acs/contoso-devbot-shell-abuse-v1/manifest.yaml --run-dir data/results/contoso-devbot-shell-abuse-v1/baseline-unguarded --require-block++
 
 1. [] Confirm the policy strongly blocked all five.
 
@@ -67,18 +62,11 @@ This page is optional. Convince yourself the gate is real.
 
 1. [] **First regenerate.**
 
-   ```bash
-   PYTHONPATH=src python3 src/policy/generate_offline.py
-   ```
+   ++$env:PYTHONPATH = "src"; python src/policy/generate_offline.py++
 
 1. [] **Then validate.**
 
-   ```bash
-   assert-ai acs validate \
-     --manifest artifacts/acs/contoso-devbot-shell-abuse-v1/manifest.yaml \
-     --run-dir data/results/contoso-devbot-shell-abuse-v1/baseline-unguarded \
-     --require-block
-   ```
+   ++assert-ai acs validate --manifest artifacts/acs/contoso-devbot-shell-abuse-v1/manifest.yaml --run-dir data/results/contoso-devbot-shell-abuse-v1/baseline-unguarded --require-block++
 
 1. [] Note how many classes are still strongly blocked, and whether the command succeeded.
 
@@ -88,8 +76,8 @@ This page is optional. Convince yourself the gate is real.
 
 >[!Alert] **Restore the rule before moving on.** Uncomment the entire `secret_disclosure` rule block in `PLAN` and save the file. Then regenerate the policy:
 >
-> ```bash
-> PYTHONPATH=src python3 src/policy/generate_offline.py
+> ```powershell
+> $env:PYTHONPATH = "src"; python src/policy/generate_offline.py
 > ```
 
 >[!Note] **Success:** you watched the gate fail on an incomplete policy, which is what makes validation worth running.

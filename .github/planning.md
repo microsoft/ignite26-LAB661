@@ -137,3 +137,157 @@ d. authenticate profile through SSO portal and GHE is now active in their VS Cod
   port, or stay self-paced only?
 - One set of Skillable pages per platform, or a Skillable section switch
   (`:::name(variable=value)`) that shows bash or PowerShell commands?
+
+## Skillable readiness
+
+Status as of 2026-10-30. Written so work can resume without the chat history.
+Full command log: [`CHANGES.md`](../CHANGES.md). Owner checklist by phase:
+[`README.maintainer.md`](../README.maintainer.md). Remove all three files before
+publishing.
+
+### Decisions made
+
+- Attendees run the lab locally on the Skillable Windows 11 VM in PowerShell,
+  not in a Codespace or WSL. The open questions in the section above are
+  answered: local Windows, one set of Skillable pages (PowerShell only, no
+  section switch), and More 0 and 1 will run on the VM (Phase B).
+- The self-paced path is unchanged: dev container, bash scripts in
+  `src/scripts/` and `infra/setup.sh`, CI, and `instructions/self-paced/`. Bash
+  stays the source of truth. Skillable gets its own Windows pieces.
+- Follow LAB663's Skillable pattern (lifecycle actions provision Foundry and
+  write `.env` before the attendee arrives; prebuilt `.venv`; nothing installed
+  during the lab). LAB663 and LAB661 run on **separate VMs**, so every image
+  change is redone here.
+- Unlike LAB663, the LAB661 core is offline, so the Foundry part of the VM
+  lifecycle action should not block the lab or end it on failure.
+- Deferred by the owner: the Copilot and GitHub sign-in content in the
+  Skillable manual (Core 0 "Sign in to your lab"). LAB663 replaces the manual
+  GitHub Enterprise SSO steps with a lifecycle action (its action 01) plus a
+  desktop status file. Look into this later; do not change those pages yet.
+
+### VM changes (redo on any new image)
+
+| Change | Where | Command or method |
+|--------|-------|-------------------|
+| Python virtual environment, Python 3.12.10 (the VM default is 3.15, which the pinned packages were not tested on; 3.12 was already installed) | `C:\Users\LabUser\Desktop\LAB661\.venv` | `py -3.12 -m venv .venv` then `.\.venv\Scripts\python.exe -m pip install --upgrade pip` |
+| All pinned packages | `.venv` | `.\.venv\Scripts\python.exe -m pip install --find-links "$env:USERPROFILE\lab661-wheelhouse" -r requirements.txt` |
+| ACS Windows wheel, self-built (PyPI has only a Linux wheel for `agent-control-specification==0.3.1b1`; it is a Rust extension) | `C:\Users\LabUser\lab661-wheelhouse\agent_control_specification-0.3.1b1-cp311-abi3-win_amd64.whl`, 2,788,316 bytes, SHA-256 `51a213a4e19b8e14a40d9e77b8aa3ec3f8dbb7da5dee9565f85832cce6af6074`. Also uploaded to the upstream GitHub repository | Built once with Rust plus VS 2022 Build Tools: `pip wheel --no-deps "agent-control-specification==0.3.1b1" -w "$env:USERPROFILE\lab661-wheelhouse"`. **Keep this folder on the image** |
+| OPA v0.70.0, SHA-256 `19d00eea60477a8f983c20af690fedcc8da52aef81922e570b27538ca88305a4` | `%LOCALAPPDATA%\Programs\OpenPolicyAgent\opa.exe`, added to the **user** PATH | Download `https://openpolicyagent.org/downloads/v0.70.0/opa_windows_amd64.exe`, verify against its `.sha256`, append the folder to the user PATH. Restart VS Code afterwards: its terminals keep the PATH from when VS Code started |
+| Build toolchain, installed then **removed** | Rust (`rustup`, user), VS 2022 Build Tools with the VC tools workload, Windows 11 SDK | Removed: `rustup self uninstall -y`; Build Tools, then the Visual Studio Installer, then the Windows SDK in **Settings > Apps > Installed apps**. A silent `setup.exe uninstall --quiet` from a non-elevated terminal does nothing. Kept: Visual C++ 2015-2022 redistributables, and a harmless "Windows SDK AddOn" entry |
+| Cleanup | `%TEMP%`, pip cache, repo | Deleted the installers, source download and pip cache (202 MB); deleted `artifacts/`; confirmed no `.env` |
+| Already on the VM, unchanged | | PowerShell 7.5 (and 5.1), Node, Azure CLI, Git for Windows (Git Bash at `C:\Program Files\Git\bin\bash.exe`), VS Code 1.135 with no extensions, execution policy `Unrestricted` (LocalMachine) |
+
+`%TEMP%\lab663-ref\ignite26-LAB663-main` holds the extracted LAB663 reference
+repo (from `D:\ignite26-LAB663-main.zip`). It is needed for Phases B and C;
+re-extract it if `%TEMP%` is cleared.
+
+### Repository changes (replay upstream)
+
+- `.gitattributes` (new): LF for `*.sh`, `*.jsonl`, `*.rego`; CRLF for `*.ps1`.
+  Git on the VM has `core.autocrlf=true`.
+- `.gitignore`: ignores `.venv/`.
+- `.vscode/settings.json` (new): `terminal.integrated.env.windows` puts
+  `${workspaceFolder}\.venv\Scripts` first on PATH and sets `VIRTUAL_ENV`, so
+  `python` and `assert-ai` resolve to `.venv` in every new VS Code terminal on
+  Windows. The dev container ignores `.windows` keys. Needs a trusted folder.
+- `src/eval/build_baseline_fixture.py`: `_write_jsonl` uses `newline="\n"`, so
+  a Windows rebuild keeps the committed baseline byte-for-byte
+  (`inference_set.jsonl` `4EA57AC1…C010D`, `scores.jsonl` `F74578D0…72162`).
+- `instructions/skillable/scripts/check-setup.ps1` and `run-offline-loop.ps1`
+  (new): ports of the bash scripts with the same `ok`/`MISS` and stage lines,
+  plus checks for `.venv` and `python on PATH is .venv`. Work in PowerShell 7
+  and 5.1, from any folder, without changing the caller's folder.
+- Skillable pages converted to PowerShell, every command run on the VM and its
+  output checked: Core 0 ("Check your lab environment", "Run the whole loop
+  once"), Core 1 to 4, More 2 to 6. Not converted: Core 0 "Sign in to your lab"
+  (deferred) and More 0 and 1 (Phase B).
+- `instructions/skillable/skillable-copy.md` regenerated with
+  `& 'C:\Program Files\Git\bin\bash.exe' -c "cd '/c/Users/LabUser/Desktop/LAB661' && ./instructions/skillable/generate-skillable-copy.sh"`.
+- `CHANGES.md` and `README.maintainer.md` (new, maintainer-only).
+
+Command translations used in the pages:
+
+| Bash | PowerShell |
+|------|------------|
+| `PYTHONPATH=src python3 x.py` | `$env:PYTHONPATH = "src"; python x.py` |
+| `./src/scripts/check-setup.sh` | `.\instructions\skillable\scripts\check-setup.ps1` |
+| `./src/scripts/run-offline-loop.sh` | `.\instructions\skillable\scripts\run-offline-loop.ps1` |
+| `head -1 f \| python3 -m json.tool` | `Get-Content f -TotalCount 1 \| python -m json.tool` |
+| `cat f` | `Get-Content f` |
+| `echo '{...}' \| opa eval ...` | `'{...}' \| opa eval ...` |
+| `"$(pwd)/data/results"` | `"$PWD\data\results"` |
+| `; echo "exit: $?"` | `; "exit: $LASTEXITCODE"` |
+| `mkdir -p d`, `cp f d/` | `New-Item -ItemType Directory -Force d \| Out-Null`, `Copy-Item f d/` |
+| `cat >> f <<'EOF' ... EOF` | `Add-Content f @' ... '@` |
+| `grep -n -E "re" f` | `Select-String -Path f -Pattern 're'` |
+| Multi-line `\` command | One line |
+
+### Validation done
+
+In a new VS Code terminal after a VS Code restart, and again after the build
+tools were removed:
+
+- `check-setup.ps1`: every line `ok`.
+- `run-offline-loop.ps1`: validation `strongly blocked 5/5`, guard demo `PASS`,
+  attack success `10/10 (100%)` to `0/10 (0%)`, benign `3/3`, exit 0. Same in
+  Windows PowerShell 5.1.
+- Core 3 "Try to break the gate" and More 6: `3/5` and exit 1 without the
+  `secret_disclosure` rule, then `5/5` and exit 0 after restoring.
+- More 3: `transform`, `allow`; `allow` before the edit; `deny`, `transform`,
+  `allow` after. More 4: `deny`, `allow`, then `deny`, `deny` and `5/5`. More 5:
+  manifest shows `pre_tool_call:` and `output:`, probe `deny`, guard shows only
+  `INPUT` and `OUTPUT`.
+
+### Remaining steps
+
+**Finish Phase A (owner)**
+
+1. Commit the VM image in Skillable (**Commit my changes and update this lab
+   profile**) with VS Code open on the trusted `LAB661` folder. If any lab
+   command runs first, delete `artifacts/` again.
+2. Replay the repository changes above upstream.
+3. Ask the ACS maintainers to publish a `win_amd64` wheel.
+4. Update `instructions/skillable/README.md` (maintainer-facing): its
+   Prerequisites, Quickstart and Scripts tables still describe a Codespace and
+   the bash scripts.
+5. Update [`AGENTS.md`](../AGENTS.md) and the `update-skillable-instructions`
+   skill: Skillable pages are PowerShell, self-paced pages are bash, and a
+   command change must be made and tested in both.
+6. Decide whether the image should use Python 3.13 to match the dev container
+   (3.12 is tested).
+
+**Phase B: Foundry for Skillable**
+
+- Owner first: confirm GlobalStandard quota per attendee subscription,
+  ideally in `eastus2` (LAB663's region): 500 for `gpt-5.4-mini`, 100 for
+  `gpt-5.4`. Install Bicep for the lab user (`az bicep install`). Sign in on the
+  VM to the Skillable subscription (`az login`).
+- Then: a cut-down copy of LAB663's `infra/main.bicep`, `modules/` and
+  `infra/pwsh/deploy.ps1` (no model router, index or agent). Resources: Foundry
+  account and project, the two model deployments, Log Analytics, Application
+  Insights, the tracing connection, and roles including **Cognitive Services
+  OpenAI User** (DevBot and ASSERT call the models keylessly). `.env` values to
+  write: `AZURE_API_BASE`, `APPLICATIONINSIGHTS_CONNECTION_STRING`,
+  `DEVBOT_MODEL`, `ASSERT_MODEL`, `ASSERT_AZURE_USE_AAD=1`, keeping
+  `DEVBOT_MODE=offline`. Rehearse with the owner's identity.
+- Then convert More 0 and 1 to PowerShell and test them live: replace
+  `bash infra/setup.sh --env-only` and `set -a; source .env; set +a` (also
+  inside the Copilot prompt text on the More 0 page), and fix the note about
+  where ASSERT saves runs (`~/.local/lib/python3.13/...`).
+
+**Phase C: lifecycle actions**
+
+- Owner first: export the LAB661 profile's current lifecycle actions; ask the
+  tenant admin for the custom variables and directory app secret LAB663 uses
+  (attendee and setup-account object IDs, GitHub group and sync IDs) and
+  whether LAB661 can reuse them.
+- Then: adapt LAB663's actions 01, 02, 04 and 06 (rename `Lab663` to `Lab661`,
+  add Cognitive Services OpenAI User to 02 and 04); write LAB661 versions of 03
+  (deploy, write `.env`, desktop status file, non-blocking for Foundry) and 05
+  (teardown). Paste into Skillable Studio and disable the originals.
+
+**Phase D: rehearse** a fresh instance as an attendee, then tear it down,
+using LAB663's "Rehearse before opening the lab" checklist in its
+`skillable_lifecycles/README.md`.
+
+**At finalize:** remove `CHANGES.md`, `README.maintainer.md` and this file.

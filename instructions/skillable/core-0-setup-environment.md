@@ -63,15 +63,17 @@ Nothing in this lab runs a real dangerous command. DevBot's tools are simulated,
 
 Confirm every tool the lab needs is installed.
 
-1. [] In VS Code, open a terminal with **Terminal > New Terminal**. It opens at the repository root, where every command in this lab runs.
+1. [] In VS Code, open a terminal with **Terminal > New Terminal**. It opens a PowerShell terminal at the repository root, where every command in this lab runs.
 1. [] Run the setup check.
 
-   ++./src/scripts/check-setup.sh++
+   ++.\instructions\skillable\scripts\check-setup.ps1++
 
 1. [] Confirm every line starts with `ok`.
 
    ```text-nocopy
-     ok    python3 3.13
+     ok    virtual environment .venv
+     ok    python on PATH is .venv
+     ok    python 3.12
      ok    assert-ai with the acs integration is importable
      ok    acs-generator present
      ok    agent-control-specification present
@@ -79,12 +81,12 @@ Confirm every tool the lab needs is installed.
      ok    node on PATH
      ok    devbot agent importable (PYTHONPATH=src)
 
-   All checks passed. Run: bash src/scripts/run-offline-loop.sh
+   All checks passed. Run: .\instructions\skillable\scripts\run-offline-loop.ps1
    ```
 
 >[+Hint] A line says `MISS`.
 >
-> The dev container did not finish setting up. Wait for it to finish, then run the check again. If it still fails, raise your hand and ask a proctor.
+> If the line is `python on PATH is not .venv`, close the terminal, open a new one with **Terminal > New Terminal**, and run the check again. For any other `MISS`, raise your hand and ask a proctor.
 
 >[!Note] **Success:** your environment has everything the lab needs.
 
@@ -96,7 +98,7 @@ Run all five stages back to back. This is your smoke test.
 
 1. [] Run the offline loop.
 
-   ++./src/scripts/run-offline-loop.sh++
+   ++.\instructions\skillable\scripts\run-offline-loop.ps1++
 
 1. [] Confirm the last lines read as follows.
 
