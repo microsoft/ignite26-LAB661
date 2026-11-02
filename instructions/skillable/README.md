@@ -22,7 +22,7 @@ do not install or clone anything.
 |----------------|-----|-------|
 | A Windows 11 VM (`Win11-Pro-Base`) with VS Code and this repository already on it | All labs | Attendees do not install or clone anything |
 | GitHub Enterprise sign-in through `https://github.com/enterprises/skillable-events/sso`, using the attendee's **Azure** credentials | More 0 | GitHub Copilot works only through this sign-in. The first page walks attendees through it |
-| A pre-provisioned Foundry project with `gpt-5.4-mini` and `gpt-5.4` deployed, plus Application Insights | More 0 and 1 | `infra/setup.sh --env-only` finds them and writes `.env` |
+| A pre-provisioned Foundry project with `gpt-5.4-mini` and `gpt-5.4` deployed, plus Application Insights | More 0 and 1 | `instructions/skillable/scripts/setup.ps1 -EnvOnly` finds them and writes `.env` |
 | `@lab.CloudPortalCredential(User1)` Username, Password and AccessToken | Sign-in, More 0 | Shown on the first page with `+++` type text |
 
 No lab uses an API key. The live labs sign in with the attendee's Azure identity
@@ -111,4 +111,4 @@ These scripts are listed for reference. You do not need to run either script now
 | Script | What it does | When it runs |
 |--------|--------------|--------------|
 | [`.devcontainer/post-create.sh`](../../.devcontainer/post-create.sh) | Checks Python, the Azure CLI, `jq` and `openssl`, installs `opa`, and installs the pinned packages in [`requirements.txt`](../../requirements.txt) | Automatically, when the dev container is created |
-| [`infra/setup.sh`](../../infra/setup.sh) | With `--env-only`, signs in to Azure, finds the pre-provisioned Foundry project and Application Insights, and writes `.env`. It creates nothing | By the attendee, on the first More 0 page |
+| [`scripts/setup.ps1`](scripts/setup.ps1) | Windows PowerShell port of [`infra/setup.sh`](../../infra/setup.sh). With `-EnvOnly`, signs in to Azure, finds the pre-provisioned Foundry project and Application Insights, and writes `.env`. It creates nothing | By the attendee, on the first More 0 page |

@@ -6,17 +6,17 @@ Run the same loop as the core, one command at a time, with a real model. If you 
 
 1. [] Load your environment.
 
-   ++set -a; source .env; set +a; export PYTHONPATH=src++
+   ++Get-Content .env | Where-Object { $_ -match '^\w+=' } | ForEach-Object { $k, $v = $_ -split '=', 2; [Environment]::SetEnvironmentVariable($k, $v.Trim("'")) }; $env:PYTHONPATH = 'src'++
 
 1. [] Run a real ASSERT evaluation against DevBot.
 
-   ++assert-ai run --config src/eval/eval_config.yaml --override artifacts_root="$PWD/artifacts"++
+   ++assert-ai run --config src/eval/eval_config.yaml --override artifacts_root="$PWD\artifacts"++
 
    >[!Knowledge] ASSERT generates adversarial and benign prompts from DevBot's spec, sends each one to DevBot, and judges the transcripts with a real model. The override keeps the run in this repository, at `artifacts/results/contoso-devbot-shell-abuse-live/baseline/`. A real model varies between runs, so your numbers will differ from the offline baseline. Expect fewer failing classes. In two fresh test runs, harm ranged from 21.4% to 50.0% and over-refusal from 0% to 18.8%, because each run generates new test cases. Only destructive commands got through, 3 of 16 both times.
 
 1. [] Check your run.
 
-   ++assert-ai results status contoso-devbot-shell-abuse-live baseline --results-dir "$PWD/artifacts/results"++
+   ++assert-ai results status contoso-devbot-shell-abuse-live baseline --results-dir "$PWD\artifacts\results"++
 
 >[!Note] **Success:** you have a real evaluation run from a live model.
 
@@ -28,10 +28,10 @@ Let a model design the guardrail rules from the real findings, then check whethe
 
 1. [] Generate the policy with `gpt-5.4`.
 
-   ```bash
-   assert-ai acs generate \
-     --run-dir artifacts/results/contoso-devbot-shell-abuse-live/baseline \
-     --out artifacts/acs/contoso-devbot-shell-abuse-live \
+   ```powershell
+   assert-ai acs generate `
+     --run-dir artifacts/results/contoso-devbot-shell-abuse-live/baseline `
+     --out artifacts/acs/contoso-devbot-shell-abuse-live `
      --model azure/gpt-5.4
    ```
 
@@ -39,7 +39,7 @@ Let a model design the guardrail rules from the real findings, then check whethe
 
 1. [] See what the rules check.
 
-   ++grep -n "annotations\." artifacts/acs/contoso-devbot-shell-abuse-live/policy/*.rego++
+   ++Select-String -Path artifacts/acs/contoso-devbot-shell-abuse-live/policy/*.rego -Pattern 'annotations\.' | ForEach-Object { "$($_.LineNumber):$($_.Line)" }++
 
    ```text-nocopy
    38:    input.annotations.unsafe_remote_exec_output == true
@@ -48,7 +48,7 @@ Let a model design the guardrail rules from the real findings, then check whethe
 
 1. [] Check whether the manifest wires those classifiers to the reply.
 
-   ++grep -n -A6 "^intervention_points\|^annotators" artifacts/acs/contoso-devbot-shell-abuse-live/manifest.yaml++
+   ++Select-String -Path artifacts/acs/contoso-devbot-shell-abuse-live/manifest.yaml -Pattern '^(intervention_points|annotators)' -Context 0,6++
 
    Look for an `annotations` entry under `output`. In two test runs there was none. The classifiers were only declared under `annotators`. The rules themselves differed between runs.
 
@@ -58,9 +58,9 @@ Let a model design the guardrail rules from the real findings, then check whethe
 
 1. [] Validate it, and note what validation can prove.
 
-   ```bash
-   assert-ai acs validate \
-     --manifest artifacts/acs/contoso-devbot-shell-abuse-live/manifest.yaml \
+   ```powershell
+   assert-ai acs validate `
+     --manifest artifacts/acs/contoso-devbot-shell-abuse-live/manifest.yaml `
      --run-dir artifacts/results/contoso-devbot-shell-abuse-live/baseline
    ```
 

@@ -6,7 +6,7 @@ The next two More labs run on a real model. Your Foundry project, both models, a
 
 1. [] In the terminal, run the setup script. It finds the lab's resources and writes your `.env`. It creates nothing.
 
-   ++bash infra/setup.sh --env-only++
+   ++.\instructions\skillable\scripts\setup.ps1 -EnvOnly++
 
 1. [] Sign in when asked, pick the lab subscription, and press Enter to accept the default resource group.
 1. [] Wait for the script to finish. It ends with `Local environment is ready.`
@@ -27,15 +27,15 @@ Load the settings setup wrote, then check that DevBot answers from the real mode
 
 1. [] Load the settings. Run this again in any new terminal.
 
-   ++set -a; source .env; set +a; export PYTHONPATH=src++
+   ++Get-Content .env | Where-Object { $_ -match '^\w+=' } | ForEach-Object { $k, $v = $_ -split '=', 2; [Environment]::SetEnvironmentVariable($k, $v.Trim("'")) }; $env:PYTHONPATH = 'src'++
 
 1. [] Check that DevBot is in live mode. You want `live azure/gpt-5.4-mini`.
 
-   ++echo "$DEVBOT_MODE $DEVBOT_MODEL"++
+   ++"$env:DEVBOT_MODE $env:DEVBOT_MODEL"++
 
 1. [] Ask DevBot a question. The answer comes from the real model, so its wording differs from the offline reply you saw in Lab 1, and it has no behavior tag. In live mode, ASSERT's judge decides whether a reply is safe.
 
-   ++python3 -m devbot.agent "How do I see recent commits?"++
+   ++python -m devbot.agent "How do I see recent commits?"++
 
 >[+Hint] A check fails.
 >
@@ -93,7 +93,7 @@ Describe DevBot and one thing it must never do. The permissible boundary matters
 
 1. [] At the Confirm gate, paste this reply.
 
-   ++Confirmed: use those models, and do a three-case smoke test first. Load the lab settings with `set -a; source .env; set +a; export PYTHONPATH=src` before running. Don't print `.env`.++
+   ++Confirmed: use those models, and do a three-case smoke test first. The terminal is PowerShell. Load the lab settings with `Get-Content .env | Where-Object { $_ -match '^\w+=' } | ForEach-Object { $k, $v = $_ -split '=', 2; [Environment]::SetEnvironmentVariable($k, $v.Trim("'")) }; $env:PYTHONPATH = 'src'` before running. Don't print `.env`.++
 
    >[!Alert] DevBot's `chat` has no `history` parameter, so every scenario runs as a single turn. The run still completes and the numbers look fine. The skill flags this. If it offers to add a `history` parameter, decline for this lab.
 
@@ -102,7 +102,7 @@ Describe DevBot and one thing it must never do. The permissible boundary matters
 
    ++Smoke test passed. Run the full 25-case evaluation with the same settings, then report the violation rate per dimension with two or three failing cases cited from the traces.++
 
->[!Knowledge] ASSERT installed from PyPI saves runs inside its own install folder, `~/.local/lib/python3.13/site-packages/artifacts/results/<suite>/<run>/`, not in this repository. The `assert-ai results` commands look there by default. A container rebuild deletes these runs.
+>[!Knowledge] ASSERT installed from PyPI saves runs inside its own install folder, `.venv\Lib\site-packages\artifacts\results\<suite>\<run>\`, not in your working files. The `assert-ai results` commands look there by default.
 
 >[!Note] **Success:** you have a baseline run for one atomic risk.
 
