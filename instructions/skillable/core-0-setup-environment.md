@@ -6,6 +6,10 @@ Sign in to the virtual machine, then to GitHub, so GitHub Copilot works in VS Co
 
    +++@lab.VirtualMachine(Win11-Pro-Base).Password+++
 
+1. [] In the browser on the virtual machine, open the GitHub Enterprise sign-in page and sign in with your **Azure** credentials.
+
+   +++https://github.com/enterprises/skillable-events/sso+++
+
 1. [] Note your Azure credentials. You use them to sign in to GitHub and, in More 0, to Azure.
 
    | Credential | Value |
@@ -13,10 +17,6 @@ Sign in to the virtual machine, then to GitHub, so GitHub Copilot works in VS Co
    | Username | +++@lab.CloudPortalCredential(User1).Username+++ |
    | Password | +++@lab.CloudPortalCredential(User1).Password+++ |
    | Temporary Access Pass | +++@lab.CloudPortalCredential(User1).AccessToken+++ |
-
-1. [] In the browser on the virtual machine, open the GitHub Enterprise sign-in page and sign in with your **Azure** credentials.
-
-   +++https://github.com/enterprises/skillable-events/sso+++
 
 1. [] Keep that browser page open, then open VS Code.
 1. [] In VS Code, select **Continue with GitHub** and finish the sign-in through the same SSO page.
