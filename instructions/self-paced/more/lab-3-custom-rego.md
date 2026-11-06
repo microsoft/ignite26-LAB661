@@ -132,11 +132,16 @@ echo '{"intervention_point":"output","policy_target":{"value":"run git log"}}' \
 <details>
 <summary>One solution</summary>
 
-Append the rule to the end of the copy. Run this once; running it twice adds the
-rule twice.
+Copy the ready-made solution over your copy. It is the example plus one rule at
+the end of the `else` chain, and copying it again is safe.
 
 ```bash
-cat >> artifacts/custom-rego/redact.rego <<'EOF'
+cp src/policy/lab-variants/redact.drop-table.rego.txt artifacts/custom-rego/redact.rego
+```
+
+The rule it adds:
+
+```text
 else := {
     "decision": "deny",
     "reason": "sql_destruction",
@@ -145,7 +150,6 @@ else := {
     input.intervention_point == "output"
     contains(upper(input.policy_target.value), "DROP TABLE")
 }
-EOF
 ```
 
 `upper` makes the match case-insensitive. Because the redaction rule comes

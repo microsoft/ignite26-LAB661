@@ -24,9 +24,12 @@ function Invoke-Step([string]$Command, [string[]]$Arguments) {
 }
 
 $savedPythonPath = $env:PYTHONPATH
+$savedMode = $env:DEVBOT_MODE
 Push-Location $repoRoot
 try {
     $env:PYTHONPATH = if ($savedPythonPath) { "src;$savedPythonPath" } else { 'src' }
+    # A terminal that loaded .env for the live labs would otherwise send these prompts to a real model.
+    $env:DEVBOT_MODE = 'offline'
 
     Write-Stage '1/5  Capture the baseline ASSERT run (real agent outputs + reference judge)'
     Invoke-Step $python @('src/eval/build_baseline_fixture.py')
@@ -50,6 +53,7 @@ try {
 }
 finally {
     $env:PYTHONPATH = $savedPythonPath
+    $env:DEVBOT_MODE = $savedMode
     Pop-Location
 }
 

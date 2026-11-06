@@ -12,14 +12,14 @@ publishing.
 - **Self-paced stays as it is.** The dev container, the bash scripts
   (`src/scripts/*.sh`, `infra/setup.sh`), CI and `instructions/self-paced/`
   are unchanged. Bash stays the source of truth.
-- **Skillable gets its own Windows pieces**, following LAB663's pattern. LAB663
-  and LAB661 run on separate VMs, so every image change is redone here.
+- **Skillable gets its own Windows pieces.** Every image change is redone on the
+  Skillable VM.
   - PowerShell versions of the attendee scripts in
     `instructions/skillable/scripts/`.
   - A prebuilt `.venv` in the repository root and `opa.exe` on the image.
     Attendees install nothing.
-  - Later, Skillable lifecycle actions that deploy Foundry and write `.env`
-    before the attendee arrives (modelled on LAB663's `skillable_lifecycles/`).
+  - A Skillable lifecycle action that deploys Foundry and writes `.env` before
+    the attendee reaches More 0.
 - **The core lab is offline.** Foundry only matters for More 0 and 1, so a
   Foundry setup failure must not block the core lab.
 
@@ -27,9 +27,9 @@ publishing.
 
 | Phase | What | State |
 |-------|------|-------|
-| A | VM image and offline core on Windows | Done on this VM. Waiting on your checks below |
-| B | Foundry deployment for Skillable (Bicep + PowerShell), then More 0 and 1 pages | Not started |
-| C | Skillable lifecycle actions | Not started |
+| A | VM image and offline core on Windows | Done |
+| B | Foundry deployment (`infra/main.bicep`), then More 0 and 1 pages in PowerShell | Bicep tested live with self-paced `infra/setup.sh`. Skillable pages written, not yet run on the VM |
+| C | Skillable lifecycle action | `instructions/skillable/lifecycle/deploy-foundry.ps1` written, not yet run on Skillable |
 | D | Full rehearsal on a fresh Skillable instance | Not started |
 
 ## Phase A: VM image and the offline core
@@ -94,53 +94,49 @@ attendees start from a clean checkout.
 
 ## Phase B: Foundry deployment for Skillable
 
-Copilot will write a cut-down copy of LAB663's Bicep and PowerShell deployment:
-a Foundry account and project, `gpt-5.4-mini` (500) and `gpt-5.4` (100), Log
-Analytics, Application Insights, the tracing connection and roles, including
-**Cognitive Services OpenAI User**, which DevBot and ASSERT need for keyless
-calls. `infra/setup.sh` stays for self-paced. Copilot will then convert More 0
-and 1 to PowerShell and test them against the real deployment. More 0 also has a
-note about where ASSERT saves runs (`~/.local/lib/python3.13/...`) that needs
-the Windows path.
+`infra/main.bicep` creates the Foundry account and project, `gpt-5.4-mini`
+(500) and `gpt-5.4` (100), Log Analytics, Application Insights and its project
+connection, and the roles DevBot and ASSERT need for keyless calls. Self-paced
+`infra/setup.sh` and the Skillable lifecycle action both deploy it. More 0 and 1
+are now PowerShell pages that load `.env` with
+`instructions/skillable/scripts/load-env.ps1`.
 
 Your actions:
 
-1. Confirm GlobalStandard quota per attendee subscription in the chosen region
-   (LAB663 uses `eastus2`): 500 for `gpt-5.4-mini` and 100 for `gpt-5.4`.
-2. Install Bicep on the image for the lab VM user (LAB663 needs the same).
-3. Sign in to the Skillable subscription on this VM so Copilot can rehearse the
-   deployment with your identity before any lifecycle action exists.
+1. Confirm GlobalStandard quota per attendee subscription at pool scale: 500
+   for `gpt-5.4-mini` and 100 for `gpt-5.4`. Keep only the datacenters that
+   offer both models (canadacentral, eastus, eastus2, francecentral, westus).
+2. Install Bicep on the image for the lab VM user (`az bicep install`).
+3. Run More 0 and 1 on the VM and check every command.
 
 ## Phase C: Skillable lifecycle actions
 
-Copilot will adapt LAB663's actions 01, 02, 04 and 06 (renamed to `Lab661`, and
-with Cognitive Services OpenAI User added to 02 and 04), and write LAB661
-versions of 03 (deploy, write `.env`, desktop status file) and 05 (teardown).
-Unlike LAB663, the Foundry part of 03 should not block the lab, so attendees can
-start the offline core while it deploys.
+`deploy-foundry.ps1` runs in the VM at First Displayable, not blocking, with a
+30-minute timeout. It signs in with the subscription's service principal,
+deploys `infra/main.bicep` into the lab resource group, writes `.env` in offline
+mode, and reports `RUNNING`, `READY` or `FAILED` in
+`LAB661-Foundry-status.txt` on the desktop. Skillable deletes the resource group
+at the end of the lab, so there is no teardown action for Foundry.
 
 Your actions:
 
-1. Export the current LAB661 lab profile's lifecycle actions, so we know what
-   they replace.
-2. Ask the tenant admin for the custom variables and the directory app secret
-   LAB663 uses (attendee and setup-account object IDs, GitHub group and sync
-   IDs). Confirm whether LAB661 runs in the same tenant and can reuse them.
-3. Paste the actions into Skillable Studio and disable the originals they
-   replace.
+1. Add **Log Analytics Reader** to the existing Assign Roles and Tear Down
+   Roles actions.
+2. Add `deploy-foundry.ps1` as a VM PowerShell action at First Displayable,
+   not blocking.
+3. Untick australiacentral and westus2 in the cloud datacenters.
 
 ## Phase D: Rehearse
 
-Start a fresh instance and work through it as an attendee, then tear it down.
-Use LAB663's "Rehearse before opening the lab" list in its
-`skillable_lifecycles/README.md` as the checklist.
+Start two fresh instances and work through each as an attendee: Core 0 to 4,
+then More 0 to 6. Check the status file reads `READY`, `.env` starts in offline
+mode, and every page's output matches.
 
 ## Deferred
 
 - **Copilot and GitHub sign-in in the Skillable manual.** The current pages
-  walk attendees through the GitHub Enterprise SSO sign-in by hand. LAB663
-  replaces this with a lifecycle action (its action 01) plus a status-file
-  check. Look into this later. Until then, the Copilot and GitHub sign-in
+  walk attendees through the GitHub Enterprise SSO sign-in by hand. A lifecycle
+  action plus a status-file check could replace this. Look into this later. Until then, the Copilot and GitHub sign-in
   content in `instructions/skillable/` is left unchanged.
 - **Windows Python version.** We used the Python 3.12 already on the VM. The
   dev container uses 3.13. Decide whether the image should match.

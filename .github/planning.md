@@ -154,16 +154,15 @@ publishing.
 - The self-paced path is unchanged: dev container, bash scripts in
   `src/scripts/` and `infra/setup.sh`, CI, and `instructions/self-paced/`. Bash
   stays the source of truth. Skillable gets its own Windows pieces.
-- Follow LAB663's Skillable pattern (lifecycle actions provision Foundry and
-  write `.env` before the attendee arrives; prebuilt `.venv`; nothing installed
-  during the lab). LAB663 and LAB661 run on **separate VMs**, so every image
-  change is redone here.
-- Unlike LAB663, the LAB661 core is offline, so the Foundry part of the VM
-  lifecycle action should not block the lab or end it on failure.
+- Skillable pattern: a lifecycle action provisions Foundry and writes `.env`
+  before the attendee reaches More 0; prebuilt `.venv`; nothing installed
+  during the lab. Every image change is redone on the Skillable VM.
+- The LAB661 core is offline, so the Foundry lifecycle action must not block the
+  lab or end it on failure.
 - Deferred by the owner: the Copilot and GitHub sign-in content in the
-  Skillable manual (Core 0 "Sign in to your lab"). LAB663 replaces the manual
-  GitHub Enterprise SSO steps with a lifecycle action (its action 01) plus a
-  desktop status file. Look into this later; do not change those pages yet.
+  Skillable manual (Core 0 "Sign in to your lab"). A lifecycle action plus a
+  desktop status file could replace the manual GitHub Enterprise SSO steps.
+  Look into this later; do not change those pages yet.
 
 ### VM changes (redo on any new image)
 
@@ -176,10 +175,6 @@ publishing.
 | Build toolchain, installed then **removed** | Rust (`rustup`, user), VS 2022 Build Tools with the VC tools workload, Windows 11 SDK | Removed: `rustup self uninstall -y`; Build Tools, then the Visual Studio Installer, then the Windows SDK in **Settings > Apps > Installed apps**. A silent `setup.exe uninstall --quiet` from a non-elevated terminal does nothing. Kept: Visual C++ 2015-2022 redistributables, and a harmless "Windows SDK AddOn" entry |
 | Cleanup | `%TEMP%`, pip cache, repo | Deleted the installers, source download and pip cache (202 MB); deleted `artifacts/`; confirmed no `.env` |
 | Already on the VM, unchanged | | PowerShell 7.5 (and 5.1), Node, Azure CLI, Git for Windows (Git Bash at `C:\Program Files\Git\bin\bash.exe`), VS Code 1.135 with no extensions, execution policy `Unrestricted` (LocalMachine) |
-
-`%TEMP%\lab663-ref\ignite26-LAB663-main` holds the extracted LAB663 reference
-repo (from `D:\ignite26-LAB663-main.zip`). It is needed for Phases B and C;
-re-extract it if `%TEMP%` is cleared.
 
 ### Repository changes (replay upstream)
 
@@ -256,38 +251,24 @@ tools were removed:
 6. Decide whether the image should use Python 3.13 to match the dev container
    (3.12 is tested).
 
-**Phase B: Foundry for Skillable**
+**Phase B: Foundry for Skillable** (done, not yet run on the VM)
 
-- Owner first: confirm GlobalStandard quota per attendee subscription,
-  ideally in `eastus2` (LAB663's region): 500 for `gpt-5.4-mini`, 100 for
-  `gpt-5.4`. Install Bicep for the lab user (`az bicep install`). Sign in on the
-  VM to the Skillable subscription (`az login`).
-- Then: a cut-down copy of LAB663's `infra/main.bicep`, `modules/` and
-  `infra/pwsh/deploy.ps1` (no model router, index or agent). Resources: Foundry
-  account and project, the two model deployments, Log Analytics, Application
-  Insights, the tracing connection, and roles including **Cognitive Services
-  OpenAI User** (DevBot and ASSERT call the models keylessly). `.env` values to
-  write: `AZURE_API_BASE`, `APPLICATIONINSIGHTS_CONNECTION_STRING`,
-  `DEVBOT_MODEL`, `ASSERT_MODEL`, `ASSERT_AZURE_USE_AAD=1`, keeping
-  `DEVBOT_MODE=offline`. Rehearse with the owner's identity.
-- Then convert More 0 and 1 to PowerShell and test them live: replace
-  `bash infra/setup.sh --env-only` and `set -a; source .env; set +a` (also
-  inside the Copilot prompt text on the More 0 page), and fix the note about
-  where ASSERT saves runs (`~/.local/lib/python3.13/...`).
+- `infra/main.bicep`: Foundry account and project, the two model deployments,
+  Log Analytics, Application Insights and its project connection, and roles
+  including **Cognitive Services OpenAI User**. Self-paced `infra/setup.sh`
+  deploys it and passed live. `.env` keeps `DEVBOT_MODE=offline` on Skillable.
+- More 0 and 1 are PowerShell pages that load `.env` with
+  `instructions/skillable/scripts/load-env.ps1 -Live`.
+- Owner: confirm GlobalStandard quota at pool scale (500 for `gpt-5.4-mini`,
+  100 for `gpt-5.4`), and install Bicep for the lab user (`az bicep install`).
 
 **Phase C: lifecycle actions**
 
-- Owner first: export the LAB661 profile's current lifecycle actions; ask the
-  tenant admin for the custom variables and directory app secret LAB663 uses
-  (attendee and setup-account object IDs, GitHub group and sync IDs) and
-  whether LAB661 can reuse them.
-- Then: adapt LAB663's actions 01, 02, 04 and 06 (rename `Lab663` to `Lab661`,
-  add Cognitive Services OpenAI User to 02 and 04); write LAB661 versions of 03
-  (deploy, write `.env`, desktop status file, non-blocking for Foundry) and 05
-  (teardown). Paste into Skillable Studio and disable the originals.
+- `instructions/skillable/lifecycle/deploy-foundry.ps1`: VM action at First
+  Displayable, not blocking. Writes `.env` and a desktop status file.
+- Owner: add Log Analytics Reader to Assign Roles and Tear Down Roles, add the
+  deploy action, untick australiacentral and westus2.
 
-**Phase D: rehearse** a fresh instance as an attendee, then tear it down,
-using LAB663's "Rehearse before opening the lab" checklist in its
-`skillable_lifecycles/README.md`.
+**Phase D: rehearse** two fresh instances as an attendee.
 
 **At finalize:** remove `CHANGES.md`, `README.maintainer.md` and this file.

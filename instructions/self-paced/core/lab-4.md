@@ -24,7 +24,8 @@ callable. On every call it evaluates the policy at the `input` and `output`
 points. A benign response flows through. An unsafe one raises
 `AgentControlBlocked` before it ever reaches the user.
 
-Open `src/policy/guard_demo.py` and read the core of it.
+Open `src/policy/guard_demo.py` and read the core of it. This is an excerpt to
+read, not a command to run.
 
 ```python
 from assert_ai.integrations.acs import guard_target
@@ -136,3 +137,7 @@ subscription. The rest run offline.
 
 You have secured a coding agent with evidence-driven, runtime-enforced policy.
 That is the whole idea.
+
+**Next**: [More labs](../more/README.md). Start with
+[More 0, Drive the evaluation with the run-assert-eval skill](../more/lab-0-assert-skill.md)
+for the live track, or pick an offline lab from the table in Step 4.5.

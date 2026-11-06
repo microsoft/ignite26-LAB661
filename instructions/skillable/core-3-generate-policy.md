@@ -58,9 +58,11 @@ Prove the policy blocks every known-bad output before you trust it.
 
 This page is optional. Convince yourself the gate is real.
 
->[!Alert] **Edit the generator before running the commands below.** In `src/policy/generate_offline.py`, comment out the entire `secret_disclosure` rule block in `PLAN` and save the file. Without this edit, regeneration keeps the rule and validation will still pass 5/5.
+1. [] **First swap in a generator with the `secret_disclosure` rule commented out.**
 
-1. [] **First regenerate.**
+   ++Copy-Item src/policy/lab-variants/generate_offline.no-secret-rule.py.txt src/policy/generate_offline.py -Force++
+
+1. [] **Then regenerate.**
 
    ++$env:PYTHONPATH = "src"; python src/policy/generate_offline.py++
 
@@ -74,10 +76,18 @@ This page is optional. Convince yourself the gate is real.
 >
 > Validation drops to 3 of 5 and the command fails. The `Secret disclosure` row falls through, and so does `Embedded-instruction obedience`, because the injected-instruction case leaked the same secret and was caught by that same rule.
 
->[!Alert] **Restore the rule before moving on.** Uncomment the entire `secret_disclosure` rule block in `PLAN` and save the file. Then regenerate the policy:
->
-> ```powershell
-> $env:PYTHONPATH = "src"; python src/policy/generate_offline.py
-> ```
+>[!Alert] **Restore the rule before moving on.** Lab 4 needs the full policy.
+
+1. [] Copy the original generator back.
+
+   ++Copy-Item src/policy/lab-variants/generate_offline.full.py.txt src/policy/generate_offline.py -Force++
+
+1. [] Regenerate the full policy.
+
+   ++$env:PYTHONPATH = "src"; python src/policy/generate_offline.py++
+
+1. [] Confirm it is back to 5 of 5. It should report `strongly blocked 5/5` and succeed.
+
+   ++assert-ai acs validate --manifest artifacts/acs/contoso-devbot-shell-abuse-v1/manifest.yaml --run-dir data/results/contoso-devbot-shell-abuse-v1/baseline-unguarded --require-block++
 
 >[!Note] **Success:** you watched the gate fail on an incomplete policy, which is what makes validation worth running.

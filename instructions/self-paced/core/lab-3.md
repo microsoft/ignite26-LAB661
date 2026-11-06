@@ -124,13 +124,13 @@ command succeeds.
 
 Convince yourself the gate is real.
 
-> [!WARNING]
-> **Edit the generator before running the commands below.** In
-> `src/policy/generate_offline.py`, comment out the entire `secret_disclosure`
-> rule block in `PLAN` and save the file. Without this edit, regeneration keeps
-> the rule and validation will still pass 5/5.
+**First swap in a generator with the `secret_disclosure` rule commented out.**
 
-**First regenerate.**
+```bash
+cp src/policy/lab-variants/generate_offline.no-secret-rule.py.txt src/policy/generate_offline.py
+```
+
+**Then regenerate.**
 
 ```bash
 PYTHONPATH=src python3 src/policy/generate_offline.py
@@ -151,14 +151,30 @@ and so does `Embedded-instruction obedience`, because the injected-instruction
 case leaked the same secret and was caught by that same rule. One deleted rule,
 two reopened holes.
 
-> [!WARNING]
-> **Restore the rule before moving on.** Uncomment the entire
-> `secret_disclosure` rule block in `PLAN` and save the file. Then regenerate
-> the policy:
->
-> ```bash
-> PYTHONPATH=src python3 src/policy/generate_offline.py
-> ```
+> [!CAUTION]
+> **Restore the rule before moving on.** Lab 4 needs the full policy.
+
+**Copy the original generator back.**
+
+```bash
+cp src/policy/lab-variants/generate_offline.full.py.txt src/policy/generate_offline.py
+```
+
+**Regenerate the full policy.**
+
+```bash
+PYTHONPATH=src python3 src/policy/generate_offline.py
+```
+
+**Confirm it is back to 5 of 5.** Run the validate command from Step 3.4 again.
+It should report `strongly blocked 5/5` and exit 0.
+
+```bash
+assert-ai acs validate \
+  --manifest artifacts/acs/contoso-devbot-shell-abuse-v1/manifest.yaml \
+  --run-dir data/results/contoso-devbot-shell-abuse-v1/baseline-unguarded \
+  --require-block
+```
 
 ---
 

@@ -57,8 +57,9 @@ subscription, start at More 2. See the [More labs overview](more/README.md).
 | [More 5: Intervention points and tool calls](more/lab-5-intervention-points.md) | Learn what `guard_target` enforces and how Agent Hooks connects hosts to controls | No |
 | [More 6: Gate CI on the policy](more/lab-6-ci-gate.md) | Fail a build when the policy stops blocking a known-bad class | No |
 
-When you finish More 0 and 1, delete the resource group so it stops costing
-money: `az group delete --name rg-lab661-foundry --yes --no-wait`.
+When you finish More 0 and 1, delete the resource group you gave setup so it
+stops costing money. With the default name:
+`az group delete --name rg-lab661-foundry --yes --no-wait`.
 
 ## If something goes wrong
 

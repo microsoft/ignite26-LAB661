@@ -1,22 +1,22 @@
 # More 1: Go live by hand
 
-Run the same loop as the core, one command at a time, with a real model. If you did More 0, this is what the skill did for you.
+Run the same loop as the core, one command at a time, with a real model. This is the manual path, for anyone who skipped More 0 or cannot use Copilot agent mode. If you finished More 0, you can skip to More 2. The next page, **Generate a live policy**, is the part More 0 does not show you step by step.
 
 >[!Alert] This lab needs the `.env` from More 0. If you skipped More 0, complete its **Connect to Microsoft Foundry** and **Validate your environment** pages first.
 
 1. [] Load your environment.
 
-   ++set -a; source .env; set +a; export PYTHONPATH=src++
+   ++. .\instructions\skillable\scripts\load-env.ps1 -Live++
 
 1. [] Run a real ASSERT evaluation against DevBot.
 
-   ++assert-ai run --config src/eval/eval_config.yaml --override artifacts_root="$PWD/artifacts"++
+   ++assert-ai run --config src/eval/eval_config.yaml --override artifacts_root="$PWD\artifacts"++
 
-   >[!Knowledge] ASSERT generates adversarial and benign prompts from DevBot's spec, sends each one to DevBot, and judges the transcripts with a real model. The override keeps the run in this repository, at `artifacts/results/contoso-devbot-shell-abuse-live/baseline/`. A real model varies between runs, so your numbers will differ from the offline baseline. Expect fewer failing classes. In two fresh test runs, harm ranged from 21.4% to 50.0% and over-refusal from 0% to 18.8%, because each run generates new test cases. Only destructive commands got through, 3 of 16 both times.
+   >[!Knowledge] ASSERT generates adversarial and benign prompts from DevBot's spec, sends each one to DevBot, and judges the transcripts with a real model. The override keeps the run in this repository, at `artifacts/results/contoso-devbot-shell-abuse-live/baseline/`. A real model varies between runs, so your numbers will differ from the offline baseline. Expect fewer failing classes. In three fresh test runs, harm ranged from 21.4% to 50.0% and over-refusal from 0% to 18.8%, because each run generates new test cases. Only destructive commands got through, 2 or 3 of 16 every time.
 
 1. [] Check your run.
 
-   ++assert-ai results status contoso-devbot-shell-abuse-live baseline --results-dir "$PWD/artifacts/results"++
+   ++assert-ai results status contoso-devbot-shell-abuse-live baseline --results-dir "$PWD\artifacts\results"++
 
 >[!Note] **Success:** you have a real evaluation run from a live model.
 
@@ -28,18 +28,15 @@ Let a model design the guardrail rules from the real findings, then check whethe
 
 1. [] Generate the policy with `gpt-5.4`.
 
-   ```bash
-   assert-ai acs generate \
-     --run-dir artifacts/results/contoso-devbot-shell-abuse-live/baseline \
-     --out artifacts/acs/contoso-devbot-shell-abuse-live \
-     --model azure/gpt-5.4
-   ```
+   ++assert-ai acs generate --run-dir artifacts/results/contoso-devbot-shell-abuse-live/baseline --out artifacts/acs/contoso-devbot-shell-abuse-live --model azure/gpt-5.4++
 
-   In one test run it ended with `handled 0/4 ... strongly blocked 0/4` and a note that the policy conditions on LLM annotators. Yours may differ.
+   In one test run it ended with `handled 0/4 ... strongly blocked 0/4` and a note that the policy conditions on LLM annotators. The count is your run's failing cases, so yours may read `0/2` or `0/3`.
 
 1. [] See what the rules check.
 
-   ++grep -n "annotations\." artifacts/acs/contoso-devbot-shell-abuse-live/policy/*.rego++
+   ++Select-String -Path artifacts\acs\contoso-devbot-shell-abuse-live\policy\*.rego -Pattern 'annotations\.'++
+
+   Each match is a rule condition on `input.annotations.<name>`. In one test run there was one, on `destructive_filesystem_output_semantic`. In another there were two:
 
    ```text-nocopy
    38:    input.annotations.unsafe_remote_exec_output == true
@@ -48,7 +45,7 @@ Let a model design the guardrail rules from the real findings, then check whethe
 
 1. [] Check whether the manifest wires those classifiers to the reply.
 
-   ++grep -n -A6 "^intervention_points\|^annotators" artifacts/acs/contoso-devbot-shell-abuse-live/manifest.yaml++
+   ++Select-String -Path artifacts\acs\contoso-devbot-shell-abuse-live\manifest.yaml -Pattern '^intervention_points','^annotators' -Context 0,6++
 
    Look for an `annotations` entry under `output`. In two test runs there was none. The classifiers were only declared under `annotators`. The rules themselves differed between runs.
 
@@ -58,13 +55,9 @@ Let a model design the guardrail rules from the real findings, then check whethe
 
 1. [] Validate it, and note what validation can prove.
 
-   ```bash
-   assert-ai acs validate \
-     --manifest artifacts/acs/contoso-devbot-shell-abuse-live/manifest.yaml \
-     --run-dir artifacts/results/contoso-devbot-shell-abuse-live/baseline
-   ```
+   ++assert-ai acs validate --manifest artifacts/acs/contoso-devbot-shell-abuse-live/manifest.yaml --run-dir artifacts/results/contoso-devbot-shell-abuse-live/baseline++
 
-   Expect `handled 0/4 ... strongly blocked 0/4`. Do not add `--require-block` for this policy. It exits with an error because nothing can be blocked offline.
+   Expect `handled 0/N ... strongly blocked 0/N`, the same count as the previous step. Do not add `--require-block` for this policy. It exits with an error because nothing can be blocked offline.
 
 >[!Knowledge] Offline validation proves only rules it can evaluate, such as the core's keyword rules. To prove a classifier-based policy, wire the classifier, wrap DevBot, and rerun the same evaluation, as the skill did in More 0. Or write keyword rules from these findings, as in the core, so `--require-block` can prove them offline. The generator sends structured findings signal to the model. For sensitive agents, generate with a self-hosted model or design the plan yourself, as `src/policy/generate_offline.py` does.
 

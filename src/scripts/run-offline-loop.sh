@@ -8,6 +8,8 @@ set -euo pipefail
 
 cd "$(dirname "$0")/../.."
 export PYTHONPATH="src${PYTHONPATH:+:$PYTHONPATH}"
+# A terminal that loaded .env for the live labs would otherwise send these prompts to a real model.
+export DEVBOT_MODE=offline
 
 hr() { printf '\n\033[1m== %s ==\033[0m\n' "$1"; }
 

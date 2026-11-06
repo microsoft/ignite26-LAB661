@@ -14,9 +14,13 @@ Turn validation into a build gate, so a regression that reopens a hole fails CI 
 
    ++assert-ai acs validate --manifest artifacts/acs/contoso-devbot-shell-abuse-v1/manifest.yaml --run-dir data/results/contoso-devbot-shell-abuse-v1/baseline-unguarded --require-block; "exit: $LASTEXITCODE"++
 
-1. [] Restore the full policy. Rerun the gate if you like; it prints `exit: 0` again.
+1. [] Restore the full policy.
 
    ++$env:PYTHONPATH = "src"; python src/policy/generate_offline.py++
+
+1. [] Rerun the gate. It prints `exit: 0` again.
+
+   ++assert-ai acs validate --manifest artifacts/acs/contoso-devbot-shell-abuse-v1/manifest.yaml --run-dir data/results/contoso-devbot-shell-abuse-v1/baseline-unguarded --require-block; "exit: $LASTEXITCODE"++
 
 >[!Note] **Success:** you watched the gate pass, fail on a regression, and pass again once the policy was restored.
 

@@ -3,13 +3,13 @@
 # Licensed under the MIT License.
 #
 # Provision a Microsoft Foundry resource and project with two model deployments
-# (gpt-5.4-mini and gpt-5.4) for the live track, plus the monitoring resources and
-# role assignments it needs: a Log Analytics workspace, Application Insights, a
-# project connection to it, Foundry User, Cognitive Services OpenAI User and Log
-# Analytics Reader for you, and Log Analytics Reader for the project identity.
+# (gpt-5.4-mini and gpt-5.4) for the live track by deploying infra/main.bicep,
+# which also creates a Log Analytics workspace, Application Insights, a project
+# connection to it, Foundry User, Cognitive Services OpenAI User and Log Analytics
+# Reader for you, and Log Analytics Reader for the project identity.
 # Signs in to Azure, lets you pick a subscription, asks for a resource group and
-# location, then creates whatever is missing. Safe to re-run: existing resources
-# are reused. Writes .env for the live labs at the end.
+# location, then deploys. Safe to re-run: the deployment updates resources in
+# place. Writes .env for the live labs at the end.
 #
 # With --env-only it creates nothing. It finds the Foundry resource and
 # Application Insights already in the resource group and only writes .env, for
@@ -68,24 +68,6 @@ esac
 
 FAILED=()
 
-# assign_role PRINCIPAL_ID TYPE ROLE SCOPE LABEL: creates the role assignment unless it exists.
-assign_role() {
-    local principal="$1" type="$2" role="$3" scope="$4" label="$5" existing error
-    existing="$(az role assignment list --assignee "${principal}" --role "${role}" --scope "${scope}" \
-        --query "length(@)" -o tsv 2>/dev/null || echo 0)"
-    if [[ "${existing}" != "0" ]]; then
-        ok "${label} (already assigned)"
-        return 0
-    fi
-    if error="$(az role assignment create --assignee-object-id "${principal}" \
-        --assignee-principal-type "${type}" --role "${role}" --scope "${scope}" --output none 2>&1)"; then
-        ok "${label}"
-    else
-        warn "${label} failed: $(head -n1 <<<"${error}")"
-        FAILED+=("role: ${label}")
-    fi
-}
-
 # ensure_jq: installs jq with winget (Git Bash on Windows), apt-get or brew when it is missing.
 ensure_jq() {
     command -v jq >/dev/null 2>&1 && return 0
@@ -107,7 +89,7 @@ ensure_jq() {
 # ----------------------------------------------------------------- sign in ----
 log "Azure sign-in"
 command -v az >/dev/null 2>&1 || die "Azure CLI (az) not found"
-# 2.80.0 adds 'az cognitiveservices account project' and --allow-project-management.
+# Oldest Azure CLI this lab is tested with.
 AZ_MIN_VERSION="2.80.0"
 AZ_VERSION="$(az version --query '"azure-cli"' -o tsv 2>/dev/null | tr -d '\r' || true)"
 [[ "$(printf '%s\n' "${AZ_MIN_VERSION}" "${AZ_VERSION:-0}" | sort -V | head -n1)" == "${AZ_MIN_VERSION}" ]] \
@@ -146,8 +128,14 @@ ok "using $(az account show --query name -o tsv) (${SUBSCRIPTION_ID})"
 
 # ------------------------------------------------- resource group, location ----
 log "Resource group and location"
-ask RESOURCE_GROUP "Resource group name" "rg-lab661-foundry"
-[[ "${ENV_ONLY}" == "1" ]] || ask LOCATION "Azure location" "eastus2"
+# Skillable labs pre-create a LAB661 group; offer it as the default when present.
+DEFAULT_GROUP="rg-lab661-foundry"
+if [[ "$(az group exists --name LAB661)" == "true" ]]; then
+    DEFAULT_GROUP="LAB661"
+fi
+ask RESOURCE_GROUP "Resource group name" "${DEFAULT_GROUP}"
+DEFAULT_LOCATION="$(clean "$(az group show --name "${RESOURCE_GROUP}" --query location -o tsv 2>/dev/null || true)")"
+[[ "${ENV_ONLY}" == "1" ]] || ask LOCATION "Azure location" "${DEFAULT_LOCATION:-eastus2}"
 
 # Reuse a Foundry resource already in the group; otherwise pick a new unique name.
 FOUNDRY_NAME="$(clean "${FOUNDRY_NAME:-$(az cognitiveservices account list --resource-group "${RESOURCE_GROUP}" \
@@ -159,6 +147,16 @@ fi
 FOUNDRY_NAME="$(tr '[:upper:]' '[:lower:]' <<<"${FOUNDRY_NAME}")"
 [[ "${FOUNDRY_NAME}" =~ ^[a-z0-9]([a-z0-9-]{0,62}[a-z0-9])?$ ]] \
     || die "Foundry resource name must be 2-64 letters, digits or hyphens, and not start or end with a hyphen"
+
+# An existing Foundry resource cannot move, so deploy into its location.
+if [[ "${ENV_ONLY}" == "0" ]]; then
+    existing_location="$(clean "$(az cognitiveservices account show --name "${FOUNDRY_NAME}" \
+        --resource-group "${RESOURCE_GROUP}" --query location -o tsv 2>/dev/null || true)")"
+    if [[ -n "${existing_location}" && "${existing_location}" != "${LOCATION}" ]]; then
+        warn "${FOUNDRY_NAME} already exists in ${existing_location}; using that location"
+        LOCATION="${existing_location}"
+    fi
+fi
 
 LOGS_NAME="$(cut -c1-63 <<<"log-${FOUNDRY_NAME}")"
 APPI_NAME="appi-${FOUNDRY_NAME}"
@@ -281,7 +279,7 @@ printf '    Project          : %s\n' "${PROJECT_NAME}"
 printf '    Models           : gpt-5.4-mini (%sK TPM), gpt-5.4 (%sK TPM)\n' "${MINI_CAPACITY}" "${MODEL_CAPACITY}"
 printf '    Monitoring       : %s, %s (connected to the project)\n' "${LOGS_NAME}" "${APPI_NAME}"
 printf '    Role assignments : Foundry User, Cognitive Services OpenAI User and Log Analytics Reader for you, Log Analytics Reader for the project identity\n'
-read -r -p "    Create anything that is missing? [Y/n]: " reply
+read -r -p "    Deploy infra/main.bicep with these settings? [Y/n]: " reply
 if [[ "${reply:-Y}" =~ ^[Nn] ]]; then
     echo "    Cancelled. Nothing was created."
     exit 0
@@ -305,179 +303,31 @@ else
     ok "created ${RESOURCE_GROUP} in ${LOCATION}"
 fi
 
-# --------------------------------------------------------- foundry resource ----
-log "Foundry resource"
-if az cognitiveservices account show --name "${FOUNDRY_NAME}" --resource-group "${RESOURCE_GROUP}" >/dev/null 2>&1; then
-    ok "using existing resource ${FOUNDRY_NAME}"
-else
-    az cognitiveservices account create \
-        --name "${FOUNDRY_NAME}" \
-        --resource-group "${RESOURCE_GROUP}" \
-        --location "${LOCATION}" \
-        --kind AIServices \
-        --sku S0 \
-        --custom-domain "${FOUNDRY_NAME}" \
-        --allow-project-management \
-        --assign-identity \
-        --yes \
-        --output none
-    ok "created ${FOUNDRY_NAME}"
-fi
-ACCOUNT_LOCATION="$(az cognitiveservices account show --name "${FOUNDRY_NAME}" --resource-group "${RESOURCE_GROUP}" --query location -o tsv)"
-
-# ----------------------------------------------------------------- project ----
-log "Foundry project"
-if az cognitiveservices account project show \
-    --name "${FOUNDRY_NAME}" --resource-group "${RESOURCE_GROUP}" --project-name "${PROJECT_NAME}" >/dev/null 2>&1; then
-    ok "using existing project ${PROJECT_NAME}"
-else
-    az cognitiveservices account project create \
-        --name "${FOUNDRY_NAME}" \
-        --resource-group "${RESOURCE_GROUP}" \
-        --project-name "${PROJECT_NAME}" \
-        --location "${ACCOUNT_LOCATION}" \
-        --output none
-    ok "created ${PROJECT_NAME}"
-fi
-
-# ------------------------------------------------------------------ models ----
-for model in "${MODELS[@]}"; do
-    log "Model ${model}"
-    if az cognitiveservices account deployment show \
-        --name "${FOUNDRY_NAME}" --resource-group "${RESOURCE_GROUP}" --deployment-name "${model}" >/dev/null 2>&1; then
-        ok "deployment ${model} already exists"
-        continue
-    fi
-
-    # Latest non-deprecated version this resource can deploy in its region.
-    version="$(clean "$(az cognitiveservices account list-models \
-        --name "${FOUNDRY_NAME}" --resource-group "${RESOURCE_GROUP}" \
-        --query "[?name=='${model}' && format=='OpenAI' && lifecycleStatus!='Deprecated'] | sort_by(@, &version) | [-1].version" \
-        -o tsv)")"
-    if [[ -z "${version}" ]]; then
-        warn "${model} is not offered by ${FOUNDRY_NAME} in ${ACCOUNT_LOCATION}; try another location"
-        FAILED+=("${model}")
-        continue
-    fi
-
-    # SKU support varies by region and list-models does not report it reliably,
-    # so try the broadest SKUs first and keep the last error for the warning.
-    deployed_sku=""
-    last_error=""
-    capacity="$(capacity_for "${model}")"
-    for sku in GlobalStandard DataZoneStandard Standard; do
-        if last_error="$(az cognitiveservices account deployment create \
-            --name "${FOUNDRY_NAME}" \
-            --resource-group "${RESOURCE_GROUP}" \
-            --deployment-name "${model}" \
-            --model-name "${model}" \
-            --model-version "${version}" \
-            --model-format OpenAI \
-            --sku-name "${sku}" \
-            --sku-capacity "${capacity}" \
-            --output none 2>&1)"; then
-            deployed_sku="${sku}"
-            break
-        fi
-        warn "${model} ${version} not deployed with ${sku}: $(head -n1 <<<"${last_error}")"
-    done
-
-    if [[ -n "${deployed_sku}" ]]; then
-        ok "deployed ${model} ${version} (${deployed_sku}, ${capacity}K TPM)"
-    else
-        warn "could not deploy ${model} in ${ACCOUNT_LOCATION}; try another location or check quota"
-        FAILED+=("${model}")
-    fi
-done
-
-# -------------------------------------------------------------- monitoring ----
-log "Log Analytics workspace"
-if az monitor log-analytics workspace show \
-    --resource-group "${RESOURCE_GROUP}" --workspace-name "${LOGS_NAME}" >/dev/null 2>&1; then
-    ok "using existing workspace ${LOGS_NAME}"
-else
-    az monitor log-analytics workspace create \
-        --resource-group "${RESOURCE_GROUP}" \
-        --workspace-name "${LOGS_NAME}" \
-        --location "${ACCOUNT_LOCATION}" \
-        --retention-time 30 \
-        --output none
-    ok "created ${LOGS_NAME}"
-fi
-LOGS_ID="$(az monitor log-analytics workspace show \
-    --resource-group "${RESOURCE_GROUP}" --workspace-name "${LOGS_NAME}" --query id -o tsv)"
-
-log "Application Insights"
-APPI_TYPE="Microsoft.Insights/components"
-APPI_API="2020-02-02"
-if az resource show --resource-group "${RESOURCE_GROUP}" --name "${APPI_NAME}" \
-    --resource-type "${APPI_TYPE}" --api-version "${APPI_API}" >/dev/null 2>&1; then
-    ok "using existing ${APPI_NAME}"
-else
-    az resource create \
-        --resource-group "${RESOURCE_GROUP}" \
-        --name "${APPI_NAME}" \
-        --resource-type "${APPI_TYPE}" \
-        --api-version "${APPI_API}" \
-        --location "${ACCOUNT_LOCATION}" \
-        --properties "{\"Application_Type\":\"web\",\"WorkspaceResourceId\":\"${LOGS_ID}\"}" \
-        --output none
-    ok "created ${APPI_NAME}, backed by ${LOGS_NAME}"
-fi
-APPI_ID="$(az resource show --resource-group "${RESOURCE_GROUP}" --name "${APPI_NAME}" \
-    --resource-type "${APPI_TYPE}" --api-version "${APPI_API}" --query id -o tsv)"
-APPI_CONNECTION_STRING="$(az resource show --resource-group "${RESOURCE_GROUP}" --name "${APPI_NAME}" \
-    --resource-type "${APPI_TYPE}" --api-version "${APPI_API}" --query properties.ConnectionString -o tsv)"
-
-# Connects the project to Application Insights so Foundry can show traces.
-log "Foundry project connection to Application Insights"
-CONNECTION_URI="https://management.azure.com/subscriptions/${SUBSCRIPTION_ID}/resourceGroups/${RESOURCE_GROUP}/providers/Microsoft.CognitiveServices/accounts/${FOUNDRY_NAME}/projects/${PROJECT_NAME}/connections/${CONNECTION_NAME}?api-version=2025-04-01-preview"
-CONNECTION_BODY="$(mktemp)"
-chmod 600 "${CONNECTION_BODY}"
-jq -n --arg id "${APPI_ID}" --arg key "${APPI_CONNECTION_STRING}" '{
-    properties: {
-        category: "AppInsights",
-        target: $id,
-        authType: "ApiKey",
-        isSharedToAll: true,
-        credentials: { key: $key },
-        metadata: { ApiType: "Azure", ResourceId: $id }
-    }
-}' > "${CONNECTION_BODY}"
-if connection_error="$(az rest --method put --uri "${CONNECTION_URI}" --body "@${CONNECTION_BODY}" --output none 2>&1)"; then
-    ok "connected ${PROJECT_NAME} to ${APPI_NAME} as '${CONNECTION_NAME}'"
-else
-    warn "could not create the project connection: $(head -n1 <<<"${connection_error}")"
-    FAILED+=("project connection to Application Insights")
-fi
-rm -f "${CONNECTION_BODY}"
-
-# ------------------------------------------------------------------- access ----
-log "Access (RBAC)"
-FOUNDRY_USER_ROLE="53ca6127-db72-4b80-b1b0-d745d6d5456d"
-OPENAI_USER_ROLE="5e0bd9bd-7b93-4f28-af87-19fc36ad61bd"
-LOG_ANALYTICS_READER_ROLE="73c42c96-874c-492b-b04d-ab87d138a893"
-ACCOUNT_ID="$(az cognitiveservices account show --name "${FOUNDRY_NAME}" --resource-group "${RESOURCE_GROUP}" --query id -o tsv)"
-
+# --------------------------------------------------------------- deployment ----
+log "Deploy infra/main.bicep"
 USER_OID="$(clean "$(az ad signed-in-user show --query id -o tsv 2>/dev/null || true)")"
+PARAMS=(location="${LOCATION}" foundryName="${FOUNDRY_NAME}" projectName="${PROJECT_NAME}"
+    miniCapacity="${MINI_CAPACITY}" modelCapacity="${MODEL_CAPACITY}")
 if [[ -n "${USER_OID}" ]]; then
-    assign_role "${USER_OID}" User "${FOUNDRY_USER_ROLE}" "${ACCOUNT_ID}" "Foundry User for you on ${FOUNDRY_NAME}"
-    assign_role "${USER_OID}" User "${OPENAI_USER_ROLE}" "${ACCOUNT_ID}" "Cognitive Services OpenAI User for you on ${FOUNDRY_NAME}"
-    assign_role "${USER_OID}" User "${LOG_ANALYTICS_READER_ROLE}" "${APPI_ID}" "Log Analytics Reader for you on ${APPI_NAME}"
+    PARAMS+=(userPrincipalId="${USER_OID}")
 else
-    warn "could not look up your user in Entra ID; skipping your role assignments"
-    FAILED+=("role: your access to the models (ask an admin for Cognitive Services OpenAI User on ${FOUNDRY_NAME})")
+    warn "could not look up your user in Entra ID; deploying without your role assignments"
+    FAILED+=("role: your access to the models (ask an admin for Foundry User and Cognitive Services OpenAI User on ${FOUNDRY_NAME})")
 fi
+TEMPLATE="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)/main.bicep"
+echo "    This takes a few minutes."
+if ! deploy_error="$(az deployment group create \
+    --resource-group "${RESOURCE_GROUP}" \
+    --name lab661-foundry \
+    --template-file "${TEMPLATE}" \
+    --parameters "${PARAMS[@]}" \
+    --only-show-errors --output none 2>&1)"; then
+    die "deployment failed: $(head -n3 <<<"${deploy_error}")"
+fi
+ok "deployed ${FOUNDRY_NAME}, ${PROJECT_NAME}, ${MODELS[*]}, ${LOGS_NAME} and ${APPI_NAME}"
 
-PROJECT_MI="$(clean "$(az cognitiveservices account project show \
-    --name "${FOUNDRY_NAME}" --resource-group "${RESOURCE_GROUP}" --project-name "${PROJECT_NAME}" \
-    --query identity.principalId -o tsv 2>/dev/null || true)")"
-if [[ -n "${PROJECT_MI}" ]]; then
-    assign_role "${PROJECT_MI}" ServicePrincipal "${LOG_ANALYTICS_READER_ROLE}" "${APPI_ID}" \
-        "Log Analytics Reader for the project identity on ${APPI_NAME}"
-else
-    warn "the project has no managed identity; skipping its role assignment"
-    FAILED+=("role: project identity")
-fi
+ACCOUNT_LOCATION="$(az cognitiveservices account show --name "${FOUNDRY_NAME}" --resource-group "${RESOURCE_GROUP}" --query location -o tsv)"
+APPI_CONNECTION_STRING="$(az resource show --resource-group "${RESOURCE_GROUP}" --name "${APPI_NAME}" \
+    --resource-type Microsoft.Insights/components --api-version 2020-02-02 --query properties.ConnectionString -o tsv)"
 
 finish

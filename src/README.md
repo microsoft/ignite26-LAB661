@@ -31,8 +31,8 @@ Run every command from the repository root. Python needs `src` on its path to
 find DevBot.
 
 ```bash
-./src/scripts/check-setup.sh
-./src/scripts/run-offline-loop.sh
+bash src/scripts/check-setup.sh
+bash src/scripts/run-offline-loop.sh
 PYTHONPATH=src python3 -m devbot.agent "How do I see recent commits?"
 ```
 

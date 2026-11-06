@@ -37,7 +37,7 @@ Fill in the sections below yourself, then:
 ## 🔥LAB661: Hill climbing for agents: From 60% to 90% with Open Source and Foundry
 ### Session description
 
-Take a working agent that misses its target and improve it through hill climbing: a repeatable process for making one measured change at a time. Use ASSERT to generate evaluations and test data from requirements, create scoring criteria with Rubrics, and implement controls with Agent Control Specification (ACS). Then use Microsoft Foundry observability, tracing, and evaluation signals to identify improvements, measure results, and iterate toward higher quality, lower cost, and safer outcomes.
+Take a working agent that misses its target and improve it through hill climbing: a repeatable process for making one measured change at a time. Use ASSERT to generate evaluations and test data from requirements, create scoring criteria with Rubrics, and implement controls with Agent Control Specification (ACS). Then run the evaluations against real models on Microsoft Foundry to measure results and iterate toward higher quality, lower cost, and safer outcomes.
 
 ### 🚀 Getting started
 
@@ -115,11 +115,6 @@ For more information, visit the [Learn MCP Server repo](https://aka.ms/learnmcp)
         <img src="https://github.com/nitya.png" width="100px;" alt="Nitya Narasimhan"/><br />
         <sub><b>Nitya Narasimhan</b></sub></a><br />
             <a href="https://github.com/nitya" title="talk">📢</a>
-    </td>
-    <td align="center"><a href="https://github.com/BethanyJep">
-        <img src="https://github.com/BethanyJep.png" width="100px;" alt="Bethany Jepchumba"/><br />
-        <sub><b>Bethany Jepchumba</b></sub></a><br />
-            <a href="https://github.com/BethanyJep" title="talk">📢</a>
     </td>
     <td align="center"><a href="https://github.com/spiderpc">
         <img src="https://github.com/spiderpc.png" width="100px;" alt="Mike Shi"/><br />

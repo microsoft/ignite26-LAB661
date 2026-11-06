@@ -79,6 +79,13 @@ PYTHONPATH=src python3 src/policy/generate_offline.py
 
 Rerun the gate from Step 1. It prints `exit: 0` again.
 
+```bash
+assert-ai acs validate \
+  --manifest artifacts/acs/contoso-devbot-shell-abuse-v1/manifest.yaml \
+  --run-dir data/results/contoso-devbot-shell-abuse-v1/baseline-unguarded \
+  --require-block; echo "exit: $?"
+```
+
 ## Step 3: The workflow
 
 This lab ships the gate as a GitHub Actions workflow.
