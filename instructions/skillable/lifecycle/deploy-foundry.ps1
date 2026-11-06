@@ -47,6 +47,12 @@ try {
     }
 
     $env:AZURE_CONFIG_DIR = $configDir
+    # az looks for Bicep under its config folder, so reuse the copy installed on the image.
+    $imageBicep = 'C:\Users\LabUser\.azure\bin\bicep.exe'
+    if (Test-Path -LiteralPath $imageBicep) {
+        New-Item -ItemType Directory -Force -Path (Join-Path $configDir 'bin') | Out-Null
+        Copy-Item -LiteralPath $imageBicep -Destination (Join-Path $configDir 'bin')
+    }
     Invoke-Az login --service-principal --username $clientId --password $clientSecret --tenant $tenantId --only-show-errors --output none | Out-Null
     Invoke-Az account set --subscription $subscriptionId | Out-Null
 
