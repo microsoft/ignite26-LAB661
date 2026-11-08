@@ -1,6 +1,7 @@
 # Skillable lifecycle action for LAB661.
 # Execute Script in Virtual Machine > PowerShell. Event: First Displayable. Blocking: off, because
-# the core labs are offline. Timeout: 30 minutes. Retries: 0. Error Action: Log.
+# the core labs are offline. Delay: 60 seconds, so the VM's DNS is ready before az login.
+# Timeout: 45 minutes. Retries: 5. Error Action: Log.
 # Deploys infra/main.bicep into the lab resource group, then writes .env in offline mode for
 # More 0 and 1. Progress and errors go to LAB661-Foundry-status.txt on the desktop.
 $ErrorActionPreference = 'Stop'
