@@ -28,7 +28,7 @@ flowchart LR
 | Use ASSERT to generate evaluations and test data from requirements | Core Lab 2 offline, and More 0 and 1 with a real model |
 | Implement controls with Agent Control Specification (ACS) | Core Labs 3 and 4: generate, validate, and enforce a policy |
 | Make one measured change at a time | Core Lab 4: attack success drops from 100% to 0% with no safe answer blocked, and More 0 reruns the same evaluation so the policy is the only change |
-| Use Microsoft Foundry to measure results and iterate | More 0 and 1: real models on Microsoft Foundry, with Application Insights ready for traces |
+| Use Microsoft Foundry to measure results and iterate | More 0 and 1: real models on Microsoft Foundry, with ASSERT scoring the runs on your machine |
 | Lower cost and safer outcomes | More 3 to 6: redact instead of block, close red-team gaps, know what your runtime enforces, and gate CI |
 
 > [!NOTE]

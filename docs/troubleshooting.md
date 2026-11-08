@@ -22,7 +22,7 @@ pinned versions yourself from the repository root.
 pip install -r requirements.txt
 ```
 
-Then re-run `./src/scripts/check-setup.sh`.
+Then re-run `bash src/scripts/check-setup.sh`.
 
 ### `ModuleNotFoundError: No module named 'devbot'`
 
@@ -114,7 +114,7 @@ The offline core does not need any of this.
 ### The run-assert-eval skill says `node` is missing
 
 The skill uses Node.js to fetch research sources. Rebuild the dev container, then
-confirm `./src/scripts/check-setup.sh` shows `node on PATH`. After a rebuild,
+confirm `bash src/scripts/check-setup.sh` shows `node on PATH`. After a rebuild,
 sign in again with `az login --use-device-code`.
 
 ### The skill asks permission before each command
@@ -142,17 +142,9 @@ faster than waiting for the foreground command to return.
 at 100K. ASSERT generates test cases on `gpt-5.4-mini` with 8 parallel calls, so
 it needs the extra headroom. If your quota is lower, deployment fails with a
 "check quota" warning; run setup again with a smaller capacity, for example
-`MINI_CAPACITY=200 MODEL_CAPACITY=50 bash infra/setup.sh`. Setup does not change
-the capacity of a deployment that already exists. To raise an existing one:
-
-```bash
-RG=rg-lab661-foundry
-ACCT=$(az cognitiveservices account list -g $RG --query '[0].name' -o tsv)
-VER=$(az cognitiveservices account deployment show -g $RG -n $ACCT --deployment-name gpt-5.4-mini --query properties.model.version -o tsv)
-az cognitiveservices account deployment create -g $RG -n $ACCT --deployment-name gpt-5.4-mini \
-  --model-name gpt-5.4-mini --model-version $VER --model-format OpenAI \
-  --sku-name GlobalStandard --sku-capacity 500 --query sku.capacity -o tsv
-```
+`MINI_CAPACITY=200 MODEL_CAPACITY=50 bash infra/setup.sh`. To raise or lower
+the capacity later, run setup again with the new values and the same resource
+group; the Bicep deployment updates the existing deployments in place.
 
 ### `cd viewer` fails after a run
 

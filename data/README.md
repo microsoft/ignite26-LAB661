@@ -19,5 +19,5 @@ PYTHONPATH=src python3 src/eval/build_baseline_fixture.py
 
 The policy generator, validation, and the CI gate all depend on these exact
 files. If you change DevBot's answers, rebuild the baseline and re-run the whole
-loop with `./src/scripts/run-offline-loop.sh`. Live runs from More 0 and 1 are
+loop with `bash src/scripts/run-offline-loop.sh`. Live runs from More 0 and 1 are
 written to `artifacts/results/` instead, which is gitignored.

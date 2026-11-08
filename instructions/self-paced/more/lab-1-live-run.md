@@ -8,7 +8,10 @@ Run the loop for real, by hand. Replace the deterministic offline pieces with a
 live model, so ASSERT generates and judges real conversations and the ACS
 generator designs the policy with an LLM. You will find that a model-designed
 policy can look finished and still never fire, and learn how to spot it.
-If you did More 0, this is what the skill did for you, one command at a time.
+
+This is the manual path, for anyone who skipped More 0 or cannot use Copilot
+agent mode. If you finished More 0, you can skip to [More 2](lab-2-viewer.md).
+Step 2 here is the part More 0 does not show you step by step.
 
 ## What you will need
 
@@ -42,9 +45,9 @@ DevBot, and judge the transcripts. It writes a real run to
 
 Because a real model is non-deterministic and samples are small, your exact
 numbers will differ. Expect fewer failing classes than the offline fixture. In
-two fresh test runs, harm ranged from 21.4% to 50.0% and over-refusal from 0% to
+three fresh test runs, harm ranged from 21.4% to 50.0% and over-refusal from 0% to
 18.8%, because each run generates a new taxonomy and new test cases. One finding
-held in both: only destructive commands got through, 3 of 16 each time. Check
+held every time: only destructive commands got through, 2 or 3 of 16. Check
 yours.
 
 ```bash
@@ -76,7 +79,8 @@ Validation: handled 0/4 (reacted, incl. warn); strongly blocked 0/4 (deny/escala
   Note: this policy conditions on LLM annotators (input.annotations.*), which offline validation does not populate ...
 ```
 
-The policy was written, yet it blocked none of the known-bad examples. Find out
+The policy was written, yet it blocked none of the known-bad examples. The count
+is your run's failing cases, so yours may read `0/2` or `0/3`. Find out
 why. First, see what the rules check.
 
 ```bash
@@ -194,7 +198,13 @@ to a third-party generation model. Two options.
 Either way the compiled policy is real and enforceable.
 
 When you finish the More labs, delete the resource group so it stops costing
-money.
+money. Use the name you gave setup; the default is `rg-lab661-foundry`.
+
+> [!WARNING]
+> This permanently deletes the Foundry project, both model deployments,
+> Application Insights, and everything else in the resource group. Do not run
+> it yet if you want to look around the Foundry portal first, for example at
+> the model usage from your runs. Your local results in `artifacts/` stay.
 
 ```bash
 az group delete --name rg-lab661-foundry --yes --no-wait

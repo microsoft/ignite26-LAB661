@@ -20,9 +20,9 @@ do not install or clone anything.
 
 | Attendee needs | For | Notes |
 |----------------|-----|-------|
-| A Windows 11 VM (`Win11-Pro-Base`) with VS Code and this repository already on it | All labs | Attendees do not install or clone anything |
+| A Windows 11 VM (`Win11-Pro-Base`) with VS Code, this repository, a prebuilt `.venv` and `opa.exe` already on it | All labs | Attendees do not install or clone anything. Image steps are in [README.maintainer.md](../../README.maintainer.md) |
 | GitHub Enterprise sign-in through `https://github.com/enterprises/skillable-events/sso`, using the attendee's **Azure** credentials | More 0 | GitHub Copilot works only through this sign-in. The first page walks attendees through it |
-| A pre-provisioned Foundry project with `gpt-5.4-mini` and `gpt-5.4` deployed, plus Application Insights | More 0 and 1 | `infra/setup.sh --env-only` finds them and writes `.env` |
+| A pre-provisioned Foundry project with `gpt-5.4-mini` and `gpt-5.4` deployed, and `.env` written in offline mode | More 0 and 1 | The [`deploy-foundry.ps1`](lifecycle/deploy-foundry.ps1) lifecycle action deploys `infra/main.bicep` and writes `.env`. More 0 switches it to live |
 | `@lab.CloudPortalCredential(User1)` Username, Password and AccessToken | Sign-in, More 0 | Shown on the first page with `+++` type text |
 
 No lab uses an API key. The live labs sign in with the attendee's Azure identity
@@ -30,9 +30,9 @@ No lab uses an API key. The live labs sign in with the attendee's Azure identity
 
 ## Quickstart
 
-1. Open the repository in a Codespace, or in VS Code with **Dev Containers: Reopen in Container**.
-2. Wait for the container setup to finish.
-3. Open a terminal. Run every command in this guide from the repository root.
+1. Sign in to the VM and open VS Code on the repository.
+2. Open a terminal with **Terminal > New Terminal**. It opens in PowerShell, with `.venv` first on PATH.
+3. Run every command in this guide from the repository root.
 
 ## Core labs
 
@@ -54,8 +54,8 @@ Skillable tears the environment down afterward, so there is no cleanup page.
 
 | Page file | Skillable pages | Needs Azure |
 |-----------|-----------------|-------------|
-| [more-0-assert-skill.md](more-0-assert-skill.md) | Connect to Microsoft Foundry, Validate your environment, Meet the run-assert-eval skill, Name one risk, Prove the fix | Yes |
-| [more-1-live-run.md](more-1-live-run.md) | Go live by hand, Generate a live policy | Yes |
+| [more-0-assert-skill.md](more-0-assert-skill.md) | Connect to Microsoft Foundry, Validate your environment, Verify the run-assert-eval skill, Name one risk, Prove the fix | Yes |
+| [more-1-live-run.md](more-1-live-run.md) | Go live by hand, Generate a live policy. Optional for anyone who finished More 0 | Yes |
 | [more-2-viewer.md](more-2-viewer.md) | Browse runs in the ASSERT viewer | No |
 | [more-3-custom-rego.md](more-3-custom-rego.md) | Author custom Rego | No |
 | [more-4-red-teaming.md](more-4-red-teaming.md) | Adaptive red-teaming, Close the gap | No |
@@ -106,9 +106,12 @@ MODE=include BRANCH=main ./instructions/skillable/generate-skillable-copy.sh
 
 ## Scripts
 
-These scripts are listed for reference. You do not need to run either script now.
+These scripts are listed for reference. Attendees run the first three from the
+lab pages.
 
 | Script | What it does | When it runs |
 |--------|--------------|--------------|
-| [`.devcontainer/post-create.sh`](../../.devcontainer/post-create.sh) | Checks Python, the Azure CLI, `jq` and `openssl`, installs `opa`, and installs the pinned packages in [`requirements.txt`](../../requirements.txt) | Automatically, when the dev container is created |
-| [`infra/setup.sh`](../../infra/setup.sh) | With `--env-only`, signs in to Azure, finds the pre-provisioned Foundry project and Application Insights, and writes `.env`. It creates nothing | By the attendee, on the first More 0 page |
+| [`scripts/check-setup.ps1`](scripts/check-setup.ps1) | Checks `.venv`, Python, ASSERT, ACS, OPA, Node and DevBot | Core 0 |
+| [`scripts/run-offline-loop.ps1`](scripts/run-offline-loop.ps1) | Runs the five offline stages end to end | Core 0 |
+| [`scripts/load-env.ps1`](scripts/load-env.ps1) | Loads `.env` into the terminal. With `-Live`, first switches `.env` to live mode | More 0 and 1 |
+| [`lifecycle/deploy-foundry.ps1`](lifecycle/deploy-foundry.ps1) | Deploys `infra/main.bicep` with the subscription's service principal, writes `.env` in offline mode, and reports progress in `LAB661-Foundry-status.txt` on the desktop | Skillable lifecycle action, at First Displayable, not blocking |

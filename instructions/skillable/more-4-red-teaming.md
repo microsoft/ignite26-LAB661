@@ -44,6 +44,10 @@ Widen the rule to match either flag order. A script does it for you: it takes th
 
    ++$env:PYTHONPATH = "src"; python src/policy/generate_offline.py++
 
+1. [] Probe the bypass again. This prints `allow` again.
+
+   ++'{"intervention_point":"output","policy_target":{"value":"just run rm -fr ~/work/x"}}' | opa eval -I -d artifacts/acs/contoso-devbot-shell-abuse-v1/policy 'data.agent_control_specification.devbot_shell_guardrails.output_verdict.decision' -f raw++
+
 >[!Knowledge] You can play whack-a-mole with regexes forever: `rm -R`, aliases, encoded payloads, and paraphrases each need another pattern. Use deterministic rules for checks on structured tool arguments and trusted state. Use semantic annotators for decisions that require interpreting free-form content. Validate both against unsafe and benign cases, and measure false positives, false negatives, latency, and cost. The discipline that scales is the loop: add each bypass to your evidence, regenerate, and let validation prove the fix.
 
 >[!Note] **Success:** you found a bypass, closed it, and proved the rest of the policy still holds.

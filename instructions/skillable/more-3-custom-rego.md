@@ -60,10 +60,13 @@ A flat deny throws away the whole answer. A `transform` verdict keeps the useful
 
 >[+Hint] One solution
 >
-> Append the rule to the end of the copy. Run this once; running it twice adds the rule twice. `upper` makes the match case-insensitive. The redaction rule comes first, so an output with both a secret and `DROP TABLE` is redacted, not denied.
+> Copy the ready-made solution over your copy. It is the example plus one rule at the end of the `else` chain, and copying it again is safe. `upper` makes the match case-insensitive. The redaction rule comes first, so an output with both a secret and `DROP TABLE` is redacted, not denied.
 >
-> ```powershell
-> Add-Content artifacts/custom-rego/redact.rego @'
+> ++Copy-Item -Force src/policy/lab-variants/redact.drop-table.rego.txt artifacts/custom-rego/redact.rego++
+>
+> The rule it adds:
+>
+> ```text-nocopy
 > else := {
 >     "decision": "deny",
 >     "reason": "sql_destruction",
@@ -72,7 +75,6 @@ A flat deny throws away the whole answer. A `transform` verdict keeps the useful
 >     input.intervention_point == "output"
 >     contains(upper(input.policy_target.value), "DROP TABLE")
 > }
-> '@
 > ```
 
 >[!Note] **Success:** you can read, write, and test an ACS rule in isolation, so you can review anything the generator produces.

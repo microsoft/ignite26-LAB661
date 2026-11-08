@@ -63,17 +63,19 @@ Nothing in this lab runs a real dangerous command. DevBot's tools are simulated,
 
 Confirm every tool the lab needs is installed.
 
-1. [] In VS Code, open a terminal with **Terminal > New Terminal**.
-1. [] In the terminal toolbar, open the dropdown beside **+** and select **Git Bash**.
-1. [] Use this Git Bash terminal at the repository root for every command in the lab.
+1. [] In VS Code, open a terminal with **Terminal > New Terminal**. It opens in **PowerShell** at the repository root.
+1. [] Use a PowerShell terminal at the repository root for every command in the lab.
 1. [] Run the setup check.
 
-   ++bash src/scripts/check-setup.sh++
+   ++.\instructions\skillable\scripts\check-setup.ps1++
 
 1. [] Confirm every line starts with `ok`.
 
    ```text-nocopy
-       ok    python3 3.13
+   Checking Contoso DevBot ACS + ASSERT lab prerequisites
+     ok    virtual environment .venv
+     ok    python on PATH is .venv
+     ok    python 3.12
      ok    assert-ai with the acs integration is importable
      ok    acs-generator present
      ok    agent-control-specification present
@@ -81,12 +83,12 @@ Confirm every tool the lab needs is installed.
      ok    node on PATH
      ok    devbot agent importable (PYTHONPATH=src)
 
-   All checks passed. Run: bash src/scripts/run-offline-loop.sh
+   All checks passed. Run: .\instructions\skillable\scripts\run-offline-loop.ps1
    ```
 
 >[+Hint] A line says `MISS`.
 >
-> Confirm you are using **Git Bash**, not PowerShell, then run the check again. If it still fails, raise your hand and ask a proctor.
+> If it is `python on PATH is not .venv`, open a new terminal with **Terminal > New Terminal** and run the check again. If another line fails, raise your hand and ask a proctor.
 
 >[!Note] **Success:** your environment has everything the lab needs.
 
@@ -98,7 +100,7 @@ Run all five stages back to back. This is your smoke test.
 
 1. [] Run the offline loop.
 
-   ++bash src/scripts/run-offline-loop.sh++
+   ++.\instructions\skillable\scripts\run-offline-loop.ps1++
 
 1. [] Confirm the last lines read as follows.
 

@@ -25,7 +25,7 @@ Run every command from the repository root.
 | `infra/` | `setup.sh`, which provisions Foundry for the live track |
 | `instructions/self-paced/core/` | Core labs 0 through 4 |
 | `instructions/self-paced/more/` | More labs 0 through 6, deeper topics |
-| `instructions/skillable/` | The same core and More labs as a Skillable paged manual |
+| `instructions/skillable/` | The same core and More labs as a Skillable paged manual, in PowerShell for the Windows 11 VM. `scripts/` holds the PowerShell ports and `load-env.ps1`; `lifecycle/` holds the Foundry lifecycle action |
 | `docs/` | Overview, troubleshooting, diagrams, and the read-only `developer-guide.ipynb` (banners from `docs/assets/make_guide_banners.py`) |
 | `artifacts/` | Generated policy and live runs (gitignored) |
 | `examples/`, `tests/`, `src/devbot/acs/`, `src/devbot/guarded.py` | Written by the `run-assert-eval` skill in More 0. Lab output, gitignored |
@@ -56,7 +56,10 @@ Run every command from the repository root.
 - Changing the policy conditions? Re-run `assert-ai acs validate --require-block`
   and `src/policy/verify_reeval.py`, and update any lab output that shows a decision.
 - Changing a lab command? Run it and update the shown output to match, in both
-  `instructions/self-paced/` and `instructions/skillable/`.
+  `instructions/self-paced/` (bash) and `instructions/skillable/` (PowerShell).
+- Changing `src/policy/generate_offline.py` or `src/policy/examples/redact.rego`?
+  Update the ready-made copies in `src/policy/lab-variants/` to match. Core Lab
+  3.5 and More 3 copy them over the live files.
 - Renaming, adding, or retiming a lab? Update `LABS` in
   `instructions/self-paced/assets/make_banners.py` and run it to regenerate the
   progress banners.
@@ -66,8 +69,8 @@ Run every command from the repository root.
 The single source of truth that the lab still works:
 
 ```bash
-./src/scripts/check-setup.sh
-./src/scripts/run-offline-loop.sh
+bash src/scripts/check-setup.sh
+bash src/scripts/run-offline-loop.sh
 ```
 
 The second must end with the `PASS` line and a 100% to 0% attack-success drop.

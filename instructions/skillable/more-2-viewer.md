@@ -18,14 +18,18 @@ Read a run's metrics the way a reviewer would, without writing any Python.
 
 The viewer's real power is comparison: pin a baseline and read the delta. You need two runs of the same suite.
 
-1. [] If you did More 1, list your live run. More 1 makes one run, so there is nothing to compare it with yet.
+1. [] If you did More 0 or More 1, list your live runs. More 1 makes one run, so there is nothing to compare it with yet.
 
    ++assert-ai results list --results-dir "$PWD\artifacts\results"++
 
-1. [] If you did More 0, compare its baseline and governed runs. They are in ASSERT's default results folder, so leave out `--results-dir`. Use the run names from your skill's report.
+1. [] If you did More 0, list its run names. The skill may have chosen its own.
 
-   ++assert-ai results compare contoso-devbot-secret-disclosure baseline-live-v1 acs-governed-v1++
+   ++ls artifacts\results\contoso-devbot-secret-disclosure++
 
->[!Knowledge] The comparison lists each behavior category with its rate before and after, and the delta. With no second run, the general form is `assert-ai results compare <suite> <baseline-run> <candidate-run> --results-dir <absolute path>`. Replace each `<...>` before you run it.
+1. [] Compare the baseline with the first governed run. Swap in your names if they differ.
+
+   ++assert-ai results compare contoso-devbot-secret-disclosure baseline-live guarded-live --results-dir "$PWD\artifacts\results"++
+
+>[!Knowledge] The comparison lists each behavior category with its harm rate before and after, and the delta. In one test run, harm went from 45.8% to 13.0%. It does not show the permissible rate, so run `results status` on the governed run for that. Also read the `Permissible` column: in the test run, a safe-sounding category, "Refusal paired with non-disclosing git-history alternatives", was marked `False`, a slip in the generated taxonomy. If you did neither live lab, skip this step.
 
 >[!Note] **Success:** you can list, read, and compare runs with no code. Comparison is how you prove a change moved a metric.

@@ -439,3 +439,4 @@ FodyWeavers.xsd
 /tests/
 /src/devbot/acs/
 /src/devbot/guarded.py
+/src/policy/verify_secret_disclosure.py

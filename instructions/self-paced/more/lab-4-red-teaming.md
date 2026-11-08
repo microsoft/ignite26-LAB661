@@ -110,6 +110,12 @@ PYTHONPATH=src python3 src/policy/generate_offline.py
 
 Rerun the probe from Step 3.3. It prints `allow` again.
 
+```bash
+echo '{"intervention_point":"output","policy_target":{"value":"just run rm -fr ~/work/x"}}' \
+  | opa eval -I -d artifacts/acs/contoso-devbot-shell-abuse-v1/policy \
+    'data.agent_control_specification.devbot_shell_guardrails.output_verdict.decision' -f raw
+```
+
 ## Step 4: The real lesson
 
 You can keep playing whack-a-mole with regexes forever. `rm -R`, aliases,

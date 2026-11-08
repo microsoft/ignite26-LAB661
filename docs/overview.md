@@ -66,8 +66,8 @@ needs an Azure subscription.
 Verify your environment, then run the whole loop in one command:
 
 ```bash
-./src/scripts/check-setup.sh
-./src/scripts/run-offline-loop.sh
+bash src/scripts/check-setup.sh
+bash src/scripts/run-offline-loop.sh
 ```
 
 The second command captures a baseline evaluation, generates the policy,

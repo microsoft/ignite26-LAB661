@@ -298,5 +298,4 @@ Remove-Item -Recurse -Force artifacts -ErrorAction SilentlyContinue
 
 Verified after removal: `check-setup.ps1` all `ok`, `run-offline-loop.ps1` exit 0
 with 100% to 0%, baseline hashes unchanged, no `artifacts/`, no `.env`, wheel
-kept, 44.7 GB free on C:. `%TEMP%\lab663-ref` (the extracted LAB663 reference)
-is kept for Phases B and C.
+kept, 44.7 GB free on C:.

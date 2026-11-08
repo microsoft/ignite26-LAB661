@@ -31,7 +31,7 @@ this lab runs from the repository root.
 ## Step 0.2: Verify the environment
 
 ```bash
-./src/scripts/check-setup.sh
+bash src/scripts/check-setup.sh
 ```
 
 You want all green:
@@ -56,7 +56,7 @@ If any line says `MISS`, rebuild the dev container, then re-run the check. See
 This is your smoke test. It runs all five stages of the lab back to back.
 
 ```bash
-./src/scripts/run-offline-loop.sh
+bash src/scripts/run-offline-loop.sh
 ```
 
 The last lines should read:
@@ -93,8 +93,8 @@ The script ran five stages. You will do each one by hand in Labs 2 through 4.
 
 Before moving on, confirm:
 
-- [ ] `./src/scripts/check-setup.sh` prints all `ok`
-- [ ] `./src/scripts/run-offline-loop.sh` ends with the `PASS` line
+- [ ] `bash src/scripts/check-setup.sh` prints all `ok`
+- [ ] `bash src/scripts/run-offline-loop.sh` ends with the `PASS` line
 - [ ] You did not need an Azure sign-in or an API key to get here
 
 **Next**: [Lab 1, Meet DevBot and map the risk](lab-1.md)
