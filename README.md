@@ -1,31 +1,3 @@
-<!--
-## Before you're done
-
-This repo has been created for your Microsoft Ignite 2026 session. Here's how to get it ready.
-
-**Easiest path — use the agent (recommended):**
-
-- Open GitHub Copilot Chat and say `help me initialize repo`. The agent will walk you through getting the README populated.
-- When you're ready to publish, say `help me finalize repo`. The agent will clean up unused folders, validate everything, and remove this "Before you're done" section and other extra stuff that attendees don't need to see.
-- Curious how it works? Read the [agent workflow](.github/AGENT-WORKFLOW.md).
-
-**Doing it manually?**
-
-Fill in the sections below yourself, then:
-
-- Delete any placeholder folders you don't need (`data/`, `infra/`, etc.)
-- Delete this "Before you're done" section
-- Delete `.github/agents/`, `.github/tests/`, `.github/copilot-instructions.md`, and `.github/AGENT-WORKFLOW.md` — these are template tooling, not part of your published repo
-
-**Folder conventions:**
-
-- Attendee step-by-step guidance goes in `instructions/`. If you use MkDocs or a docs site instead, put it in `docs/` and link to it from this README.
-- Reference material and background reading go in `docs/`.
-- You can add a `.devcontainer/` folder if needed.
-
----
--->
-
 <a name="start-building"></a>
 
 <p align="center">
@@ -74,10 +46,11 @@ By the end of this session, you will be able to:
 
 ### 💻 Technologies used
 
-- ASSERT
-- Rubrics
-- Agent Control Specification (ACS)
-- Microsoft Foundry observability
+- [ASSERT](https://responsibleai.github.io/ASSERT/). Read [Turn specs into evals for any agent with ASSERT](https://commandline.microsoft.com/assert-written-intent-executable-evals/).
+- [Rubrics](https://github.com/responsibleai/ASSERT/blob/main/docs/concepts.md#judge), the ASSERT judge rubrics. Read [Are your AI evals measuring the right things?](https://commandline.microsoft.com/structured-ai-evaluation-design-assert-vs-petri-bloom/)
+- [Agent Control Specification (ACS)](https://github.com/responsibleai/agent-control-spec). Read [Agent Control Specification: Portable runtime governance for AI agents](https://commandline.microsoft.com/agent-control-specification-runtime-governance/) and [Evaluating, controlling, and optimizing AI agents with ASSERT and ACS](https://commandline.microsoft.com/safety-requirements-failure-paths-assert-acs/).
+- [Microsoft Foundry Models](https://learn.microsoft.com/azure/foundry/concepts/foundry-models-overview). Read [The agent optimization loop and how we built it in Foundry](https://commandline.microsoft.com/the-agent-optimization-loop-and-how-we-built-it-in-foundry/).
+- [GitHub Copilot agent skills](https://code.visualstudio.com/docs/copilot/customization/agent-skills). Read [Introducing run-assert-eval: Find the risk, fix it, prove it](https://commandline.microsoft.com/run-assert-eval-responsible-ai-agent-risk-discovery-at-runtime/).
 
 ### 📚 Continue your learning
 
@@ -91,8 +64,6 @@ Pick your next step based on your learning style:
 | **[Microsoft Foundry Community](https://aka.ms/MicrosoftFoundryDiscord-Ignite26)** | Connect with other learners and experts in our Discord community |
 
 ### 🌟 Microsoft Learn MCP Server
-
-<!-- Remove this section if the Microsoft Learn MCP Server is not relevant to the session. -->
 
 The Microsoft Learn MCP Server gives your AI agent direct access to Microsoft's official documentation — grounded, up-to-date answers about the topics in this session.
 
