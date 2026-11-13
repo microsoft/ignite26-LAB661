@@ -6,10 +6,12 @@
 
 # [Microsoft Ignite 2026](https://ignite.microsoft.com)
 
-## 🔥LAB661: Hill climbing for agents: From 60% to 90% with Open Source and Foundry
+## 🔥LAB661: Continuous improvement for agents: From open source to Foundry
 ### Session description
 
-Take a working agent that misses its target and improve it through hill climbing: a repeatable process for making one measured change at a time. Use ASSERT to generate evaluations and test data from requirements, create scoring criteria with Rubrics, and implement controls with Agent Control Specification (ACS). Then run the evaluations against real models on Microsoft Foundry to measure results and iterate toward higher quality, lower cost, and safer outcomes.
+Take a working agent that misses its target and apply continuous improvement: a repeatable process for making one measured change at a time. Use open-source ASSERT to generate evaluations and test data from requirements, create scoring criteria with rubrics, and implement controls with Agent Control Specification (ACS). Then run live with Microsoft Foundry models, the first step toward production, and use GitHub Copilot with the run-assert-eval skill to automate the improvement loop.
+
+[Microsoft Ignite Session Page](https://ignite.microsoft.com/en-US/sessions/LAB661)
 
 ### 🚀 Getting started
 
